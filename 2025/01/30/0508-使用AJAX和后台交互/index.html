@@ -1,0 +1,773 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Django结合AJAX的使用一、AJAX简介我们知道，前端页面想要和后端接口进行数据交互，可以通过以下方式：	  将参数添加到 url 中，后端通过 get 方式从 url 中获取数据； 前端页面通过 form 表单，将数据以 get 或者 post 的方式发送给后端； 前端通过 a 标签（和使用url方式传参的方式类似）；  此外，我们还可以使用 ajax 技术来实现前后端数据的交互。 ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clark&#39;s Blog">
+<meta property="og:url" content="https://clark-cdc.github.io/2025/01/30/0508-%E4%BD%BF%E7%94%A8AJAX%E5%92%8C%E5%90%8E%E5%8F%B0%E4%BA%A4%E4%BA%92/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="Django结合AJAX的使用一、AJAX简介我们知道，前端页面想要和后端接口进行数据交互，可以通过以下方式：	  将参数添加到 url 中，后端通过 get 方式从 url 中获取数据； 前端页面通过 form 表单，将数据以 get 或者 post 的方式发送给后端； 前端通过 a 标签（和使用url方式传参的方式类似）；  此外，我们还可以使用 ajax 技术来实现前后端数据的交互。 ​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/ajax%E4%BA%A4%E4%BA%92%E6%B5%81%E7%A8%8B.png">
+<meta property="article:published_time" content="2025-01-30T09:00:17.201Z">
+<meta property="article:modified_time" content="2025-03-03T14:45:40.907Z">
+<meta property="article:author" content="clark">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/ajax%E4%BA%A4%E4%BA%92%E6%B5%81%E7%A8%8B.png">
+  
+  
+  
+  <title>Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-30 17:00" pubdate>
+          2025年1月30日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Django结合AJAX的使用"><a href="#Django结合AJAX的使用" class="headerlink" title="Django结合AJAX的使用"></a>Django结合AJAX的使用</h1><h2 id="一、AJAX简介"><a href="#一、AJAX简介" class="headerlink" title="一、AJAX简介"></a>一、AJAX简介</h2><p>我们知道，前端页面想要和后端接口进行数据交互，可以通过以下方式：	</p>
+<ul>
+<li>将参数添加到 url 中，后端通过 get 方式从 url 中获取数据；</li>
+<li>前端页面通过 form 表单，将数据以 get 或者 post 的方式发送给后端；</li>
+<li>前端通过 a 标签（和使用url方式传参的方式类似）；</li>
+</ul>
+<p>此外，我们还可以使用 ajax 技术来实现前后端数据的交互。</p>
+<p>​		AJAX（Asynchronous Javascript And XML）翻译成中文就是“异步的Javascript和XML”。即使用Javascript语言与服务器进行异步交互，传输的数据为XML（当然，传输的数据不只是XML）。AJAX 不是新的编程语言，而是一种使用现有标准的新方法。</p>
+<p>​		AJAX 最大的优点是在不重新加载整个页面的情况下，可以与服务器交换数据并更新部分网页内容。（这一特点给用户的感受是在不知不觉中完成请求和响应过程）。AJAX 不需要任何浏览器插件，但需要用户允许JavaScript在浏览器上执行。</p>
+<ul>
+<li>同步交互：客户端发出一个请求后，需要等待服务器响应结束后，才能发出第二个请求；</li>
+<li>异步交互：客户端发出一个请求后，无需等待服务器响应结束，就可以发出第二个请求。</li>
+</ul>
+<p>AJAX用于<strong>局部刷新页面</strong>和<strong>异步请求</strong>的特点，因此和使用Form表单和后端进行数据交互的方式比较，具有以下优点：</p>
+<ul>
+<li>AJAX使用JavaScript技术向服务器发送异步请求；</li>
+<li>AJAX请求无须刷新整个页面；</li>
+<li>因为服务器响应内容不再是整个页面，而是页面中的部分内容，所以AJAX性能高；</li>
+</ul>
+<h2 id="二、AJAX的简单使用"><a href="#二、AJAX的简单使用" class="headerlink" title="二、AJAX的简单使用"></a>二、AJAX的简单使用</h2><h3 id="2-1-简单实现"><a href="#2-1-简单实现" class="headerlink" title="2.1 简单实现"></a><strong>2.1 简单实现</strong></h3><p>AJAX技术是基于JS的，因此使用AJAX发送的请求也属于 JS 请求，而通过 Form表单等形式来发送请求的方式属于 HTML请求。在编写AJAX请求之前，我们先来回顾一下使用 Form 表单来和后端交互</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/test_form/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;user&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;登录&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们再来观察一下AJAX的方式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;test_ajax&quot;</span>&gt;</span>ajax提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.test_ajax&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/test_ajax/&quot;</span>,  <span class="hljs-comment">// 请求的url</span></span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;get&quot;</span>,  <span class="hljs-comment">// post  请求的方式</span></span><br><span class="language-javascript">            <span class="hljs-attr">data</span>:<span class="hljs-string">&quot;&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>:<span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;  <span class="hljs-comment">// 回调函数</span></span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>对比两种方式，我们可以发现有以下区别：</p>
+<ul>
+<li>从实现方式上来看，form表单会自动将input标签中用户输入的值组装成键值对，在点击提交后自动发送给后端，这也就是为什么input标签必须有name属性的原因了，name属性的值，即为键值对的键。而对于ajax方式来说，实际上就是给提交按钮绑定了一个点击事件，数据也需要手动传给后端，所以对于ajax而言，只要能定位到要取值的标签就可以了，取值和数据封装工作由程序员来完成。</li>
+<li>从实现效果上来看，通过form表单发送数据，点击提交后是对整个页面的刷新，即之前在数据框中填入的数据会置空，而使用ajax方式，点击提交后只是局部刷新，并不会将整个页面重新覆盖。（点击提交后仔细观察浏览器地址栏，form会进行刷新，ajax不会）</li>
+</ul>
+<p>所以在实际的项目中，往往都是使用ajax来和后端进行数据交互的。</p>
+<h3 id="2-2-参数介绍"><a href="#2-2-参数介绍" class="headerlink" title="2.2 参数介绍"></a><strong>2.2 参数介绍</strong></h3><ul>
+<li><strong>url</strong>               请求发送的url，相当于form表单中的action</li>
+<li><strong>type</strong>            请求的方式，相当于form表单中的method</li>
+<li><strong>data</strong>            要发送的数据，数据类型是 object 类型（类似python中的字典类型）</li>
+<li><strong>success</strong>       回调函数，data为后端返回的结果</li>
+</ul>
+<h3 id="2-3-ajax交互的流程"><a href="#2-3-ajax交互的流程" class="headerlink" title="2.3 ajax交互的流程"></a><strong>2.3 ajax交互的流程</strong></h3><img src="/static/img/Django专题/ajax交互流程.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 67%;" />  
+
+<h3 id="2-4-使用JS实现AJAX"><a href="#2-4-使用JS实现AJAX" class="headerlink" title="2.4 使用JS实现AJAX"></a><strong>2.4 使用JS实现AJAX</strong></h3><p>由于使用js实现ajax的过程比较麻烦，通常我们直接使用jQuery来实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;b2&quot;</span>);<br>  b2.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// 原生JS</span><br>    <span class="hljs-keyword">var</span> xmlHttp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();<br>    xmlHttp.<span class="hljs-title function_">open</span>(<span class="hljs-string">&quot;POST&quot;</span>, <span class="hljs-string">&quot;/ajax_test/&quot;</span>, <span class="hljs-literal">true</span>);<br>    xmlHttp.<span class="hljs-title function_">setRequestHeader</span>(<span class="hljs-string">&quot;Content-type&quot;</span>, <span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span>);<br>    xmlHttp.<span class="hljs-title function_">send</span>(<span class="hljs-string">&quot;username=cdc&amp;password=123456&quot;</span>);<br>    xmlHttp.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">if</span> (xmlHttp.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span> &amp;&amp; xmlHttp.<span class="hljs-property">status</span> === <span class="hljs-number">200</span>) &#123;<br>        <span class="hljs-title function_">alert</span>(xmlHttp.<span class="hljs-property">responseText</span>);<br>      &#125;<br>    &#125;;<br>  &#125;;<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、AJAX传递数据"><a href="#三、AJAX传递数据" class="headerlink" title="三、AJAX传递数据"></a>三、AJAX传递数据</h2><p>使用Ajax实现一个简单的计算器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^index/$&#x27;</span>, views.index),<br>    url(<span class="hljs-string">r&#x27;^count/$&#x27;</span>, views.count),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- index.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;add_no1&quot;</span>&gt;</span>+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;add_no2&quot;</span>&gt;</span>=<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;add_ret&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ajax_test&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.ajax_test&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/count/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">data</span>: &#123;</span><br><span class="language-javascript">                <span class="hljs-string">&quot;add_1&quot;</span>: $(<span class="hljs-string">&quot;.add_no1&quot;</span>).<span class="hljs-title function_">val</span>(),</span><br><span class="language-javascript">                <span class="hljs-string">&quot;add_2&quot;</span>: $(<span class="hljs-string">&quot;.add_no2&quot;</span>).<span class="hljs-title function_">val</span>(),</span><br><span class="language-javascript">            &#125;,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                $(<span class="hljs-string">&quot;.add_ret&quot;</span>).<span class="hljs-title function_">val</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">import</span> json<br><br><span class="hljs-comment"># Create your views here.</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">count</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-built_in">print</span>(request.POST)<br>    add_1 = <span class="hljs-built_in">int</span>(request.POST.get(<span class="hljs-string">&quot;add_1&quot;</span>))<br>    add_2 = <span class="hljs-built_in">int</span>(request.POST.get(<span class="hljs-string">&quot;add_2&quot;</span>))<br>    ret = add_1 + add_2<br><br>    <span class="hljs-keyword">return</span> HttpResponse(ret)<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、AJAX实现登录验证"><a href="#四、AJAX实现登录验证" class="headerlink" title="四、AJAX实现登录验证"></a>四、AJAX实现登录验证</h2><p>用户在页面输入用户名和密码，如果正确返回成功页面，错误则在登录页面提示用户名或者密码错误</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^login/$&#x27;</span>, views.login),<br>    url(<span class="hljs-string">r&#x27;^login/success/$&#x27;</span>, views.login_success),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- login.html --&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>    用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;user_name&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>    密 码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;login&quot;</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;#login&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/login/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">data</span>: &#123;</span><br><span class="language-javascript">                <span class="hljs-string">&quot;user_name&quot;</span>: $(<span class="hljs-string">&quot;#user_name&quot;</span>).<span class="hljs-title function_">val</span>(),</span><br><span class="language-javascript">                <span class="hljs-string">&quot;pwd&quot;</span>: $(<span class="hljs-string">&quot;#pwd&quot;</span>).<span class="hljs-title function_">val</span>()</span><br><span class="language-javascript">            &#125;,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data);  <span class="hljs-comment">// 得到的是 json 字符串</span></span><br><span class="language-javascript">                <span class="hljs-keyword">var</span> res = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(data);  <span class="hljs-comment">// 反序列化，得到 object</span></span><br><span class="language-javascript">                <span class="hljs-keyword">if</span> (res.<span class="hljs-property">user</span>) &#123;</span><br><span class="language-javascript">                    location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;/login/success/&quot;</span></span><br><span class="language-javascript">                &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="language-javascript">                    $(<span class="hljs-string">&quot;.content&quot;</span>).<span class="hljs-title function_">html</span>(res.<span class="hljs-property">msg</span>)</span><br><span class="language-javascript">                &#125;</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> User<br><span class="hljs-keyword">import</span> json<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        ret = &#123;<span class="hljs-string">&quot;user&quot;</span>: <span class="hljs-literal">None</span>, <span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-literal">None</span>&#125;<br><br>        name = request.POST.get(<span class="hljs-string">&quot;user_name&quot;</span>)<br>        pwd = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        user = User.objects.<span class="hljs-built_in">filter</span>(user_name=name, pwd=pwd).first()<br>        <span class="hljs-keyword">if</span> user:<br>            ret[<span class="hljs-string">&quot;user&quot;</span>] = user.user_name<br>        <span class="hljs-keyword">else</span>:<br>            ret[<span class="hljs-string">&quot;msg&quot;</span>] = <span class="hljs-string">&quot;username or password error&quot;</span><br><br>        <span class="hljs-comment"># 如果想要传输除了字符串以外其他的数据类型，需要传送前先序列化</span><br>        <span class="hljs-keyword">return</span> HttpResponse(json.dumps(ret))<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login_success</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;success.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># models.py</span><br><br><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span>(models.Model):<br>    user_name = models.CharField(max_length=<span class="hljs-number">32</span>)<br>    pwd = models.CharField(max_length=<span class="hljs-number">32</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、使用AJAX上传文件"><a href="#五、使用AJAX上传文件" class="headerlink" title="五、使用AJAX上传文件"></a>五、使用AJAX上传文件</h2><h3 id="5-1-使用form表单上传文件"><a href="#5-1-使用form表单上传文件" class="headerlink" title="5.1 使用form表单上传文件"></a><strong>5.1 使用form表单上传文件</strong></h3><p>在之前，我们简单介绍过使用 form 表单上传文件的方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^upload/$&#x27;</span>, views.upload),<br>    url(<span class="hljs-string">r&#x27;^upload/file/$&#x27;</span>, views.upload_file),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- upload.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/upload/file/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span> <span class="hljs-attr">enctype</span>=<span class="hljs-string">&quot;multipart/form-data&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>头像：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;avatar&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;upload.html&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    接收文件逻辑</span><br><span class="hljs-string">    :param request:</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>除了form表单发送数据的三要素外，还需要对form表的属性 enctype 进行值得设定，其实针对 enctype 属性，我们有必要要详细的引申一下。</p>
+<h3 id="5-2-Content-Type介绍"><a href="#5-2-Content-Type介绍" class="headerlink" title="5.2 Content-Type介绍"></a><strong>5.2 Content-Type介绍</strong></h3><p>​		我们知道，所有的网络请求都是要遵循 http 协议的，例如在前后端进行数据交互中，我们就要告知后端服务器，前端的数据是按照什么样的格式来封装的，那么后端就会根据该格式进行反解，这些数据的封装格式，都可以在 http 请求头中的 Content-Type 字段中看到，而form表单中的属性 enctype，就是用于固定数据传输封装的格式的。</p>
+<ul>
+<li>当传输非文件数据时，不用写 enctype 或者 enctype  &#x3D; “application&#x2F;x-www-form-urlencoded”</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/upload/file/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果不规定 enctype 的值，enctype 就会使用”application&#x2F;x-www-form-urlencoded”作为默认值，此时我们从web页面查看请求头可以发现Content-Type的值为application&#x2F;x-www-form-urlencoded</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># Request Headers</span><br><br><span class="hljs-attribute">POST</span> /upload/file/ HTTP/<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">Host</span>: <span class="hljs-number">127.0.0.1:8000</span><br><span class="hljs-attribute">Connection</span>: keep-alive<br><span class="hljs-attribute">Content</span>-Length: <span class="hljs-number">83</span><br><span class="hljs-attribute">Cache</span>-Control: max-age=<span class="hljs-number">0</span><br><span class="hljs-attribute">Origin</span>: http://<span class="hljs-number">127.0.0.1:8000</span><br><span class="hljs-attribute">Upgrade</span>-Insecure-Requests: <span class="hljs-number">1</span><br><span class="hljs-attribute">Content</span>-Type: application/x-www-form-urlencoded<br><span class="hljs-attribute">User</span>-Agent: Mozilla/<span class="hljs-number">5</span>.<span class="hljs-number">0</span> (Windows NT <span class="hljs-number">10</span>.<span class="hljs-number">0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537</span>.<span class="hljs-number">36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">80</span>.<span class="hljs-number">0</span>.<span class="hljs-number">3987</span>.<span class="hljs-number">122</span> Safari/<span class="hljs-number">537</span>.<span class="hljs-number">36</span><br><span class="hljs-attribute">Sec</span>-Fetch-Dest: document<br><span class="hljs-attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span>,image/webp,image/apng,*/*;q=<span class="hljs-number">0</span>.<span class="hljs-number">8</span>,application/signed-exchange;v=b3;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span><br><span class="hljs-attribute">Sec</span>-Fetch-Site: same-origin<br><span class="hljs-attribute">Sec</span>-Fetch-Mode: navigate<br><span class="hljs-attribute">Sec</span>-Fetch-User: ?<span class="hljs-number">1</span><br><span class="hljs-attribute">Referer</span>: http://<span class="hljs-number">127.0.0.1:8000</span>/upload/<br><span class="hljs-attribute">Accept</span>-Encoding: gzip, deflate, br<br><span class="hljs-attribute">Accept</span>-Language: zh-CN,zh;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span><br><span class="hljs-attribute">Cookie</span>: csrftoken=<span class="hljs-number">1</span>rBhf4zliEruWHaoPmvQurF4RirU36j0D5snKSSkIdnbcZUiWEQysFvBSJJuBzGt<br><br><br><span class="hljs-comment"># Form Data</span><br><span class="hljs-attribute">name</span>=cdc&amp;pwd=<span class="hljs-number">123456</span><br></code></pre></td></tr></table></figure>
+
+<p>此时，发送的数据就会按照urlencoded的格式封装在请求体中，当django服务器检测到数据传输的格式是urlencoded时，就会对请求他中的数据进一步处理，把数据处理成QueryDict的形式，并封装到request.POST中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 在视图中分别查看请求体和request.POST中的内容</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    接收文件逻辑</span><br><span class="hljs-string">    :param request:</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;body中的内容&quot;</span>, request.body)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;psot中的内容&quot;</span>,request.POST)<br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta"># 输出结果</span><br>body中的内容 b&#x27;name=cdc&amp;pwd=<span class="hljs-number">123456</span>&#x27;<br>psot中的内容 &lt;QueryDict<span class="hljs-punctuation">:</span> &#123;&#x27;name&#x27;<span class="hljs-punctuation">:</span> [&#x27;cdc&#x27;]<span class="hljs-punctuation">,</span> &#x27;pwd&#x27;<span class="hljs-punctuation">:</span> [&#x27;<span class="hljs-number">123456</span>&#x27;]&#125;&gt;<br></code></pre></td></tr></table></figure>
+
+<p>所以，当数据的传输方式为urlencoded时，发送的数据是以 b’name&#x3D;cdc&amp;pwd&#x3D;123456’ 的形式封装在请求体中的，django机制会对数据进一步处理。但是如果使用该方式传输文件时：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/upload/file/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span> <span class="hljs-attr">enctype</span>=<span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>头像：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;avatar&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    接收文件逻辑</span><br><span class="hljs-string">    :param request:</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;body中的内容&quot;</span>, request.body)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;psot中的内容&quot;</span>, request.POST)<br>    <span class="hljs-built_in">print</span>(request.POST.get(<span class="hljs-string">&quot;name&quot;</span>))<br>    <span class="hljs-built_in">print</span>(request.FILES.get(<span class="hljs-string">&quot;avatar&quot;</span>))<br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-comment"># 输出的结果</span><br>body中的内容 b<span class="hljs-string">&#x27;name=cdc&amp;avatar=my_avatar.jpg&#x27;</span><br>psot中的内容 &lt;QueryDict: &#123;<span class="hljs-string">&#x27;name&#x27;</span>: [<span class="hljs-string">&#x27;cdc&#x27;</span>], <span class="hljs-string">&#x27;avatar&#x27;</span>: [<span class="hljs-string">&#x27;my_avatar.jpg&#x27;</span>]&#125;&gt;<br>cdc<br><span class="hljs-literal">None</span><br></code></pre></td></tr></table></figure>
+
+<p>只能接收到文件名，但是无法接收文件的实际内容，因此涉及到文件传输时，该数据传输方式无法满足</p>
+<ul>
+<li>当传输文件时，enctype  &#x3D; “multipart&#x2F;form-data”</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/upload/file/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span> <span class="hljs-attr">enctype</span>=<span class="hljs-string">&quot;multipart/form-data&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>头像：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;avatar&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    接收文件逻辑</span><br><span class="hljs-string">    :param request:</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;body中的内容&quot;</span>, request.body)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;psot中的内容&quot;</span>, request.POST)<br>    <span class="hljs-built_in">print</span>(request.POST.get(<span class="hljs-string">&quot;name&quot;</span>))<br>    <span class="hljs-built_in">print</span>(request.FILES.get(<span class="hljs-string">&quot;avatar&quot;</span>))<br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust"># 结果<br><br>body中的内容 <span class="hljs-string">b&#x27;------WebKitFormBoundaryWvWLmKBZEWP4XMzK<span class="hljs-char escape_">\r</span><span class="hljs-char escape_">\n</span>Content-Disposition: form-data; name=&quot;name&quot;<span class="hljs-char escape_">\r</span><span class="hljs-char escape_">\n</span><span class="hljs-char escape_">\r</span><span class="hljs-char escape_">\n</span>cdc<span class="hljs-char escape_">\r</span><span class="hljs-char escape_">\n</span>------WebKitFormBoundaryWvWLmKBZEWP4XMzK<span class="hljs-char escape_">\r</span><span class="hljs-char escape_">\n</span>Content-Disposition: form-data; name=&quot;avatar&quot;; filename=&quot;<span class="hljs-char escape_">\x</span>e9<span class="hljs-char escape_">\x</span>99<span class="hljs-char escape_">\x</span>88<span class="hljs-char escape_">\x</span>e8......</span><br><span class="hljs-string"></span><br><span class="hljs-string">psot中的内容 &lt;QueryDict: &#123;&#x27;</span>name<span class="hljs-string">&#x27;: [&#x27;</span>cdc<span class="hljs-string">&#x27;]&#125;&gt;</span><br><span class="hljs-string"></span><br><span class="hljs-string">cdc</span><br><span class="hljs-string"></span><br><span class="hljs-string">my_avatar.jpg</span><br></code></pre></td></tr></table></figure>
+
+<p>我们再从前端观察以下请求相关的信息</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># Request Headers</span><br><br><span class="hljs-attribute">POST</span> /upload/file/ HTTP/<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">Host</span>: <span class="hljs-number">127.0.0.1:8000</span><br><span class="hljs-attribute">Connection</span>: keep-alive<br><span class="hljs-attribute">Content</span>-Length: <span class="hljs-number">108825</span><br><span class="hljs-attribute">Cache</span>-Control: max-age=<span class="hljs-number">0</span><br><span class="hljs-attribute">Origin</span>: http://<span class="hljs-number">127.0.0.1:8000</span><br><span class="hljs-attribute">Upgrade</span>-Insecure-Requests: <span class="hljs-number">1</span><br><span class="hljs-attribute">Content</span>-Type: multipart/form-data; boundary=----WebKitFormBoundary7Nna5hqVK9fCxR1m<br><span class="hljs-attribute">User</span>-Agent: Mozilla/<span class="hljs-number">5</span>.<span class="hljs-number">0</span> (Windows NT <span class="hljs-number">10</span>.<span class="hljs-number">0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537</span>.<span class="hljs-number">36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">80</span>.<span class="hljs-number">0</span>.<span class="hljs-number">3987</span>.<span class="hljs-number">122</span> Safari/<span class="hljs-number">537</span>.<span class="hljs-number">36</span><br><span class="hljs-attribute">Sec</span>-Fetch-Dest: document<br><span class="hljs-attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span>,image/webp,image/apng,*/*;q=<span class="hljs-number">0</span>.<span class="hljs-number">8</span>,application/signed-exchange;v=b3;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span><br><span class="hljs-attribute">Sec</span>-Fetch-Site: same-origin<br><span class="hljs-attribute">Sec</span>-Fetch-Mode: navigate<br><span class="hljs-attribute">Sec</span>-Fetch-User: ?<span class="hljs-number">1</span><br><span class="hljs-attribute">Referer</span>: http://<span class="hljs-number">127.0.0.1:8000</span>/upload/<br><span class="hljs-attribute">Accept</span>-Encoding: gzip, deflate, br<br><span class="hljs-attribute">Accept</span>-Language: zh-CN,zh;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span><br><span class="hljs-attribute">Cookie</span>: csrftoken=<span class="hljs-number">1</span>rBhf4zliEruWHaoPmvQurF4RirU36j0D5snKSSkIdnbcZUiWEQysFvBSJJuBzGt<br></code></pre></td></tr></table></figure>
+
+<p>此时 Content-Type的值也变为了 multipart&#x2F;form-data，当然Content-Type除了这两种数据传输的格式，还有其他的方式，下面我们还会学习如何使用ajax发送json格式的数据。</p>
+<p><strong>总结：</strong></p>
+<ol>
+<li>不过以何种方式传输数据，只要是POST请求，数据都会以对于的方式封装在请求体中，换句话说，在后台通过request.body都是可以获取到数据的，我们可以自己取出数据并处理。</li>
+<li>只有当contentType为urlencoded方式时，request.POST中才有数据，这是django机制帮我们做了进一步的处理。</li>
+<li>后台接收文件对象时，必须使用 FILES.get() 方法</li>
+</ol>
+<h3 id="5-3-使用AJAX发送json格式的数据"><a href="#5-3-使用AJAX发送json格式的数据" class="headerlink" title="5.3 使用AJAX发送json格式的数据"></a><strong>5.3 使用AJAX发送json格式的数据</strong></h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.btn&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/test/ajax/json/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">contentType</span>: <span class="hljs-string">&quot;application/json&quot;</span>,  <span class="hljs-comment">// 和form表单发送数据一样，要规定数据的传输方式，这里规定以json格式传输</span></span><br><span class="language-javascript">            <span class="hljs-attr">data</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(   <span class="hljs-comment">// 将 object 对象序列化成 json 对象</span></span><br><span class="language-javascript">                &#123;</span><br><span class="language-javascript">                    <span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>,</span><br><span class="language-javascript">                    <span class="hljs-string">&quot;b&quot;</span>: <span class="hljs-number">2</span></span><br><span class="language-javascript">                &#125;</span><br><span class="language-javascript">            ),</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>:<span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ajax_json</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;body中的内容&quot;</span>, request.body)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;psot中的内容&quot;</span>, request.POST)<br><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;Ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 视图函数打印结果</span><br><br><span class="hljs-attribute">body</span>中的内容 b&#x27;&#123;<span class="hljs-string">&quot;a&quot;</span>:<span class="hljs-number">1</span>,<span class="hljs-string">&quot;b&quot;</span>:<span class="hljs-number">2</span>&#125;&#x27;<br><span class="hljs-attribute">psot</span>中的内容 &lt;QueryDict: &#123;&#125;&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我们再来看一下前端的请求相关的信息</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment"># Request Headers</span><br><br>POST /test/ajax/json/ HTTP/1.1<br><span class="hljs-section">Host: 127.0.0.1:8000</span><br><span class="hljs-section">Connection: keep-alive</span><br><span class="hljs-section">Content-Length: 13</span><br><span class="hljs-section">Accept: */*</span><br><span class="hljs-section">Sec-Fetch-Dest: empty</span><br><span class="hljs-section">X-Requested-With: XMLHttpRequest</span><br><span class="hljs-section">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36</span><br><span class="hljs-section">Content-Type: application/json</span><br><span class="hljs-section">Origin: http://127.0.0.1:8000</span><br><span class="hljs-section">Sec-Fetch-Site: same-origin</span><br><span class="hljs-section">Sec-Fetch-Mode: cors</span><br><span class="hljs-section">Referer: http://127.0.0.1:8000/upload/</span><br><span class="hljs-section">Accept-Encoding: gzip, deflate, br</span><br><span class="hljs-section">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="hljs-section">Cookie: csrftoken=1rBhf4zliEruWHaoPmvQurF4RirU36j0D5snKSSkIdnbcZUiWEQysFvBSJJuBzGt</span><br><br><br><br><span class="hljs-comment"># Form Data</span><br><br><span class="hljs-section">&#123;&quot;a&quot;:1,&quot;b&quot;:2&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>通过测试我们可以知道，json格式的传输方式是将数据按照键值对的排列方式进行封装的，由于不是urlencoded方式，所以request.POST无法拿到数据，但是数据还是会被封装在请求体中。</p>
+<h3 id="5-4-Ajax上传文件"><a href="#5-4-Ajax上传文件" class="headerlink" title="5.4 Ajax上传文件"></a><strong>5.4 Ajax上传文件</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^upload/$&#x27;</span>, views.upload),<br>    url(<span class="hljs-string">r&#x27;^upload/file/$&#x27;</span>, views.upload_file),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- upload.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>文件上传示例<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>头像：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;avatar&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.btn&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">    	<span class="hljs-comment">// 固定写法</span></span><br><span class="language-javascript">        <span class="hljs-keyword">var</span> formdata = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>();</span><br><span class="language-javascript">        formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;name&quot;</span>, $(<span class="hljs-string">&quot;.name&quot;</span>).<span class="hljs-title function_">val</span>());</span><br><span class="language-javascript">        formdata.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;avatar&quot;</span>, $(<span class="hljs-string">&quot;.avatar&quot;</span>)[<span class="hljs-number">0</span>].<span class="hljs-property">files</span>[<span class="hljs-number">0</span>]);  <span class="hljs-comment">// 获取文件的实际内容</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/upload/file/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">contentType</span>: <span class="hljs-literal">false</span>,  </span><br><span class="language-javascript">            <span class="hljs-attr">processData</span>: <span class="hljs-literal">false</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">data</span>:formdata,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>:<span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> Django_AJAX.settings <span class="hljs-keyword">import</span> BASE_DIR<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    接收文件逻辑</span><br><span class="hljs-string">    :param request:</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;body中的内容&quot;</span>, request.body)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;psot中的内容&quot;</span>, request.POST)<br>    name = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>    file_obj = request.FILES.get(<span class="hljs-string">&quot;avatar&quot;</span>)<br><br>    file_name = os.path.join(BASE_DIR, <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;name&#125;</span>_avatar.jpg&quot;</span>)<br><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_name, <span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> fw:<br>        <span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> file_obj.chunks():<br>            fw.write(chunk)<br><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="六、AJAX设置csrf-token"><a href="#六、AJAX设置csrf-token" class="headerlink" title="六、AJAX设置csrf_token"></a>六、AJAX设置csrf_token</h2><h3 id="6-1-方式一"><a href="#6-1-方式一" class="headerlink" title="6.1 方式一"></a><strong>6.1 方式一</strong></h3><ul>
+<li>通过获取隐藏的input标签中的csrfmiddlewaretoken值，放置在data中发送。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>&#123;% csrf_token %&#125;<br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.btn&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/test/ajax/csrf/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">data</span>: &#123;</span><br><span class="language-javascript">                <span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>,</span><br><span class="language-javascript">                <span class="hljs-string">&quot;b&quot;</span>: <span class="hljs-number">2</span>,</span><br><span class="language-javascript">                <span class="hljs-string">&quot;csrfmiddlewaretoken&quot;</span>: $(<span class="hljs-string">&quot;[name=&#x27;csrfmiddlewaretoken&#x27;]&quot;</span>).<span class="hljs-title function_">val</span>()  <span class="hljs-comment">// 使用jQuery取出csrfmiddlewaretoken的值，拼接到data中</span></span><br><span class="language-javascript">            &#125;,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>:<span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="6-2-方式二"><a href="#6-2-方式二" class="headerlink" title="6.2 方式二"></a><strong>6.2 方式二</strong></h3><ul>
+<li>通过获取返回的cookie中的字符串 放置在请求头中发送。此时需要引入一个 jquery.cookie.js 插件。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/static/js/jquery.cookie.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>&#123;% csrf_token %&#125;<br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    $(<span class="hljs-string">&quot;.btn&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        $.<span class="hljs-title function_">ajax</span>(&#123;</span><br><span class="language-javascript">            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/test/ajax/csrf/&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;post&quot;</span>,</span><br><span class="language-javascript">            <span class="hljs-attr">headers</span>: &#123;<span class="hljs-string">&quot;X-CSRFToken&quot;</span>: $.<span class="hljs-title function_">cookie</span>(<span class="hljs-string">&quot;csrftoken&quot;</span>)&#125;,  <span class="hljs-comment">// 从Cookie取csrftoken，并设置到请求头中</span></span><br><span class="language-javascript">            <span class="hljs-attr">data</span>: &#123;</span><br><span class="language-javascript">                <span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>,</span><br><span class="language-javascript">                <span class="hljs-string">&quot;b&quot;</span>: <span class="hljs-number">2</span>,</span><br><span class="language-javascript">            &#125;,</span><br><span class="language-javascript">            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;</span><br><span class="language-javascript">                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data)</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;)</span><br><span class="language-javascript">    &#125;)</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="6-3-方式三"><a href="#6-3-方式三" class="headerlink" title="6.3 方式三"></a><strong>6.3 方式三</strong></h3><ul>
+<li>自己手写一个获取cookie的方法</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getCookie</span>(<span class="hljs-params">name</span>) &#123;<br>    <span class="hljs-keyword">var</span> cookieValue = <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span> &amp;&amp; <span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span> !== <span class="hljs-string">&#x27;&#x27;</span>) &#123;<br>        <span class="hljs-keyword">var</span> cookies = <span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;;&#x27;</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; cookies.<span class="hljs-property">length</span>; i++) &#123;<br>            <span class="hljs-keyword">var</span> cookie = jQuery.<span class="hljs-title function_">trim</span>(cookies[i]);<br>            <span class="hljs-comment">// Does this cookie string begin with the name we want?</span><br>            <span class="hljs-keyword">if</span> (cookie.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, name.<span class="hljs-property">length</span> + <span class="hljs-number">1</span>) === (name + <span class="hljs-string">&#x27;=&#x27;</span>)) &#123;<br>                cookieValue = <span class="hljs-built_in">decodeURIComponent</span>(cookie.<span class="hljs-title function_">substring</span>(name.<span class="hljs-property">length</span> + <span class="hljs-number">1</span>));<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> cookieValue;<br>&#125;<br><span class="hljs-keyword">var</span> csrftoken = <span class="hljs-title function_">getCookie</span>(<span class="hljs-string">&#x27;csrftoken&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>每一次都这么写太麻烦了，可以使用$.ajaxSetup()方法为ajax请求统一设置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">csrfSafeMethod</span>(<span class="hljs-params">method</span>) &#123;<br>  <span class="hljs-comment">// these HTTP methods do not require CSRF protection</span><br>  <span class="hljs-keyword">return</span> (<span class="hljs-regexp">/^(GET|HEAD|OPTIONS|TRACE)$/</span>.<span class="hljs-title function_">test</span>(method));<br>&#125;<br><br>$.<span class="hljs-title function_">ajaxSetup</span>(&#123;<br>  <span class="hljs-attr">beforeSend</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">xhr, settings</span>) &#123;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">csrfSafeMethod</span>(settings.<span class="hljs-property">type</span>) &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">crossDomain</span>) &#123;<br>      xhr.<span class="hljs-title function_">setRequestHeader</span>(<span class="hljs-string">&quot;X-CSRFToken&quot;</span>, csrftoken);<br>    &#125;<br>  &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：</p>
+<p>如果使用从cookie中取csrftoken的方式，需要确保cookie存在csrftoken值。如果你的视图渲染的HTML文件中没有包含  <code>&#123;% csrf_token %&#125;</code>，Django可能不会设置CSRFtoken的cookie。这个时候需要使用ensure_csrf_cookie()装饰器强制设置Cookie。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.views.decorators.csrf <span class="hljs-keyword">import</span> ensure_csrf_cookie<br><br><br><span class="hljs-meta">@ensure_csrf_cookie</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ajax_csrf</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;ajax_csrf.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>https://clark-cdc.github.io/2025/01/30/0508-使用AJAX和后台交互/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/30/0507-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%BA%8C)/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/30/0509-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%88%86%E9%A1%B5%E5%99%A8/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

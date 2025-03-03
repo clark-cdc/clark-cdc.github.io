@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="生成器的本质和定义方式本质：生成器实际上就是一个迭代器。 生成器的定义方式主要有三种：  通过生成器函数 通过各种推导式来实现生成器 通过数据的转换也可以获取生成器  生成器函数12345678910# 普通函数def func():    print(&quot;My name is cdc&quot;)    return &quot;Hello&quot;print(func())&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 生成器">
+<meta property="og:url" content="https://clark-cdc.github.io/2019/05/01/0009-%E7%94%9F%E6%88%90%E5%99%A8/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="生成器的本质和定义方式本质：生成器实际上就是一个迭代器。 生成器的定义方式主要有三种：  通过生成器函数 通过各种推导式来实现生成器 通过数据的转换也可以获取生成器  生成器函数12345678910# 普通函数def func():    print(&quot;My name is cdc&quot;)    return &quot;Hello&quot;print(func())&amp;quot">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Python.jpeg">
+<meta property="article:published_time" content="2019-05-01T06:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-03T13:49:13.775Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Python.jpeg">
+  
+  
+  
+  <title>Python 生成器 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python 生成器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-05-01 14:00" pubdate>
+          2019年5月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Python 生成器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="生成器的本质和定义方式"><a href="#生成器的本质和定义方式" class="headerlink" title="生成器的本质和定义方式"></a>生成器的本质和定义方式</h2><p>本质：生成器实际上就是一个迭代器。</p>
+<p>生成器的定义方式主要有三种：</p>
+<ul>
+<li>通过生成器函数</li>
+<li>通过各种推导式来实现生成器</li>
+<li>通过数据的转换也可以获取生成器</li>
+</ul>
+<h2 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 普通函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello&quot;</span><br><br><span class="hljs-built_in">print</span>(func())<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 函数中包含了yield, 当前这个函数就不再是普通的函数了. 是生成器函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br><br>func()         <span class="hljs-comment"># 什么都没有打印</span><br><span class="hljs-built_in">print</span>(func())  <span class="hljs-comment"># &lt;generator object func at 0x000001F69ADAC258&gt;  输出结果是一个生成器函数对象的地址，因此func()这一步相当于就是创建了一个生成器</span><br><br><span class="hljs-comment"># 生成器本质就是装饰器，因此可以用next方法取值</span><br>g = func()<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">结果</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 对于普通函数而言，出现多个return，只会执行到第一return，后面的语句不再执行</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br><br>func()<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">结果</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><br><span class="hljs-comment"># 对于生成器而言，有多个yield并不影响函数的执行，每当调用一次next，就会从上一个yield执行到下一个yield</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br><br>g = func()<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">结果</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">My age is 18</span><br><span class="hljs-string">18</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-comment"># 若通过next取值的个数超过函数中yield的个数，则溢出，报停止迭代错误</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br><br>g = func()<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">My age is 18</span><br><span class="hljs-string">18</span><br><span class="hljs-string">哈哈哈</span><br><span class="hljs-string">Traceback (most recent call last):</span><br><span class="hljs-string">  File &quot;F:/生成器.py&quot;, line 12, in &lt;module&gt;</span><br><span class="hljs-string">    print(g.__next__())</span><br><span class="hljs-string">StopIteration</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="生成器函数的send方法"><a href="#生成器函数的send方法" class="headerlink" title="生成器函数的send方法"></a>生成器函数的send方法</h2><p>send 方法也和 next 一样，也可以让生成器向下执行一次，但是同时可以给上一个 yield 返回一个值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    a = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;a&quot;</span>,a)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    b = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br>    c = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;over&quot;</span><br><br><br>g = func()<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">1111</span>))<br><span class="hljs-built_in">print</span>(g.__next__())<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">a 1111</span><br><span class="hljs-string">My age is 18</span><br><span class="hljs-string">18</span><br><span class="hljs-string">哈哈哈</span><br><span class="hljs-string">over</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+ <img src="/static/img/生成器函数send执行流程.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:67%;" />     
+
+
+
+<p><strong>send 方法的注意事项：</strong></p>
+<ul>
+<li>send 方法前面必须有next方法，即send方法不能作为第一个方法使用。因为 send 方法是将值传到前一个 yield 中，若一开始就使用 send 方法，将找不到 yield；</li>
+<li>send 方法不能放在最后使用，因为 send 和 next 一样，调用时会从当前的 yield 执行到下一个 yield，最后使用 send，找不到下一个 yield 将会报溢出错误。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    a = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;a&quot;</span>,a)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    b = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;b&quot;</span>,b)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br>    c = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;over&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;c&quot;</span>,c)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;呵呵&quot;</span>)<br><br><span class="hljs-comment"># 不能将send作为第一个方法</span><br>g = func()<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">2222</span>))  <span class="hljs-comment"># TypeError: can&#x27;t send non-None value to a just-started generator</span><br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">1111</span>))<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.__next__())<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My name is cdc&quot;</span>)<br>    a = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;Hello&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;a&quot;</span>, a)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;My age is 18&quot;</span>)<br>    b = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;18&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;b&quot;</span>, b)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;哈哈哈&quot;</span>)<br>    c = <span class="hljs-keyword">yield</span> <span class="hljs-string">&quot;over&quot;</span>  <span class="hljs-comment">#  此处c还是可以接收到最后一个send传过来的值的，只是再往下找yield的时候会报错</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;c&quot;</span>, c)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;呵呵&quot;</span>)<br><br><span class="hljs-comment"># 不能在最后使用send</span><br>g = func()<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">1111</span>))<br><span class="hljs-built_in">print</span>(g.__next__())<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">2222</span>))<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">My name is cdc</span><br><span class="hljs-string">Hello</span><br><span class="hljs-string">a 1111</span><br><span class="hljs-string">My age is 18</span><br><span class="hljs-string">18</span><br><span class="hljs-string">b None</span><br><span class="hljs-string">哈哈哈</span><br><span class="hljs-string">over</span><br><span class="hljs-string">c 2222</span><br><span class="hljs-string">呵呵</span><br><span class="hljs-string">Traceback (most recent call last):</span><br><span class="hljs-string">    print(g.send(2222))</span><br><span class="hljs-string">StopIteration</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>生成器的元素可以通过 for 循环遍历取出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">111</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">222</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">333</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">444</span><br>	<br>g = func()<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> g:<br>	<span class="hljs-built_in">print</span>(i)<br>	<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">111</span><br><span class="hljs-string">222</span><br><span class="hljs-string">333</span><br><span class="hljs-string">444</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>生成器的元素还可以通过转换数据类型获取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">111</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">222</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">333</span><br>	<span class="hljs-keyword">yield</span> <span class="hljs-number">444</span><br>	<br>g = func()<br>lst = <span class="hljs-built_in">list</span>(g)<br><span class="hljs-built_in">print</span>(lst)<br><br><span class="hljs-comment"># [111, 222, 333, 444]</span><br></code></pre></td></tr></table></figure>
+
+<p>转换成列表类型后，会自动执行生成器中的 next 方法取出所有数据</p>
+<h2 id="推导式实现生成器"><a href="#推导式实现生成器" class="headerlink" title="推导式实现生成器"></a>推导式实现生成器</h2><h3 id="一、列表推导式"><a href="#一、列表推导式" class="headerlink" title="一、列表推导式"></a><strong>一、列表推导式</strong></h3><p>首先我们来看一段代码，要求给出一个列表，向列表中添加1-13</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">lst = <span class="hljs-built_in">list</span>()<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">14</span>):<br>	lst.append(i)<br></code></pre></td></tr></table></figure>
+
+<p>换成列表推导式的形式</p>
+<p>语法 ：[最终结果(变量) for 变量 in 可迭代对象]</p>
+<p>返回结果：按要求操作过后的列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">lst = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">14</span>)]<br></code></pre></td></tr></table></figure>
+
+<p>列表推导式的常用语法： [ 结果 for 变量 in 可迭代对象]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 例：从python1到python14写入列表lst</span><br>lst = [<span class="hljs-string">&#x27;python%s&#x27;</span> % i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">15</span>)] <br><span class="hljs-built_in">print</span>(lst)<br></code></pre></td></tr></table></figure>
+
+<p>还可以对列表中的数据进行筛选：[ 结果 for 变量 in 可迭代对象 if 条件 ] </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 获取1-100内所有的偶数 </span><br>lst = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">100</span>) <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>] <br><span class="hljs-built_in">print</span>(lst) <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 小练习</span><br><span class="hljs-comment"># 1. 获取1-100内能被3整除的数</span><br>lst = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">101</span>) <span class="hljs-keyword">if</span> i % <span class="hljs-number">3</span> == <span class="hljs-number">0</span>]<br><br><span class="hljs-comment"># 2. 100以内能被3整除的数的平方</span><br>lst = [i * i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">101</span>) <span class="hljs-keyword">if</span> i % <span class="hljs-number">3</span> == <span class="hljs-number">0</span>]<br><br><span class="hljs-comment"># 3. 寻找名字中带有两个e的⼈的名字</span><br>names = [[<span class="hljs-string">&#x27;Tom&#x27;</span>, <span class="hljs-string">&#x27;Billy&#x27;</span>, <span class="hljs-string">&#x27;Jefferson&#x27;</span>, <span class="hljs-string">&#x27;Andrew&#x27;</span>, <span class="hljs-string">&#x27;Wesley&#x27;</span>, <span class="hljs-string">&#x27;Steven&#x27;</span>, <span class="hljs-string">&#x27;Joe&#x27;</span>],<br>         [<span class="hljs-string">&#x27;Alice&#x27;</span>, <span class="hljs-string">&#x27;Jill&#x27;</span>, <span class="hljs-string">&#x27;Ana&#x27;</span>, <span class="hljs-string">&#x27;Wendy&#x27;</span>, <span class="hljs-string">&#x27;Jennifer&#x27;</span>, <span class="hljs-string">&#x27;Sherry&#x27;</span>, <span class="hljs-string">&#x27;Eva&#x27;</span>]]<br>lst = [name <span class="hljs-keyword">for</span> first <span class="hljs-keyword">in</span> names <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> first <span class="hljs-keyword">if</span> name.count(<span class="hljs-string">&quot;e&quot;</span>) == <span class="hljs-number">2</span>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="二、生成器表达式"><a href="#二、生成器表达式" class="headerlink" title="二、生成器表达式"></a><strong>二、生成器表达式</strong></h3><p>生成器表达式和列表推导式的语法基本上是一样的，只是把[]替换成()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">gen = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>)) <br><span class="hljs-built_in">print</span>(gen) <br><span class="hljs-comment"># 打印结果是一个生成器: &lt;generator object &lt;genexpr&gt; at 0x106768f10&gt; </span><br></code></pre></td></tr></table></figure>
+
+<p> 可以通过for循环取值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">gen = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>)) <br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> gen:<br>	<span class="hljs-built_in">print</span>(i)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 小练习 生成器表达式版</span><br><span class="hljs-comment"># 获取1-100内能被3整除的数 </span><br>gen = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">100</span>) <span class="hljs-keyword">if</span> i % <span class="hljs-number">3</span> == <span class="hljs-number">0</span>) <br><span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> gen:    <br>	<span class="hljs-built_in">print</span>(num) <br>	<br><span class="hljs-comment"># 100以内能被3整除的数的平方 </span><br>gen = (i * i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">if</span> i % <span class="hljs-number">3</span> == <span class="hljs-number">0</span>) <br><span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> gen:    <br>	<span class="hljs-built_in">print</span>(num) <br><br><span class="hljs-comment"># 寻找名字中带有两个e的⼈人的名字 </span><br>gen = (name <span class="hljs-keyword">for</span> first <span class="hljs-keyword">in</span> names <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> first <span class="hljs-keyword">if</span> name.count(<span class="hljs-string">&quot;e&quot;</span>) &gt;= <span class="hljs-number">2</span>) <br><span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> gen:    <br>	<span class="hljs-built_in">print</span>(name)<br></code></pre></td></tr></table></figure>
+
+<p>生成器表达式和列表推导式的区别：</p>
+<ul>
+<li>列表推导式比较耗内存，将所有数据一次性加载。生成器表达式几乎不占用内存，使用的时候才分配和使用内存 </li>
+<li>得到的值不一样，列表推导式得到的是一个列表，生成器表达式获取的是一个生成器。</li>
+</ul>
+<p>使用生成器表达式的好处就在于节省内存空间，比如一共有一万个元素，使用列表就需要为这一万个元素开辟一万个内存空间。使用生成器只需要开辟一个内存空间，由于生成器的惰性机制，只有问它要值得时候才会给你返回，因此当第一个值使用完后，就会把内存空间释放，放索取第二个值的时候，再开辟一个内存空间给第二个值使用，使用后再释放。所有对于一万个元素来说，只用了一个元素的内存空间。</p>
+<h2 id="其他推导式"><a href="#其他推导式" class="headerlink" title="其他推导式"></a>其他推导式</h2><h3 id="一、字典推导式"><a href="#一、字典推导式" class="headerlink" title="一、字典推导式"></a><strong>一、字典推导式</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 把字典中的key和value互换 </span><br>dic = &#123;<span class="hljs-string">&#x27;a&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;b&#x27;</span>: <span class="hljs-string">&#x27;2&#x27;</span>&#125; <br>new_dic = &#123;dic[key]: key <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> dic&#125; <br><span class="hljs-built_in">print</span>(new_dic) <br><br><span class="hljs-comment"># 在以下list中. 从lst1中获取的数据和lst2中相对应的位置的数据组成⼀个新字典 </span><br>lst1 = [<span class="hljs-string">&#x27;jay&#x27;</span>, <span class="hljs-string">&#x27;jj&#x27;</span>, <span class="hljs-string">&#x27;sylar&#x27;</span>] <br>lst2 = [<span class="hljs-string">&#x27;周杰伦&#x27;</span>, <span class="hljs-string">&#x27;林林俊杰&#x27;</span>, <span class="hljs-string">&#x27;邱彦涛&#x27;</span>] <br>dic = &#123;lst1[i]: lst2[i] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(lst1))&#125; <br><span class="hljs-built_in">print</span>(dic)<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="二、集合推导式"><a href="#二、集合推导式" class="headerlink" title="二、集合推导式"></a><strong>二、集合推导式</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 绝对值去重 </span><br>lst = [<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">8</span>, <span class="hljs-number">12</span>] <br>s = &#123;<span class="hljs-built_in">abs</span>(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> lst&#125; <br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p><strong>注：没有元组推导式</strong></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python 生成器</div>
+      <div>https://clark-cdc.github.io/2019/05/01/0009-生成器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年5月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/05/01/0010-%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/" title="Python 内置函数">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python 内置函数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/04/12/0008-%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="Python 迭代器">
+                        <span class="hidden-mobile">Python 迭代器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

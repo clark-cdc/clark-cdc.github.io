@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="进程的创建以及使用一、创建进程方式一：直接创建 ​		process 模块是 multiprocessing库一个创建进程的模块，借助这个模块，就可以完成进程的创建。 ​		Process([group [, target [, name [, args [, kwargs]]]]])，由该类实例化得到的对象，表示一个子进程中的任		务（尚未启动） 参数说明：  group     参数未使用，值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 多进程开发">
+<meta property="og:url" content="https://clark-cdc.github.io/2019/05/13/0015-%E5%A4%9A%E8%BF%9B%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="进程的创建以及使用一、创建进程方式一：直接创建 ​		process 模块是 multiprocessing库一个创建进程的模块，借助这个模块，就可以完成进程的创建。 ​		Process([group [, target [, name [, args [, kwargs]]]]])，由该类实例化得到的对象，表示一个子进程中的任		务（尚未启动） 参数说明：  group     参数未使用，值">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Python.jpeg">
+<meta property="article:published_time" content="2019-05-13T10:30:00.000Z">
+<meta property="article:modified_time" content="2025-03-03T13:55:04.937Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Python.jpeg">
+  
+  
+  
+  <title>Python 多进程开发 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python 多进程开发"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-05-13 18:30" pubdate>
+          2019年5月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Python 多进程开发</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="进程的创建以及使用"><a href="#进程的创建以及使用" class="headerlink" title="进程的创建以及使用"></a>进程的创建以及使用</h2><h3 id="一、创建进程"><a href="#一、创建进程" class="headerlink" title="一、创建进程"></a><strong>一、创建进程</strong></h3><p><strong>方式一：直接创建</strong></p>
+<p>​		process 模块是 multiprocessing库一个创建进程的模块，借助这个模块，就可以完成进程的创建。</p>
+<p>​		Process([group [, target [, name [, args [, kwargs]]]]])，由该类实例化得到的对象，表示一个子进程中的任		务（尚未启动）</p>
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>group     参数未使用，值始终为None</li>
+<li>target     表示调用对象，即子进程要执行的任务</li>
+<li>args       表示调用对象的位置参数元组，args&#x3D;(1,2,’egon’,)</li>
+<li>kwargs   表示调用对象的字典,kwargs&#x3D;{‘name’:’egon’,’age’:18}</li>
+<li>name      为子进程的名称</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 补充：os模块的 getpid 方法用于获取当前进程的进程号，getppid 方法用于获取当前进程的父进程的进程号</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">name</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是一个子进程%s，我的进程号是%s，我的父进程的进程号是%s&quot;</span> % (name, os.getpid(), os.getppid()))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是父进程，我的进程号是%s&quot;</span> % os.getpid())<br>    p = Process(target=func, args=(<span class="hljs-string">&quot;cdc&quot;</span>,))  <span class="hljs-comment"># 实例化一个进程对象</span><br>    p.start()  <span class="hljs-comment"># 开启一个子进程</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>方式二：通过类继承的方式来创建</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyProcess</span>(<span class="hljs-title class_ inherited__">Process</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;开始启动子进程&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = MyProcess()<br>    p.start()<br></code></pre></td></tr></table></figure>
+
+<p>Process对象除了有 start 方法外，还有一个 run 方法，两者的区别是：</p>
+<ul>
+<li>p.start()：是指解释器告诉操作系统去帮我开启一个进程，至于什么时候执行，由操作系统来调度，即处于就绪状态</li>
+<li>p.run()：是指告诉操作系统，现在马上帮我执行这个子进程，即处于执行状态</li>
+</ul>
+<p>当通过类继承的方式来创建一个子进程的时候，执行 start 方法会自动执行类中定义的 run 方法。</p>
+<p><strong>方式三：开启多个不同的子进程</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;子进程 %s，父进程 %s&quot;</span> % (os.getpid(), os.getppid()))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程 %s&quot;</span> % os.getpid())<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        p = Process(target=func, args=())<br>        p.start()<br>        <br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">父进程 7476</span><br><span class="hljs-string">子进程 7876，父进程 7476</span><br><span class="hljs-string">子进程 16044，父进程 7476</span><br><span class="hljs-string">子进程 13908，父进程 7476</span><br><span class="hljs-string">子进程 18332，父进程 7476</span><br><span class="hljs-string">子进程 9312，父进程 7476</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>注：在Windows操作系统中由于没有 fork (linux操作系统中创建进程的机制)，在创建子进程的时候会自动 import 启动它的这个文件，而在 import 的时候又执行了整个文件。因此如果将Process()直接写在文件中就会无限递归创建子进程报错。所以必须把创建子进程的部分使用 if __name__ &#x3D;&#x3D;’__main__‘ 判断保护起来，import 的时候  ，就不会递归运行了。</p>
+<h3 id="二、进程常用方法"><a href="#二、进程常用方法" class="headerlink" title="二、进程常用方法"></a><strong>二、进程常用方法</strong></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.start</span>()：启动进程，并调用该子进程中的<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.run</span>() <br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.run</span>()：进程启动时运行的方法，正是它去调用target指定的函数，我们自定义类的类中一定要实现该方法  <br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.terminate</span>()：强制终止进程<span class="hljs-selector-tag">p</span>，不会进行任何清理操作，如果<span class="hljs-selector-tag">p</span>创建了子进程，该子进程就成了僵尸进程，使用该方法需要特别小心这种情况。如果<span class="hljs-selector-tag">p</span>还保存了一个锁那么也将不会被释放，进而导致死锁<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.is_alive</span>()：如果<span class="hljs-selector-tag">p</span>仍然运行，返回True<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.join</span>(<span class="hljs-selector-attr">[timeout]</span>)：主线程等待<span class="hljs-selector-tag">p</span>终止（强调：是主线程处于等的状态，而<span class="hljs-selector-tag">p</span>是处于运行的状态）。timeout是可选的超时时间，需要强调的是，<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.join</span>只能join住start开启的进程，而不能join住run开启的进程 <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>is_alive 和 terminate</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    time.sleep(<span class="hljs-number">200</span>)  <span class="hljs-comment"># 睡眠 200 秒</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func, args=())  <span class="hljs-comment"># 创建一个子进程</span><br>    p.start()<br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># 判断子进程是否存活 存活结果为True，死亡结果为False</span><br>    time.sleep(<span class="hljs-number">10</span>)<br>    <span class="hljs-built_in">print</span>(p.is_alive())<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    time.sleep(<span class="hljs-number">200</span>)  <span class="hljs-comment"># 睡眠 200 秒</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func, args=())  <span class="hljs-comment"># 创建一个子进程</span><br>    p.start()<br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># True</span><br>    p.terminate()  <span class="hljs-comment"># 杀死该进程</span><br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># True</span><br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># True</span><br></code></pre></td></tr></table></figure>
+
+<p>理论上来说，杀死子进程后得到的进程存活状态应该是 False，但是实际测试得到的还是 True，这是由于操作系统在切换和调度进程时都需要时间，而我们的代码执行的速度特别快，我们无法直接捕捉该现象，可以让程序等待一定的时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    time.sleep(<span class="hljs-number">200</span>)  <span class="hljs-comment"># 睡眠 200 秒</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func, args=())  <span class="hljs-comment"># 创建一个子进程</span><br>    p.start()<br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># True</span><br>    p.terminate()  <span class="hljs-comment"># 杀死该进程</span><br>    time.sleep(<span class="hljs-number">0.1</span>)<br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># False</span><br>    <span class="hljs-built_in">print</span>(p.is_alive())  <span class="hljs-comment"># False</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>join</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500</span>):<br>        time.sleep(<span class="hljs-number">0.01</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是子进程&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)  <span class="hljs-comment"># 创建一个子进程</span><br>    p.start()<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        time.sleep(<span class="hljs-number">0.01</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是父进程&quot;</span>)<br>        <br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">...</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">...</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>开启一个正常的子进程，父进程会等待子进程结束后，父进程也就是程序才结束，但是并不是先执行完子进程的方法后才会去执行父进程中的方法，父进程和子进程是异步执行的。</p>
+<p>p.join() 方法就可以使父进程和子进程变为同步执行，父进程执行到join方法时，就会阻塞住，等待子进程执行完成后再继续执行主进程中的代码。</p>
+<p>join必须放在start()后边</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500</span>):<br>        time.sleep(<span class="hljs-number">0.01</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是子进程&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)  <span class="hljs-comment"># 创建一个子进程</span><br>    p.start()<br>    p.join()<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        time.sleep(<span class="hljs-number">0.01</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我是父进程&quot;</span>)<br>        <br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">...</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是子进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">我是父进程</span><br><span class="hljs-string">...</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>多个子进程和主进程实现同步</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    time.sleep(<span class="hljs-number">0.5</span>)<br>    <span class="hljs-built_in">print</span>(num ** <span class="hljs-number">2</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p_l = <span class="hljs-built_in">list</span>()  <span class="hljs-comment"># 用于保存所有的子进程对象</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        p = Process(target=func, args=(i,))<br>        p.start()<br>        p_l.append(p)<br><br>    [p.join() <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> p_l]  <span class="hljs-comment"># 对所有的子进程进行join</span><br>    time.sleep(<span class="hljs-number">0.5</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;计算结束&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="三、进程常用属性"><a href="#三、进程常用属性" class="headerlink" title="三、进程常用属性"></a><strong>三、进程常用属性</strong></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.daemon</span>：默认值为False，如果设为True，代表<span class="hljs-selector-tag">p</span>为后台运行的守护进程，当<span class="hljs-selector-tag">p</span>的父进程终止时，<span class="hljs-selector-tag">p</span>也随之终止，并且设定为True后，<span class="hljs-selector-tag">p</span>不能创建自己的新进程，必须在<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.start</span>()之前设置<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.name</span>：进程的名称<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.pid</span>：进程的pid<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.exitcode</span>：进程在运行时为<span class="hljs-attribute">None</span>，如果为–N，表示被信号N结束(了解即可)<br><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.authkey</span>：进程的身份验证键，默认是由os<span class="hljs-selector-class">.urandom</span>()随机生成的<span class="hljs-number">32</span>个字符。这个键的用途是为涉及网络连接的底层进程间通信提供安全性，这类连接只有在具有相同的身份验证键时才能成功（了解即可）<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>name 和 pid 属性</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;这里是子进程<span class="hljs-subst">&#123;os.getpid()&#125;</span>&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        p = Process(target=func)<br>        p.name = <span class="hljs-string">f&quot;cdc<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i)&#125;</span>&quot;</span><br>        p.start()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;子进程<span class="hljs-subst">&#123;p.name&#125;</span>开始执行，进程号<span class="hljs-subst">&#123;p.pid&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>daemon 属性</strong></li>
+</ul>
+<p>使用 p.daemon &#x3D; True 可以将普通的子进程设置成守护进程。对于一个正常的子进程，主进程和子进程是异步的执行各自的代码的，如果主进程代码已经执行结束，子进程代码还未执行完，那么主进程就会等待所有的子进程执行结束后再结束，即结束整个程序；而对于守护进程而言，<strong>会随着主进程代码的执行结束而立即结束</strong>。</p>
+<p>注意：守护进程是随着主进程的代码的结束而结束，而不是随着主进程的结束而结束。换句话说，正常执行中主进程永远是最后结束的，哪怕自己的代码已经全部执行完了，也不会结束，而是阻塞等待所有的子进程执行完了再结束，即结束整个程序。但只要主进程中的代码执行完了，守护进程肯定就跟着结束了。守护进程必须在 start 之前设置。</p>
+<p>守护进程的三个特点：</p>
+<ol>
+<li><p>守护进程会随着父进程代码的结束而结束</p>
+<pre><code class="hljs">           2. 守护进程自身不能再创建子进程
+           3. 守护进程必须要在start之前设置
+</code></pre>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func1</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;这是孙子&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;这是儿子&quot;</span>)<br>    time.sleep(<span class="hljs-number">1</span>)<br>    p = Process(target=func1)<br>    p.start()<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)<br>    p.daemon = <span class="hljs-literal">True</span>  <span class="hljs-comment"># 设置守护进程</span><br>    p.start()<br>    <span class="hljs-built_in">print</span>(p.daemon)<br>    time.sleep(<span class="hljs-number">5</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;这是爸爸&quot;</span>)<br><span class="hljs-comment"># AssertionError: daemonic processes are not allowed to have children  守护进程不允许有子进程</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 没有设置守护进程</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span>  Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    time.sleep(<span class="hljs-number">10</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;子进程代码结束&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)<br>    p.start()<br>    time.sleep(<span class="hljs-number">3</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程代码执行结束&quot;</span>)<br><span class="hljs-comment"># 父进程三秒后就将代码全部执行完成了，阻塞等待子进程结束，最后载结束程序，结果为</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">父进程代码执行结束</span><br><span class="hljs-string">子进程代码结束</span><br><span class="hljs-string">Process finished with exit code 0</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><br><span class="hljs-comment"># 设置守护进程</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span>  Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    time.sleep(<span class="hljs-number">10</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;子进程代码结束&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)<br>    p.daemon = <span class="hljs-literal">True</span><br>    p.start()<br><br>    time.sleep(<span class="hljs-number">3</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程代码执行结束&quot;</span>)<br><span class="hljs-comment"># 父进程三秒后就将代码全部执行完成了，此时守护进程跟随父进程代码的执行结束而结束，所以结果为</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">父进程代码执行结束</span><br><span class="hljs-string">Process finished with exit code 0</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 利用守护进程编写计时器</span><br><span class="hljs-comment"># 计时5秒</span><br><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(time.strftime(<span class="hljs-string">&#x27;%H:%M:%S&#x27;</span>))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Process(target=func)<br>    p.daemon = <span class="hljs-literal">True</span> <span class="hljs-comment"># 将p进程设置为守护进程,必须要在start之前设置</span><br>    p.start()<br>    time.sleep(<span class="hljs-number">5</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;这是爸爸&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><h3 id="一、进程间无法共享内存"><a href="#一、进程间无法共享内存" class="headerlink" title="一、进程间无法共享内存"></a><strong>一、进程间无法共享内存</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    num -= <span class="hljs-number">1</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    num = <span class="hljs-number">100</span><br>    p_l = <span class="hljs-built_in">list</span>()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        p = Process(target=func, args=(num,))<br>        p.start()<br>        p_l.append(p)<br>    [p.join() <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> p_l]<br><br>    <span class="hljs-built_in">print</span>(num)  <span class="hljs-comment"># 100</span><br></code></pre></td></tr></table></figure>
+
+<p>以上代码创建了五个子进程，分别对全局变量 num 进行了减1的操作，理论上来说，num 最后的值应该是95，然而测试得到的结果还是100，这是因为每次执行子进程实际相当于重新开辟了一个空间，将子进程的代码和相关的变量都拷贝一份过去再操作，所以不管子进程中对全局的变量进行什么操作，都不会影响原本内存中变量对应的值，这也就是多进程之间无法共享内存的原因。</p>
+<h3 id="二、进程间直接的数据共享"><a href="#二、进程间直接的数据共享" class="headerlink" title="二、进程间直接的数据共享"></a><strong>二、进程间直接的数据共享</strong></h3><p>虽然进程间数据独立，但可以通过Manager和Value实现数据共享</p>
+<ul>
+<li><strong>Manager</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Manager<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">lst</span>):<br>    lst[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;aaa&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;子进程中的列表&quot;</span>, lst)  <span class="hljs-comment"># 子进程中的列表 [&#x27;aaa&#x27;, 22, 33]</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    m = Manager()<br>    lst = m.<span class="hljs-built_in">list</span>([<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>])  <span class="hljs-comment"># 创建一个共享的列表数据</span><br>    <span class="hljs-comment"># dic = m.dict(&#123;&quot;name&quot;: &quot;cdc&quot;&#125;)  # 创建一个共享的字典数据</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程中一开始的列表&quot;</span>, lst)  <span class="hljs-comment"># 父进程中一开始的列表 [11, 22, 33]</span><br>    p = Process(target=func, args=(lst,))<br>    p.start()<br>    p.join()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程中后来的列表&quot;</span>, lst)  <span class="hljs-comment"># 父进程中后来的列表 [&#x27;aaa&#x27;, 22, 33]</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Value</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Value<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    num.value -= <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;子进程中的num值&quot;</span>, num.value)  <span class="hljs-comment"># 子进程中的num值 99</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    num = Value(<span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-number">100</span>)  <span class="hljs-comment"># 创建一个数值为100的共享整型数据</span><br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程中一开始的num&quot;</span>, num.value)  <span class="hljs-comment"># 父进程中一开始的num 100</span><br>    p = Process(target=func, args=(num,))<br>    p.start()<br>    p.join()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;父进程中后来的num&quot;</span>, num.value)  <span class="hljs-comment"># 父进程中后来的num 99</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>除了直接实现数据共享外，multiprocessing 中可以通过以下机制来实现进程间通信（IPC，inter process Communication）</strong></p>
+<h3 id="三、锁机制"><a href="#三、锁机制" class="headerlink" title="三、锁机制"></a><strong>三、锁机制</strong></h3><p>多个进程同时共享内存时会出现数据错乱的问题，例如如果多个进程同时向一个文件中写入，可能会出现一个进程刚写完还未来得及将写好的内容保存，另外一个进程已经将文件关闭了，此时第一个进程所写入的内容就丢失了。因此，我们可以给这个文件上一把锁，如果当前有进程正在操作文件，那么就不允许其他的进程再来操作这个文件了，只能等当前的进程操作结束后，再把锁打开，其他进程才能来使用文件。重复上述步骤，就不会出现数据错乱丢失的问题了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Lock<br><br>l = Lock()   <span class="hljs-comment"># 实例化一个锁</span><br>l.acquire()  <span class="hljs-comment"># 相当于拿走钥匙，锁上门，不允许其他人进来</span><br>l.release()  <span class="hljs-comment"># 释放锁，还钥匙，开门，允许其他人操作</span><br><br><span class="hljs-comment"># 如果加上锁后一直不释放，程序会阻塞等待，直到有锁被释放</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Lock<br><br>l = Lock()<br>l.acquire()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;aaaa&quot;</span>)<br>l.acquire()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;bbbb&quot;</span>)<br><span class="hljs-comment"># 程序输出 aaaa 后一直阻塞等待</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 多进程操作同一个文件</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Lock, Process<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">hand_file</span>(<span class="hljs-params">l</span>):<br>    l.acquire()  <span class="hljs-comment"># 给文件加锁，不允许别的进程访问</span><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file=<span class="hljs-string">&quot;a.txt&quot;</span>, mode=<span class="hljs-string">&quot;a+&quot;</span>, encoding=<span class="hljs-string">&quot;utf-8&quot;</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(<span class="hljs-string">f&quot;我是子进程<span class="hljs-subst">&#123;os.getpid()&#125;</span>&quot;</span> + <span class="hljs-string">&quot;\n&quot;</span>)<br>    l.release()  <span class="hljs-comment"># 释放锁，允许其他进程操作文件</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    l = Lock()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        p = Process(target=hand_file, args=(l,))<br>        p.start()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 模拟银行卡存钱取钱</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Lock, Process, Value<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 取钱</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_money</span>(<span class="hljs-params">l, money</span>):<br>    l.acquire()  <span class="hljs-comment"># 取钱的时候不允许别人对同一个账号存钱</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">6</span>):<br>        money.value -= <span class="hljs-number">100</span><br>        time.sleep(<span class="hljs-number">0.5</span>)<br>    l.release()  <span class="hljs-comment"># 取完钱了，可以让别人存钱了</span><br><br><span class="hljs-comment"># 存钱</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">save_money</span>(<span class="hljs-params">l, money</span>):<br>    l.acquire()  <span class="hljs-comment"># 存钱的时候不允许别人对同一个账号取钱</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        money.value += <span class="hljs-number">100</span><br>        time.sleep(<span class="hljs-number">0.5</span>)<br>    l.release()  <span class="hljs-comment"># 存完钱了，可以让别人取钱了</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    money = Value(<span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-number">1000</span>)  <span class="hljs-comment"># 定义 1000块钱</span><br>    l = Lock()  <span class="hljs-comment"># 实例化一个锁</span><br>    p1 = Process(target=get_money, args=(l, money))  <span class="hljs-comment"># 该进程用于取钱操作</span><br>    p1.start()<br>    p2 = Process(target=save_money, args=(l, money))  <span class="hljs-comment"># 该进程用于存钱操作</span><br>    p2.start()<br>    p1.join()<br>    p2.join()<br>    <span class="hljs-built_in">print</span>(money.value)<br></code></pre></td></tr></table></figure>
+
+<p>进程中还会存在<strong>死锁</strong>情况，需要借助<strong>递归锁</strong>来解决，由于死锁和递归锁原理和多线程相同，此处在多线程中再详细介绍。</p>
+<h3 id="四、信号量机制"><a href="#四、信号量机制" class="headerlink" title="四、信号量机制"></a><strong>四、信号量机制</strong></h3><p>信号量机制相当于是一把锁配好几把钥匙。信号量机制比锁机制多了一个计数器，这个计数器是用来记录当前剩余几把钥匙的。对于计数器来说，每acquire一次，计数器内部就减1，release一次，计数器就加1，当计数器为0时，表示没有钥匙了，此时acquire()处于阻塞，直到有钥匙归还才解除阻塞。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Semaphore<br><br>sem = Semaphore(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 参数为整型，表示可以有多少把钥匙，此处表示有5把</span><br>sem.acquire()  <span class="hljs-comment"># 拿走钥匙，锁上门</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">1111</span>)<br>sem.acquire()  <span class="hljs-comment"># 拿走钥匙，锁上门</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">2222</span>)<br>sem.acquire()  <span class="hljs-comment"># 拿走钥匙，锁上门</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">3333</span>)<br>sem.acquire()  <span class="hljs-comment"># 拿走钥匙，锁上门</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">4444</span>)<br>sem.acquire()  <span class="hljs-comment"># 拿走钥匙，锁上门</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">5555</span>)<br>sem.acquire()  <span class="hljs-comment"># 此时钥匙已经被前面全部拿完了，acquire会阻塞在这里，直到有人归还钥匙</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">6666</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 多人同时就餐示例</span><br><span class="hljs-comment"># 一共有五个餐位，后来的人要等前面有空位才能就餐</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Semaphore, Process<br><span class="hljs-keyword">import</span> random, time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">eat</span>(<span class="hljs-params">i, sem</span>):<br>    sem.acquire()  <span class="hljs-comment"># 占一个位置吃饭</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;第<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i)&#125;</span>位客人准备吃饭了&quot;</span>)<br>    time.sleep(random.uniform(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;第<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i)&#125;</span>位客人吃完了&quot;</span>)<br>    sem.release()  <span class="hljs-comment"># 吃完了，把位置腾出来给别人吃饭</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    sem = Semaphore(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 初始化了一把锁5把钥匙，也就是说允许5个人同时进入餐厅，</span><br>    <span class="hljs-comment"># 之后其他人必须等待，等有人从餐厅出来，还了钥匙，才能允许后边的人进入</span><br>    <span class="hljs-comment"># 来了20位客人</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        p = Process(target=eat, args=(i, sem))<br>        p.start()<br></code></pre></td></tr></table></figure>
+
+<h3 id="五、事件机制"><a href="#五、事件机制" class="headerlink" title="五、事件机制"></a><strong>五、事件机制</strong></h3><p>事件机制 Event 对象主要有以下几种方法：</p>
+<ol>
+<li>is_set()：is_set 的值是布尔类型，事件机制通过该值来判断 wait 方法是否应该处于阻塞状态，is_set 的值为 True，则 wait 处于非阻塞状态，否则处于阻塞状态</li>
+<li>wait()：判断is_set的值，如果为True，则非阻塞；值为False，则阻塞</li>
+<li>set()：将is_set设为True</li>
+<li>clear()：将is_set设为False</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Event<br><br>e = Event()  <span class="hljs-comment"># 实例化一个事件对象</span><br><span class="hljs-built_in">print</span>(e.is_set())  <span class="hljs-comment"># False  此时wait应该是阻塞的</span><br>e.<span class="hljs-built_in">set</span>()<br><span class="hljs-built_in">print</span>(e.is_set())  <span class="hljs-comment"># True  此时wait是非阻塞的</span><br>e.wait()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;aaaa&quot;</span>)<br>e.clear()<br><span class="hljs-built_in">print</span>(e.is_set())  <span class="hljs-comment"># False 此时wait是阻塞的，wait后面的代码无法继续执行</span><br>e.wait()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;bbbb&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 使用事件机制模拟信号灯场景</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Event<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 信号灯函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">traffic_light</span>(<span class="hljs-params">e</span>):<br>    <span class="hljs-comment"># 交通等得一直亮着，要么是红灯，要么是绿灯</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">if</span> e.is_set():  <span class="hljs-comment"># 如果is_set是True，那么就是绿灯，wait非阻塞，汽车就通过</span><br>            time.sleep(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 绿的亮5秒</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;红灯亮了&quot;</span>)  <span class="hljs-comment"># 5秒后，切换到红灯</span><br>            e.clear()  <span class="hljs-comment"># 将is_set的值设为False，wait阻塞，汽车无法通过</span><br>        <span class="hljs-keyword">else</span>:<br>            time.sleep(<span class="hljs-number">3</span>)  <span class="hljs-comment"># 红的亮三秒</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;绿灯亮了&quot;</span>)  <span class="hljs-comment"># 5秒后，切换到绿灯</span><br>            e.<span class="hljs-built_in">set</span>()  <span class="hljs-comment"># 将is_set的值设为True，wait非阻塞，汽车可以通过</span><br><br><span class="hljs-comment"># 车的函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Car</span>(<span class="hljs-params">e, i</span>):<br>    e.wait()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;第<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i)&#125;</span>辆车通过&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    e = Event()<br>    light = Process(target=traffic_light, args=(e,))<br>    light.start()<br>    <span class="hljs-comment"># 定义50辆车</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50</span>):<br>        <span class="hljs-keyword">if</span> i % <span class="hljs-number">3</span> == <span class="hljs-number">0</span>:  <span class="hljs-comment"># 为了测试效果明显，控制一下汽车生产的速度</span><br>            time.sleep(<span class="hljs-number">5</span>)<br>        p = Process(target=Car, args=(e, i))<br>        p.start()<br></code></pre></td></tr></table></figure>
+
+<h3 id="六、队列"><a href="#六、队列" class="headerlink" title="六、队列"></a><strong>六、队列</strong></h3><ul>
+<li>队列：先进先出（FIFO，First In First Out）</li>
+<li>栈：先进后出（FILO，First In Last Out）</li>
+</ul>
+<p>创建共享的进程队列，Queue是多进程安全的队列，可以使用Queue实现多进程之间的数据传递，<strong>队列在进程间通信是安全的</strong>。队列有以下常用方法</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.get</span>( <span class="hljs-selector-attr">[ block [ ,timeout ]</span> ] ) <br>返回q中的一个项目。如果q为空，此方法将阻塞，直到队列中有项目可用为止。block用于控制阻塞行为，默认为True. 如果设置为False，将引发Queue.Empty异常（定义在Queue模块中）。timeout是可选超时时间，用在阻塞模式中。如果在指定的时间间隔内没有项目可用，将引发Queue.Empty异常。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.get_nowait</span>( ) <br>同<span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.get</span>(False)方法。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.put</span>(item <span class="hljs-selector-attr">[, block [,timeout ]</span> ] ) <br>将item放入队列。如果队列已满，此方法将阻塞至有空间可用为止。block控制阻塞行为，默认为True。如果设置为False，将引发Queue.Full异常（定义在Queue库模块中）。timeout指定在阻塞模式中等待可用空间的时间长短。超时后将引发Queue.Full异常。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.qsize</span>() <br>返回队列中目前项目的正确数量。此函数的结果并不可靠，因为在返回结果和在稍后程序中使用结果之间，队列中可能添加或删除了项目。在某些系统上，此方法可能引发NotImplementedError异常。<br><br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.empty</span>() <br>如果调用此方法时 q为空，返回True。如果其他进程或线程正在往队列中添加项目，结果是不可靠的。也就是说，在返回和使用结果之间，队列中可能已经加入新的项目。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.full</span>() <br>如果q已满，返回为True. 由于线程的存在，结果也可能是不可靠的（参考<span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.empty</span>()方法）<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.close</span>() <br>关闭队列，防止队列中加入更多数据。调用此方法时，后台线程将继续写入那些已入队列但尚未写入的数据，但将在此方法完成时马上关闭。如果q被垃圾收集，将自动调用此方法。关闭队列不会在队列使用者中生成任何类型的数据结束信号或异常。例如，如果某个使用者正被阻塞在get（）操作上，关闭生产者中的队列不会导致get（）方法返回错误。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.cancel_join_thread</span>() <br>不会再进程退出时自动连接后台线程。这可以防止<span class="hljs-built_in">join_thread</span>()方法阻塞。<br><br><span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.join_thread</span>() <br>连接队列的后台线程。此方法用于在调用<span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.close</span>()方法后，等待所有队列项被消耗。默认情况下，此方法由不是q的原始创建者的所有进程调用。调用<span class="hljs-selector-tag">q</span><span class="hljs-selector-class">.cancel_join_thread</span>()方法可以禁止这种行为。<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># put</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Queue<br><br>q = Queue(<span class="hljs-number">3</span>)  <span class="hljs-comment"># 实例化一个队列，参数为规定队列中最多可以存放的数据个数</span><br>q.put(<span class="hljs-number">123</span>)<br>q.put(<span class="hljs-string">&quot;abc&quot;</span>)<br>q.put([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;到此为止队列已经存满了&quot;</span>)  <span class="hljs-comment"># 队列已经存放了三个数据了，满了</span><br><span class="hljs-comment"># q.put(236)	# 此时 q.put(236) 会阻塞等待，知道队列空出一个位置，即有数据被取出来</span><br>q.put(<span class="hljs-number">236</span>, <span class="hljs-literal">False</span>)  <span class="hljs-comment">#  此时不会阻塞，直接引发 queue.Full 错误</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># get</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Queue<br><br>q = Queue(<span class="hljs-number">3</span>)  <span class="hljs-comment"># 实例化一个队列，参数为规定队列中最多可以存放的数据个数</span><br>q.put(<span class="hljs-number">123</span>)<br>q.put(<span class="hljs-string">&quot;abc&quot;</span>)<br>q.put([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># 123</span><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># abc</span><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># [1, 2, 3]</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;此时队列已经全部取完了&quot;</span>)<br><span class="hljs-comment"># print(q.get())  #  队列中已经没有值了，此时get会阻塞等待，直到队列中有值</span><br><span class="hljs-built_in">print</span>(q.get(<span class="hljs-literal">False</span>))  <span class="hljs-comment"># 将block设置为False后不会阻塞，直接引发queue.Empty错误</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># put_nowait</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Queue<br><br>q = Queue(<span class="hljs-number">3</span>)  <span class="hljs-comment"># 实例化一个队列，参数为规定队列中最多可以存放的数据个数</span><br>q.put(<span class="hljs-number">123</span>)<br>q.put(<span class="hljs-string">&quot;abc&quot;</span>)<br>q.put([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;到此为止队列已经存满了&quot;</span>)<br>q.put_nowait(<span class="hljs-number">236</span>)  <span class="hljs-comment"># 不会阻塞，直接引发queue.Full异常，等同于 q.put(236, False)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># get_nowait</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Queue<br><br>q = Queue(<span class="hljs-number">3</span>)  <span class="hljs-comment"># 实例化一个队列，参数为规定队列中最多可以存放的数据个数</span><br>q.put(<span class="hljs-number">123</span>)<br>q.put(<span class="hljs-string">&quot;abc&quot;</span>)<br>q.put([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># 123</span><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># abc</span><br><span class="hljs-built_in">print</span>(q.get())  <span class="hljs-comment"># [1, 2, 3]</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;此时队列已经全部取完了&quot;</span>)<br><span class="hljs-built_in">print</span>(q.get_nowait())  <span class="hljs-comment"># 不会阻塞，直接引发queue.Empty异常，等同于 q.get(False)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 进程中使用队列</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Queue,Process<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">q</span>):<br>    q.put(<span class="hljs-string">&#x27;我是四川的&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue(<span class="hljs-number">5</span>)<br>    p = Process(target=func,args=(q,))<br>    p.start()<br>    <span class="hljs-comment"># print(q.get_nowait()) # 此处，可能会报错，因为子进程和父进程同时运行，不一定队列中有数据</span><br>    <span class="hljs-built_in">print</span>(q.get())<span class="hljs-comment"># 此处一定不会报错，因为get是阻塞获取数据，如果队列没有就等着</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 使用队列q对象调用get函数来取得队列中最先进入的数据</span><br><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue,freeze_support<br><span class="hljs-keyword">import</span> random<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">put_func</span>(<span class="hljs-params">q</span>):<br>    info = <span class="hljs-built_in">str</span>(os.getpid()) + <span class="hljs-string">&#x27;\t:\t&#x27;</span> + <span class="hljs-built_in">str</span>(random.randint(<span class="hljs-number">0</span>, <span class="hljs-number">100</span>))<br>    q.put(info)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_func</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;%s 获取到数据 ：\033[33m; %s \033[0m&#x27;</span> % (os.getpid(), q.get()))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-comment"># freeze_support() 如果有windows系统开启多进程导致程序崩溃，可尝试调用此函数</span><br>    q = Queue(<span class="hljs-number">5</span>)<br>    l_put = []<br>    l_get = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        p_put = Process(target=put_func, args=(q,))<br>        p_put.start()<br>        l_put.append(p_put)<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        p_get = Process(target=get_func, args=(q,))<br>        p_get.start()<br>        l_put.append(p_get)<br><br>    [i.join() <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> l_put]<br>    [i.join() <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> l_get]<br></code></pre></td></tr></table></figure>
+
+<h3 id="七、JoinableQueue-可连接的队列"><a href="#七、JoinableQueue-可连接的队列" class="headerlink" title="七、JoinableQueue 可连接的队列"></a><strong>七、JoinableQueue 可连接的队列</strong></h3><p>JoinableQueue常用于解决生产者消费者模型问题，它是继承Queue的，所以可以使用Queue中的方法并且JoinableQueue又多了两个方法：</p>
+<ul>
+<li>q.join()	用于生产者。该方法会等待 q.task_done的返回结果，通过返回结果，生产者就能获得消费者当前消费了多少个数据</li>
+<li>q.task_done()     用于消费者，是指每消费队列中一个数据，就给join返回一个标识。</li>
+</ul>
+<p>假设生产者生产了100个数据，join就先记录下100这个数据。每次消费者消费一个数据，task_done就会返回一个标识，当生产者（join）接收到100个消费者返回来的标识的时候，生产者就能知道消费者已经把所有数据都消费完了。</p>
+<h3 id="八、管道"><a href="#八、管道" class="headerlink" title="八、管道"></a><strong>八、管道</strong></h3><p>管道是用于多进程之间通信的一种方式。管道是不安全的。管道在实例化对象时，会产生两个端口，即 con1,con2 &#x3D; Pipe()</p>
+<ul>
+<li>在单进程中使用管道，如果con1负责接收数据，con2就负责发送数据；如果con2负责接收数据，con1就负责发送数据</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pipe<br><br>con1, con2 = Pipe()<br><br>con1.send(<span class="hljs-string">&quot;abc&quot;</span>)<br><span class="hljs-built_in">print</span>(con2.recv())<br><br>con2.send(<span class="hljs-number">123</span>)<br><span class="hljs-built_in">print</span>(con1.recv())<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在多进程中使用管道：如果父进程使用con1收，那么子进程就必须使用con2发；<br>                                       如果父进程使用con1发，那么子进程就必须使用con2收；<br>                                       如果父进程使用con2收，那么子进程就必须使用con1发；<br>                                       如果父进程使用con2发，那么子进程就必须使用con1收；</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Pipe<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">con1, con2</span>):<br>    con1, con2 = con1, con2<br>    con1.close()  <span class="hljs-comment">#  子进程中使用con2和主进程交互，所以con1可以关闭了</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">try</span>:<br>            <span class="hljs-built_in">print</span>(con2.recv())  <span class="hljs-comment"># 当主进程的con1发数据时，子进程要死循环的去接收。</span><br>        <span class="hljs-keyword">except</span>:  <span class="hljs-comment"># 如果主进程的con1发完数据并关闭con1，子进程的con2继续接收时，就会报错，使用try的方式，获取错误</span><br>            con2.close()  <span class="hljs-comment"># 获取到错误，就是指子进程已经把管道中所有数据都接收完了，所以用这种方式去关闭管道</span><br>            <span class="hljs-keyword">break</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    con1, con2 = Pipe()<br>    p = Process(target=func, args=(con1, con2))<br>    p.start()<br>    con2.close()  <span class="hljs-comment"># 主进程中使用con1和子进程交互，所以con2可以关闭了</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):  <span class="hljs-comment"># 生产数据</span><br>        con1.send(i)  <span class="hljs-comment"># 给子进程的con2发送数据</span><br>    con1.close()  <span class="hljs-comment"># 生产完数据，关闭父进程这一端的管道</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="生产者消费者模型"><a href="#生产者消费者模型" class="headerlink" title="生产者消费者模型"></a>生产者消费者模型</h2><p>在并发编程中使用生产者和消费者模式能够解决绝大多数并发问题。该模式通过平衡生产进程和消费进程的工作能力来提高程序的整体处理数据的速度。举个应用栗子：全栈开发时候，前端接收客户请求，后端处理请求逻辑。当某时刻客户请求过于多的时候，后端处理不过来，此时完全可以借助队列来辅助，将客户请求放入队列中，后端逻辑代码处理完一批客户请求后马上从队列中继续获取，这样平衡两端的效率。</p>
+<h4 id="为什么要使用生产者和消费者模式"><a href="#为什么要使用生产者和消费者模式" class="headerlink" title="为什么要使用生产者和消费者模式"></a><strong>为什么要使用生产者和消费者模式</strong></h4><p>在进程世界里，生产者就是生产数据的进程，消费者就是消费数据的进程。在多进程开发当中，如果生产者处理速度很快，而消费者处理速度很慢，那么生产者就必须等待消费者处理完，才能继续生产数据。同样的道理，如果消费者的处理能力大于生产者，那么消费者就必须等待生产者。为了解决这个问题于是引入了生产者和消费者模式。</p>
+<h4 id="什么是生产者消费者模式"><a href="#什么是生产者消费者模式" class="headerlink" title="什么是生产者消费者模式"></a><strong>什么是生产者消费者模式</strong></h4><p>生产者消费者模式是通过一个容器来解决生产者和消费者的强耦合问题。生产者和消费者彼此之间不直接通讯，而通过阻塞队列来进行通讯，所以生产者生产完数据之后不用等待消费者处理，直接扔给阻塞队列，消费者不找生产者要数据，而是直接从阻塞队列里取，阻塞队列就相当于一个缓冲区，平衡了生产者和消费者的处理能力。</p>
+<h4 id="基于队列实现的生产者消费者模型"><a href="#基于队列实现的生产者消费者模型" class="headerlink" title="基于队列实现的生产者消费者模型"></a><strong>基于队列实现的生产者消费者模型</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 第一版</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue<br><br><span class="hljs-comment"># 消费者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">consumer</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        info = q.get()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我吃到了&quot;</span> + info)<br><br><span class="hljs-comment"># 生产者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">productor</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        info = <span class="hljs-string">f&quot;包子<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i+<span class="hljs-number">1</span>)&#125;</span>号&quot;</span><br>        q.put(info)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue(<span class="hljs-number">5</span>)<br>    pro_con = Process(target=consumer, args=(q,))<br>    pro_con.start()<br>    pro_pro = Process(target=productor, args=(q,))<br>    pro_pro.start()<br></code></pre></td></tr></table></figure>
+
+<p>第一版代码中存在这样一个问题，生产者生产完数据后正常结束代码了，但是消费者会不断的从队列中取数据，如果获取不到，get 方法就会阻塞，导致整个程序无法结束，所以我们要修改一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 第二版</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 消费者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">consumer</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">try</span>:<br>            info = q.get_nowait()<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我吃到了&quot;</span> + info)<br>        <span class="hljs-keyword">except</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;包子取完了&quot;</span>)<br>            <span class="hljs-keyword">break</span><br><br><span class="hljs-comment"># 生产者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">productor</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        time.sleep(<span class="hljs-number">0.5</span>)<br>        info = <span class="hljs-string">f&quot;包子<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i + <span class="hljs-number">1</span>)&#125;</span>号&quot;</span><br>        <span class="hljs-built_in">print</span>(info)<br>        q.put(info)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue(<span class="hljs-number">20</span>)<br>    pro_con = Process(target=consumer, args=(q,))<br>    pro_pro = Process(target=productor, args=(q,))<br>    pro_con.start()<br>    pro_pro.start()<br></code></pre></td></tr></table></figure>
+
+<p>第二版在消费者函数中加了一个判断，如果不能取到数据，就退出。但是这个逻辑是有问题的，如果生产者的速度比较慢，数据还没来及放到队列中时，消费者已经去取了，发现没取到就判断为生产者已经全部生产完了，自己就退出了。而实际上生产者还在不断的生产数据，所以为了保险起见，生产者在生产完所有的数据后，可以在队列中加一个结束的标识，告诉消费者我已经生产结束了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 第三版</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue<br><br><span class="hljs-comment"># 消费者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">consumer</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        info = q.get()<br>        <span class="hljs-keyword">if</span> info <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;包子取完了&quot;</span>)<br>            <span class="hljs-keyword">break</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我吃到了&quot;</span> + info)<br><br><span class="hljs-comment"># 生产者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">productor</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        info = <span class="hljs-string">f&quot;包子<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i + <span class="hljs-number">1</span>)&#125;</span>号&quot;</span><br>        q.put(info)<br>    q.put(<span class="hljs-literal">None</span>)  <span class="hljs-comment"># 生产结束了，放入一个结束的标志来提醒消费者</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue(<span class="hljs-number">5</span>)<br>    pro_con = Process(target=consumer, args=(q,))<br>    pro_pro = Process(target=productor, args=(q,))<br>    pro_con.start()<br>    pro_pro.start()<br></code></pre></td></tr></table></figure>
+
+<p>这次可以完美实现了，但是这是只有一个生产者和一个消费者的情况，如果有一个生产者和多个消费者，生产者放入的结束标识被某一个消费者拿到后，后面几个消费者就没有办法再次拿到了，所以还是会阻塞，因此，有多少个消费者就应该有多少个结束标识，再次基础上我们再来优化一下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 终极版</span><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue<br><br><span class="hljs-comment"># 消费者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">consumer</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        info = q.get()<br>        <span class="hljs-keyword">if</span> info <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">break</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我吃到了&quot;</span> + info)<br><br><span class="hljs-comment"># 生产者函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">productor</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        info = <span class="hljs-string">f&quot;包子<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i + <span class="hljs-number">1</span>)&#125;</span>号&quot;</span><br>        q.put(info)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue(<span class="hljs-number">5</span>)<br>    pro_con1 = Process(target=consumer, args=(q,))<br>    pro_con2 = Process(target=consumer, args=(q,))<br>    pro_con3 = Process(target=consumer, args=(q,))<br><br>    pro_pro1 = Process(target=productor, args=(q,))<br>    pro_pro2 = Process(target=productor, args=(q,))<br><br>    pro_con1.start()<br>    pro_con2.start()<br>    pro_con3.start()<br>    pro_pro1.start()<br>    pro_pro2.start()<br><br>    <span class="hljs-comment"># 我们可以把添加结束标识放在主进程中操作，主进程必须等生产者生产完后再添加标识</span><br>    pro_pro1.join()<br>    pro_pro2.join()<br><br>    <span class="hljs-comment"># 有几个消费者就添加几个标识</span><br>    q.put(<span class="hljs-literal">None</span>)<br>    q.put(<span class="hljs-literal">None</span>)<br>    q.put(<span class="hljs-literal">None</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>基于可连接队列实现的生产者消费者模型</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> JoinableQueue, Process<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">consumer</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        info = q.get()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;我吃到了&quot;</span> + info)<br>        q.task_done()  <span class="hljs-comment"># 没吃到一个包子就告诉生产者一下，生产者的计数器（join）就会自减 1</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">productor</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>        info = <span class="hljs-string">f&quot;包子<span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(i + <span class="hljs-number">1</span>)&#125;</span>号&quot;</span><br>        q.put(info)<br>    q.join()  <span class="hljs-comment"># 此时生产者会将生产的包子的数目，即20，记录下来，阻塞等待消费者消费完队列中所有的数据（即join计数为0）再解除阻塞</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = JoinableQueue(<span class="hljs-number">10</span>)<br>    p_pro = Process(target=productor, args=(q,))<br>    p_con = Process(target=consumer, args=(q,))<br><br>    <span class="hljs-comment"># 将消费者设置成守护进程</span><br>    p_con.daemon = <span class="hljs-literal">True</span><br><br>    p_pro.start()<br>    p_con.start()<br><br>    <span class="hljs-comment"># 主进程等待生产者全部结束再结束</span><br>    p_pro.join()<br></code></pre></td></tr></table></figure>
+
+<p>实现的逻辑是这样的，首先生产者由于q.join的缘故，要等到消费者的task_done不断返回，等 join 计数变为0的时候，生产者才能结束；主进程由于p_pro.join()的缘故，必须等待生产者结束，自身的代码才能执行结束，而一旦主进程的代码执行结束了，消费者这个守护进程就会跟着结束，因此就不会存在消费者循环阻塞的问题了。</p>
+<h2 id="进程池"><a href="#进程池" class="headerlink" title="进程池"></a>进程池</h2><p>进程池实际上就是一个池子，它会帮程序员去管理池中的进程。进程池里边有固定数量的进程。这些进程一直处于待命状态，一旦有任务来，马上就有进程去处理。因为在实际业务中，任务量是有多有少的，如果任务量特别的多，不可能要开对应那么多的进程数，其次也不是开的进程越多，效率越高。开启那么多进程首先就需要消耗大量的时间让操作系统来为你管理它。其次还需要消耗大量时间让 CPU 帮你调度它。一边拿来说，进程数量是 CPU 核数 + 1 时，对CPU的利用率是最高的。</p>
+<h3 id="一、使用进程池的三个方法"><a href="#一、使用进程池的三个方法" class="headerlink" title="一、使用进程池的三个方法"></a><strong>一、使用进程池的三个方法</strong></h3><p><strong>map(func,iterable)  方法</strong></p>
+<ul>
+<li>func：进程池中的进程执行的任务函数</li>
+<li>iterable：可迭代对象，是把可迭代对象中的每个元素依次传给任务函数当参数</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    num += <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(num)<br>    <span class="hljs-keyword">return</span> num<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Pool(<span class="hljs-number">5</span>)<br>    res = p.<span class="hljs-built_in">map</span>(func, [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>)])<br>    p.close()<br>    p.join()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;主进程中map的返回值&#x27;</span>, res)<br></code></pre></td></tr></table></figure>
+
+<p><strong>apply(func,args&#x3D;())  方法</strong></p>
+<ul>
+<li>func：进程池中的进程执行的任务函数</li>
+<li>args：可迭代对象型的参数，是传给任务函数的参数</li>
+</ul>
+<p>该方法为同步方法，即根据进程池中的进程数量接入对应数量的任务，但是进程是一个一个执行的。同步处理任务时，不需要close和join，进程池中的所有进程是普通进程，即主进程需要等待其执行结束。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    num += <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> num<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    pool = Pool(os.cpu_count() + <span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):  <span class="hljs-comment"># 同步处理这100个任务，同步是指，哪怕我进程中有5个进程，也依旧是1个进程1个进程的去执行任务</span><br>        res = pool.apply(func,args=(i,))<br>        <span class="hljs-built_in">print</span>(res)<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>apply_async(func,args&#x3D;(),callback&#x3D;None)  方法</strong></p>
+<ul>
+<li>func：进程池中的进程执行的任务函数</li>
+<li>args：可迭代对象型的参数，是传给任务函数的参数</li>
+<li>callback：回调函数，就是说每当进程池中有进程处理完任务了，返回的结果可以交给回调函数，由回调函数进行进一步的处理，回调函数只有异步才有，同步是没有的</li>
+</ul>
+<p>异步处理任务时，进程池中的所有进程是守护进程（主进程代码执行完毕守护进程就结束），所以异步处理任务时，必须要加上close和join，同步处理不需要</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    num += <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> num<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Pool(<span class="hljs-number">5</span>)<br>    start = time.time()<br>    l = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10000</span>):<br>    	<span class="hljs-comment"># 异步处理这100个任务，异步是指，进程中有5个进程，一下就处理5个任务，接下来哪个进程处理完任务了，就马上去接收下一个任务</span><br>        res = p.apply_async(func,args=(i,))  <span class="hljs-comment"># 得到的结果是一个AsyncResul的实例obj，先将结果放入列表</span><br>        l.append(res)<br>    p.close()  <span class="hljs-comment">#  关闭进程池，防止还有其他的任务过来</span><br>    p.join()   <span class="hljs-comment"># 阻塞等待进程池中的子进程执行结束</span><br>    <span class="hljs-built_in">print</span>(time.time() - start)<br>    <br>    [<span class="hljs-built_in">print</span>(i.get()) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> l]<br>    <br><span class="hljs-comment"># 异步机制执行的结果是AsyncResul的实例obj，需要通过get方法得到实际结果；同步机制没有此方法，同步机制能直接拿到实际结果。</span><br><span class="hljs-comment"># 其实get是阻塞等待的，也就是说，如果没有上边的close和join，主进程一样会阻塞在get等待进程池中给返回结果。进程池异步执行任务获取结果，每次有一个进程返回结果后，就能get到一个结果，然后for循环到下一次继续阻塞等待拿结果，所以为了不影响执行效率，通常是将进程池执行的初始结果统一保存，然后统一取值</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="二、回调函数的使用"><a href="#二、回调函数的使用" class="headerlink" title="二、回调函数的使用"></a><strong>二、回调函数的使用</strong></h3><p>进程的任务函数的返回值，被当成回调函数的形参接收到，以此进行进一步的处理操作。回调函数是<strong>由主进程调用的，而不是子进程</strong>，子进程只负责把结果传递给回调函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> time,os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">url</span>):<br>    res = requests.get(url)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;子进程的pid:%s,父进程的pid：%s&#x27;</span>%(os.getpid(),os.getppid()))<br>    <span class="hljs-comment"># print(res.text)</span><br>    <span class="hljs-keyword">if</span> res.status_code == <span class="hljs-number">200</span>:<br>        <span class="hljs-keyword">return</span> url,res.text<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">record_result</span>(<span class="hljs-params">res</span>):<br>    url,text = res<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;回调函数的pid&#x27;</span>, os.getpid())  <span class="hljs-comment"># 所有打印出来的回调函数的pid都和主进程是一样的，所以回调函数都是由主进程负责调用的</span><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;a.txt&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(url + text)<br>    <span class="hljs-comment"># print(&#x27;回调函数中！&#x27;,url)</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p = Pool(<span class="hljs-number">5</span>)<br>    l = [<span class="hljs-string">&#x27;https://www.baidu.com&#x27;</span>,<br>         <span class="hljs-string">&#x27;http://www.jd.com&#x27;</span>,<br>         <span class="hljs-string">&#x27;http://www.taobao.com&#x27;</span>,<br>         <span class="hljs-string">&#x27;http://www.mi.com&#x27;</span>,<br>         <span class="hljs-string">&#x27;http://www.cnblogs.com&#x27;</span>,<br>         <span class="hljs-string">&#x27;https://www.bilibili.com&#x27;</span>,<br>         ]<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;主进程的pid&#x27;</span>,os.getpid())<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> l:<br>        p.apply_async(func, args=(i,),callback=record_result)<span class="hljs-comment">#</span><br>        <span class="hljs-comment"># 异步执行任务func，每有一个进程执行完任务后，在func中return一个结果，结果会自动的被callback指定的函数，当成形式参数来接收到</span><br>    p.close()<br>    p.join()<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python 多进程开发</div>
+      <div>https://clark-cdc.github.io/2019/05/13/0015-多进程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年5月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/05/20/0016-%E7%BA%BF%E7%A8%8B/" title="Python 多线程开发">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python 多线程开发</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/05/10/0014-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Python 正则表达式">
+                        <span class="hidden-mobile">Python 正则表达式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

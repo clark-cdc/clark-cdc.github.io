@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ORM之多表操作一、创建模型1.1 需求分析为了方便演示，我们先来构造一下需求场景。现在有这么四张表，分别是：  Book表	用于记录书籍的书名，价格，作者，出版社等信息 Author表    用于记录作者的简要信息以及编写的书籍的相关信息 AuthorDetail表   用于记录作者的详细信息 Publish表    用于记录出版社的信息和出版书籍的相关信息  我们再为上述的四张表添加以下的对应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clark&#39;s Blog">
+<meta property="og:url" content="https://clark-cdc.github.io/2025/01/30/0507-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%BA%8C)/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="ORM之多表操作一、创建模型1.1 需求分析为了方便演示，我们先来构造一下需求场景。现在有这么四张表，分别是：  Book表	用于记录书籍的书名，价格，作者，出版社等信息 Author表    用于记录作者的简要信息以及编写的书籍的相关信息 AuthorDetail表   用于记录作者的详细信息 Publish表    用于记录出版社的信息和出版书籍的相关信息  我们再为上述的四张表添加以下的对应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_tables.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_book.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_authordetail.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_author.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_publish.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_book_author.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/%E8%A1%A8%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/author%E8%A1%A8%E5%86%85%E5%AE%B9.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/author_detail%E8%A1%A8%E5%86%85%E5%AE%B9.png">
+<meta property="og:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/publish%E8%A1%A8%E5%86%85%E5%AE%B9.png">
+<meta property="article:published_time" content="2025-01-30T09:00:17.201Z">
+<meta property="article:modified_time" content="2025-01-30T09:00:17.201Z">
+<meta property="article:author" content="clark">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/static/img/Django%E4%B8%93%E9%A2%98/app02_tables.png">
+  
+  
+  
+  <title>Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-30 17:00" pubdate>
+          2025年1月30日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="ORM之多表操作"><a href="#ORM之多表操作" class="headerlink" title="ORM之多表操作"></a>ORM之多表操作</h1><h2 id="一、创建模型"><a href="#一、创建模型" class="headerlink" title="一、创建模型"></a>一、创建模型</h2><h3 id="1-1-需求分析"><a href="#1-1-需求分析" class="headerlink" title="1.1 需求分析"></a><strong>1.1 需求分析</strong></h3><p>为了方便演示，我们先来构造一下需求场景。现在有这么四张表，分别是：</p>
+<ul>
+<li>Book表	用于记录书籍的书名，价格，作者，出版社等信息</li>
+<li>Author表    用于记录作者的简要信息以及编写的书籍的相关信息</li>
+<li>AuthorDetail表   用于记录作者的详细信息</li>
+<li>Publish表    用于记录出版社的信息和出版书籍的相关信息</li>
+</ul>
+<p>我们再为上述的四张表添加以下的对应关系：</p>
+<ul>
+<li>一对一    每一条作者的简要信息都会有且仅有一条详细信息对应，即 Author表和AuthorDetail表是一对一的关系</li>
+<li>一对多    一个出版社可以出版多本书籍，但是一本书籍不能由多个出版社联合出版，即Book表和Publish表是一对多的关系</li>
+<li>多对多    一本书可以由多个作者联合编写，一个作者也可以编写多本书，即Book表和Author表是多对多的关系</li>
+</ul>
+<p>在 SQL 中，对于一对一的关系，只需要通过一个关联字段即可将两张表进行关联；对于一对多的关系，我们需要通过外键来将两张表进行关联；对于多对多的关系，我们需要通过第三张表来作为中间表进行关联，而在 ORM 中，我们也可以通过上述方式来对多表做关联操作，但是 ORM 还为我们提供了更简单的方式，如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models<br><br><br><span class="hljs-comment"># 书籍表</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Book</span>(models.Model):<br>    nid = models.AutoField(primary_key=<span class="hljs-literal">True</span>)<br>    title = models.CharField(max_length=<span class="hljs-number">32</span>)<br>    price = models.DecimalField(max_digits=<span class="hljs-number">5</span>, decimal_places=<span class="hljs-number">2</span>)<br><br>    <span class="hljs-comment"># Book表和Publish建立一对多关系</span><br>    publish = models.ForeignKey(to=<span class="hljs-string">&quot;Publish&quot;</span>, to_field=<span class="hljs-string">&quot;nid&quot;</span>, on_delete=models.CASCADE)<br><br>    <span class="hljs-comment"># Book表和Author建立多对多关系</span><br>    author = models.ManyToManyField(to=<span class="hljs-string">&quot;Author&quot;</span>)<br><br><br><span class="hljs-comment"># 作者表</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Author</span>(models.Model):<br>    nid = models.AutoField(primary_key=<span class="hljs-literal">True</span>)<br>    name = models.CharField(max_length=<span class="hljs-number">32</span>)<br><br>    <span class="hljs-comment"># Author表和AuthorDetail表建立一对一的表关系</span><br>    author_detail = models.OneToOneField(to=<span class="hljs-string">&quot;AuthorDetail&quot;</span>, to_field=<span class="hljs-string">&quot;nid&quot;</span>, on_delete=models.CASCADE)<br><br><br><span class="hljs-comment"># 作者详细信息表</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">AuthorDetail</span>(models.Model):<br>    nid = models.AutoField(primary_key=<span class="hljs-literal">True</span>)<br>    age = models.IntegerField()<br>    gender = models.CharField(max_length=<span class="hljs-number">10</span>)<br>    phone = models.BigIntegerField()<br><br><br><span class="hljs-comment"># 出版社表</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Publish</span>(models.Model):<br>    nid = models.AutoField(primary_key=<span class="hljs-literal">True</span>)<br>    name = models.CharField(max_length=<span class="hljs-number">32</span>)<br>    address = models.CharField(max_length=<span class="hljs-number">32</span>)<br></code></pre></td></tr></table></figure>
+
+<p>执行数据库迁移操作</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">python</span> manage.<span class="hljs-keyword">py</span> makemigrations<br><span class="hljs-keyword">python</span> manage.<span class="hljs-keyword">py</span> migrate<br></code></pre></td></tr></table></figure>
+
+<p>此时我们可以看到在数据库中多出来五张表，且表中对应的字段分别如下：</p>
+<img src="/static/img/Django专题/app02_tables.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<ul>
+<li>book表</li>
+</ul>
+<img src="/static/img/Django专题/app02_book.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 80%;" /> 
+
+<ul>
+<li>author_detail表</li>
+</ul>
+<img src="/static/img/Django专题/app02_authordetail.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<ul>
+<li>author表</li>
+</ul>
+<img src="/static/img/Django专题/app02_author.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<ul>
+<li>publish表</li>
+</ul>
+<img src="/static/img/Django专题/app02_publish.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<ul>
+<li>book_author表</li>
+</ul>
+<img src="/static/img/Django专题/app02_book_author.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<p>​		对于 publish 表和 author_detail 表没有什么特别的地方，和我们在模型中定义的字段是一样的。对于author表，我们并没有看到在 Author模型中定义的一对一的关联字段 author_detail，反而多了一个author_detail_id 的属性，这是因为对于一对一的表关系，django 的 ORM 机制会把我们定义的关联字段自动加上 “_id” 后作为一个属性，存储在表中，该属性指向的就是关联表的 nid 属性。</p>
+<p>​		同样的，对于一对多的外键关系，django 的 ORM 机制也会把我们定义的外键字段加上 “_id” 后作为一个属性，存储在表中，该属性指向的也是关联表的 nid 属性，即 book 表中的 publish_id 属性字段就是这么由来的。</p>
+<p>​		最后，对于 book 和 author 这种多对多的关系，ORM 自动生成了第三张表来对两者的关系进行管理，表名就是这两张表的名字，中间加上下划线。表中的属性字段 book_id 和 author_id 分别对应book 表和 author 表中的 nid 字段。以上表关系的具体对应关系如下：</p>
+<img src="/static/img/Django专题/表对应关系.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 67%;" /> 
+
+<p>补充说明：</p>
+<p>​		对于一对一的表关系，关联字段无论写在哪个模型中都行，因为本质上一对一的表是完全可以合并成一张表的；而对于一对多的表关系，关联字段必须定义在多的那个模型中，如 Book 和 Publish 中，一个 publish 可以对应多个 book，多以外键字段写在了 Book 类中；最后对于多对多的关系而言，关联字段无论写在哪个模型中都可以。</p>
+<h3 id="1-2-正向查询与反向查询"><a href="#1-2-正向查询与反向查询" class="headerlink" title="1.2 正向查询与反向查询"></a><strong>1.2 正向查询与反向查询</strong></h3><p>​		正向查询是指，从含有关联属性的表去跨表查询对应的表的过程；反向查询是指从其他表跨表查询含有关联属性的表的查询过程。举个例子，就 book 表 和 publish 表，在 book 表中定义了外键关联字段 publish，此时从 book 表出发去 publish 表中查询对应数据的过程就是正向查询，从  publish 表出发去 book 表中查询对应的数据的过程即为反向查询。</p>
+<p>​		这里简单介绍正向查询和反向查询的概念，是因为在 ORM 中，正向跨表查询和反向跨表查询的方式是有区别的，我们会在下面介绍查询时具体研究。</p>
+<h2 id="二、添加记录"><a href="#二、添加记录" class="headerlink" title="二、添加记录"></a>二、添加记录</h2><p>​		对于一对一的表关系来说，插入数据和单表的插入方式没有任何区别，只需要注意关联字段的值必须能在关联的表中找到对应的匹配值即可。因此我们可以简单的先来为 author，author_detail 和 publish 表插入一些数据，我们重点研究的是一对多和多对多的表关系的数据插入方式。</p>
+<ul>
+<li>author 表</li>
+</ul>
+<p><img src="/static/img/Django%E4%B8%93%E9%A2%98/author%E8%A1%A8%E5%86%85%E5%AE%B9.png" srcset="/img/asserts/loading.gif" lazyload> </p>
+<ul>
+<li>author_detail 表</li>
+</ul>
+<p><img src="/static/img/Django%E4%B8%93%E9%A2%98/author_detail%E8%A1%A8%E5%86%85%E5%AE%B9.png" srcset="/img/asserts/loading.gif" lazyload> </p>
+<ul>
+<li>publish 表</li>
+</ul>
+<p><img src="/static/img/Django%E4%B8%93%E9%A2%98/publish%E8%A1%A8%E5%86%85%E5%AE%B9.png" srcset="/img/asserts/loading.gif" lazyload> </p>
+<h3 id="2-1-一对多插入"><a href="#2-1-一对多插入" class="headerlink" title="2.1 一对多插入"></a><strong>2.1 一对多插入</strong></h3><h4 id="2-1-1-通过模型对象插入"><a href="#2-1-1-通过模型对象插入" class="headerlink" title="2.1.1 通过模型对象插入"></a><strong>2.1.1 通过模型对象插入</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 新增一本书籍，出版社是北京出版社</span><br>publish_obj = Publish.objects.get(name=<span class="hljs-string">&quot;北京出版社&quot;</span>)<br>Book.objects.create(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>, price=<span class="hljs-number">100</span>, publish=publish_obj)<br></code></pre></td></tr></table></figure>
+
+<p>​		该方式是通过模型中定义的关联字段来实现数据插入的。首先查询到对应的出版社对象，再将出版社对象赋值给Book模型中定义的外键字段，此时 ORM 引擎会自动去 book 表关联的 publish 表中匹配这个publish_obj 对象，找到这条数据后将该数据对象的 nid 的值赋给 book 表中的 publish_id 属性字段。</p>
+<h4 id="2-1-2-直接给-book-表绑定-publish-id"><a href="#2-1-2-直接给-book-表绑定-publish-id" class="headerlink" title="2.1.2 直接给 book 表绑定 publish_id"></a><strong>2.1.2 直接给 book 表绑定 publish_id</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 新增一本书籍，出版社是北京出版社</span><br>Book.objects.create(title=<span class="hljs-string">&quot;跟我一起学GoLang&quot;</span>, price=<span class="hljs-number">200</span>, publish_id=<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>​		该方式等价于直接对 book 表进行操作，给表中对应的每个字段赋值。</p>
+<h3 id="2-2-多对多插入"><a href="#2-2-多对多插入" class="headerlink" title="2.2 多对多插入"></a><strong>2.2 多对多插入</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 插入一本书籍，book_obj为插入的对象</span><br>book_obj = Book.objects.create(title=<span class="hljs-string">&quot;跟我一起学Linux&quot;</span>, price=<span class="hljs-number">150</span>, publish_id=<span class="hljs-number">2</span>)<br><br><span class="hljs-comment"># 查询作者对象</span><br>cdc = Author.objects.get(name=<span class="hljs-string">&quot;cdc&quot;</span>)<br>trr = Author.objects.get(name=<span class="hljs-string">&quot;trr&quot;</span>)<br><br><span class="hljs-comment"># 通过关联字段为book绑定多对多的关系</span><br>book_obj.author.add(cdc, trr)<br></code></pre></td></tr></table></figure>
+
+<p>也可以通过指定主键的方式进行直接绑定</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">book_obj = Book.objects.get(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>)<br>book_obj.author.add(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)   <span class="hljs-comment"># 将关联表author中nid分别为 1、2、3的数据进行关联</span><br><span class="hljs-comment"># book_obj.author.add(*[1, 2, 3])  #  和上述方式一样</span><br></code></pre></td></tr></table></figure>
+
+<p>补充：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">book_obj.authors.remove()      <span class="hljs-comment"># 将某个特定的对象从被关联对象集合中去除，如 book_obj.authors.remove(cdc)  或者 book_obj.authors.remove(1)</span><br>book_obj.authors.clear()       <span class="hljs-comment"># 清空被关联对象集合，等价于 book_obj.authors.remove(所有作者)</span><br>book_obj.authors.<span class="hljs-built_in">set</span>()         <span class="hljs-comment"># 先清空再设置　　</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">book_obj.authors.<span class="hljs-built_in">all</span>()  <span class="hljs-comment"># 获取与这本书关联的所有作者对象集合，是一个QuerySet类型</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="三、跨表查询"><a href="#三、跨表查询" class="headerlink" title="三、跨表查询"></a>三、跨表查询</h2><h3 id="3-1-基于对象的跨表查询（子查询）"><a href="#3-1-基于对象的跨表查询（子查询）" class="headerlink" title="3.1 基于对象的跨表查询（子查询）"></a><strong>3.1 基于对象的跨表查询（子查询）</strong></h3><h4 id="3-1-1-一对一查询"><a href="#3-1-1-一对一查询" class="headerlink" title="3.1.1 一对一查询"></a><strong>3.1.1 一对一查询</strong></h4><ul>
+<li>正向查询：根据关联字段</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询cdc的手机号</span><br>cdc = Author.objects.<span class="hljs-built_in">filter</span>(name=<span class="hljs-string">&quot;cdc&quot;</span>).first()<br>phone = cdc.author_detail.phone  <span class="hljs-comment"># 根据关联字段查询</span><br><span class="hljs-built_in">print</span>(phone)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询：根据表名小写</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询手机号是13169857456的作者名字</span><br>per = AuthorDetail.objects.<span class="hljs-built_in">filter</span>(phone=<span class="hljs-number">13169857456</span>).first()<br><span class="hljs-built_in">print</span>(per.author.name)  <span class="hljs-comment"># 根据表名小写反向查询</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-1-2-一对多查询"><a href="#3-1-2-一对多查询" class="headerlink" title="3.1.2 一对多查询"></a><strong>3.1.2 一对多查询</strong></h4><ul>
+<li>正向查询：根据关联字段</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询《跟我学Python》这本书的出版社名字</span><br>book = Book.objects.<span class="hljs-built_in">filter</span>(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).first()<br><span class="hljs-built_in">print</span>(book.publish)  <span class="hljs-comment"># 跟这本书有关的出版社对象</span><br><span class="hljs-built_in">print</span>(book.publish.name)  <span class="hljs-comment"># 出版社的名字</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询：<code>表名小写_set.all()</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询北京出版社出版的所有书籍</span><br>pub = Publish.objects.<span class="hljs-built_in">filter</span>(name=<span class="hljs-string">&quot;北京出版社&quot;</span>).first()<br>books = pub.book_set.<span class="hljs-built_in">all</span>()<br><br><span class="hljs-keyword">for</span> book <span class="hljs-keyword">in</span> books:<br>    <span class="hljs-built_in">print</span>(book.title)<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-1-3-多对多查询"><a href="#3-1-3-多对多查询" class="headerlink" title="3.1.3 多对多查询"></a><strong>3.1.3 多对多查询</strong></h4><ul>
+<li>正向查询：根据关联字段</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询《跟我学Python》所有作者的名字</span><br>book = Book.objects.<span class="hljs-built_in">filter</span>(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).first()<br>author_list = book.author.<span class="hljs-built_in">all</span>()<br><span class="hljs-built_in">print</span>(author_list)<br><span class="hljs-keyword">for</span> author <span class="hljs-keyword">in</span> author_list:<br>	<span class="hljs-built_in">print</span>(author.name)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询：根据<code>表名小写_set.all()</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询cdc写过的所有书籍</span><br>cdc = Author.objects.<span class="hljs-built_in">filter</span>(name=<span class="hljs-string">&quot;cdc&quot;</span>).first()<br>book_list = cdc.book_set.<span class="hljs-built_in">all</span>()<br><span class="hljs-keyword">for</span> book <span class="hljs-keyword">in</span> book_list:<br>	<span class="hljs-built_in">print</span>(book.title)<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-基于双下划线的跨表查询（join查询）"><a href="#3-2-基于双下划线的跨表查询（join查询）" class="headerlink" title="3.2 基于双下划线的跨表查询（join查询）"></a><strong>3.2 基于双下划线的跨表查询（join查询）</strong></h3><p>基于双下划线的跨表查询，其本质是连表查询。正向查询主要通过在表中定义的关联字段来通知 ORM 引擎去 join 对应的关联表，然后进行连表查询；反向查询主要通过小写的表名来告诉 ORM 引擎，让当前表去 join 对应的表，然后进行连表查询。</p>
+<h4 id="3-2-1-一对一查询"><a href="#3-2-1-一对一查询" class="headerlink" title="3.2.1 一对一查询"></a><strong>3.2.1 一对一查询</strong></h4><ul>
+<li>正向查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询cdc的手机号</span><br>phone = Author.objects.<span class="hljs-built_in">filter</span>(name=<span class="hljs-string">&quot;cdc&quot;</span>).values(<span class="hljs-string">&quot;author_detail__phone&quot;</span>)<br><span class="hljs-built_in">print</span>(phone)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;author_detail__phone&#x27;: 13169857456&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询cdc的手机号</span><br>phone = AuthorDetail.objects.<span class="hljs-built_in">filter</span>(author__name=<span class="hljs-string">&quot;cdc&quot;</span>).values(<span class="hljs-string">&quot;phone&quot;</span>)<br><span class="hljs-built_in">print</span>(phone)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;phone&#x27;: 13169857456&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-2-一对多查询"><a href="#3-2-2-一对多查询" class="headerlink" title="3.2.2 一对多查询"></a><strong>3.2.2 一对多查询</strong></h4><ul>
+<li>正常查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询跟我学Python这本书的出版社</span><br>pub_name = Book.objects.<span class="hljs-built_in">filter</span>(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).values(<span class="hljs-string">&quot;publish__name&quot;</span>)<br><span class="hljs-built_in">print</span>(pub_name)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;publish__name&#x27;: &#x27;北京出版社&#x27;&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询跟我学Python这本书的出版社</span><br>pub_name = Publish.objects.<span class="hljs-built_in">filter</span>(book__title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).values(<span class="hljs-string">&quot;name&quot;</span>)<br><span class="hljs-built_in">print</span>(pub_name)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;name&#x27;: &#x27;北京出版社&#x27;&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-3-多对多查询"><a href="#3-2-3-多对多查询" class="headerlink" title="3.2.3 多对多查询"></a><strong>3.2.3 多对多查询</strong></h4><ul>
+<li>正向查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询跟我学Python这本书的所有作者</span><br>authors = Book.objects.<span class="hljs-built_in">filter</span>(title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).values(<span class="hljs-string">&quot;author__name&quot;</span>)<br><span class="hljs-built_in">print</span>(authors)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;author__name&#x27;: &#x27;trr&#x27;&#125;, &#123;&#x27;author__name&#x27;: &#x27;cdc&#x27;&#125;, &#123;&#x27;author__name&#x27;: &#x27;ctt&#x27;&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询跟我学Python这本书的所有作者</span><br>authors = Author.objects.<span class="hljs-built_in">filter</span>(book__title=<span class="hljs-string">&quot;跟我学Python&quot;</span>).values(<span class="hljs-string">&quot;name&quot;</span>)<br><span class="hljs-built_in">print</span>(authors)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;name&#x27;: &#x27;trr&#x27;&#125;, &#123;&#x27;name&#x27;: &#x27;cdc&#x27;&#125;, &#123;&#x27;name&#x27;: &#x27;ctt&#x27;&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>练习：连续跨表查询</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询年龄大于25岁的作者以及写过的书和书籍的出版社</span><br>res = Book.objects.<span class="hljs-built_in">filter</span>(author__author_detail__age__gt=<span class="hljs-number">25</span>).values(<span class="hljs-string">&quot;title&quot;</span>, <span class="hljs-string">&quot;publish__name&quot;</span>, <span class="hljs-string">&quot;author__name&quot;</span>)<br><span class="hljs-built_in">print</span>(res)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;title&#x27;: &#x27;跟我学Python&#x27;, &#x27;publish__name&#x27;: &#x27;北京出版社&#x27;, &#x27;author__name&#x27;: &#x27;ctt&#x27;&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="四、聚合和分组查询"><a href="#四、聚合和分组查询" class="headerlink" title="四、聚合和分组查询"></a>四、聚合和分组查询</h2><h3 id="4-1-聚合查询"><a href="#4-1-聚合查询" class="headerlink" title="4.1 聚合查询"></a><strong>4.1 聚合查询</strong></h3><p>​		ORM 中的聚合查询是通过  aggregate() 方法实现的，aggregate() 是 QuerySet 的一个终止子句，意思是说，它返回一个包含一些键值对的字典，不再是queryset。键的名称是聚合值的标识符，值是计算出来的聚合值。键的名称是按照字段和聚合函数的名称自动生成出来的。如果你想要为聚合值指定一个名称，可以向聚合子句提供它。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> django.db.models <span class="hljs-keyword">import</span> Avg, Max, Min, Count<br><br><span class="hljs-comment"># 查询所有书籍的平均价格</span><br>avg_price = Book.objects.<span class="hljs-built_in">all</span>().aggregate(Avg(<span class="hljs-string">&quot;price&quot;</span>))  <span class="hljs-comment"># &#123;&#x27;price__avg&#x27;: 150.0&#125; 不为值指定名称的话，默认名称是字段加双下划线加计算方法</span><br>avg_price = Book.objects.<span class="hljs-built_in">all</span>().aggregate(average_price=Avg(<span class="hljs-string">&quot;price&quot;</span>))  <span class="hljs-comment"># 指定名称 &#123;&#x27;average_price&#x27;: 150.0&#125;</span><br><br><span class="hljs-comment"># 查询最贵的书的价格</span><br>max_price = Book.objects.<span class="hljs-built_in">all</span>().aggregate(max_price=Max(<span class="hljs-string">&quot;price&quot;</span>))<br><span class="hljs-built_in">print</span>(max_price)<br><br><span class="hljs-comment"># 查询最便宜的书的价格</span><br>min_price = Book.objects.<span class="hljs-built_in">all</span>().aggregate(min_price=Min(<span class="hljs-string">&quot;price&quot;</span>))<br><span class="hljs-built_in">print</span>(min_price)<br><br><span class="hljs-comment"># 查有多少本书</span><br>book_num = Book.objects.<span class="hljs-built_in">all</span>().aggregate(book_num=Count(<span class="hljs-string">&quot;title&quot;</span>))<br><span class="hljs-built_in">print</span>(book_num)<br></code></pre></td></tr></table></figure>
+
+<p>如果你希望生成不止一个聚合，你可以向<code>aggregate()</code>子句中添加另一个参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">res = Book.objects.<span class="hljs-built_in">all</span>().aggregate(max_price=Max(<span class="hljs-string">&quot;price&quot;</span>), min_price=Min(<span class="hljs-string">&quot;price&quot;</span>), average_price=Avg(<span class="hljs-string">&quot;price&quot;</span>))<br><span class="hljs-built_in">print</span>(res)  <span class="hljs-comment"># &#123;&#x27;max_price&#x27;: Decimal(&#x27;200.00&#x27;), &#x27;min_price&#x27;: Decimal(&#x27;100.00&#x27;), &#x27;average_price&#x27;: 150.0&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-分组查询"><a href="#4-2-分组查询" class="headerlink" title="4.2 分组查询"></a><strong>4.2 分组查询</strong></h3><p>ORM 中的聚合查询是通过  annotate() 方法实现的，annotate()为调用的<code>QuerySet</code>中每一个对象都生成一个独立的统计值（统计方法用聚合函数），返回值依然是一个queryset</p>
+<h4 id="4-2-1-单表分组"><a href="#4-2-1-单表分组" class="headerlink" title="4.2.1 单表分组"></a><strong>4.2.1 单表分组</strong></h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#----------------- 员工表 --------------------</span><br><span class="hljs-attribute">id</span>  name age  salary    dep<br><span class="hljs-attribute">1</span>   cdc  <span class="hljs-number">12</span>    <span class="hljs-number">2000</span>    销售部<br><span class="hljs-attribute">2</span>   ctt  <span class="hljs-number">22</span>    <span class="hljs-number">3000</span>    人事部<br><span class="hljs-attribute">3</span>   trr   <span class="hljs-number">22</span>   <span class="hljs-number">5000</span>    人事部<br></code></pre></td></tr></table></figure>
+
+<p>我们要查询每个部门有多少人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"># <span class="hljs-keyword">SQL</span><br><span class="hljs-keyword">select</span> dep,<span class="hljs-built_in">Count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> dep;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ORM</span><br><span class="hljs-keyword">from</span> django.db.models <span class="hljs-keyword">import</span> Avg, Max, Min, Count<br><br>res = Emp.objects.<span class="hljs-built_in">all</span>().values(<span class="hljs-string">&quot;dep&quot;</span>).annotate(Count(<span class="hljs-string">&quot;name&quot;</span>))<br><span class="hljs-built_in">print</span>(res)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;dep&#x27;: &#x27;销售部&#x27;, &#x27;name__count&#x27;: 1&#125;, &#123;&#x27;dep&#x27;: &#x27;人事部&#x27;, &#x27;name__count&#x27;: 2&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>values 中存放要分组的条件（需求中是按部门分组），annotate 中存放计算结果，结果的键名默认值为计算的字段加双下划线加计算方式，当然我们也可以指定结果名称</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">res = Emp.objects.<span class="hljs-built_in">all</span>().values(<span class="hljs-string">&quot;dep&quot;</span>).annotate(people_num=Count(<span class="hljs-string">&quot;name&quot;</span>))<br><span class="hljs-built_in">print</span>(res)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;dep&#x27;: &#x27;销售部&#x27;, &#x27;people_num&#x27;: 1&#125;, &#123;&#x27;dep&#x27;: &#x27;人事部&#x27;, &#x27;people_num&#x27;: 2&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-2-2-多表分组"><a href="#4-2-2-多表分组" class="headerlink" title="4.2.2 多表分组"></a><strong>4.2.2 多表分组</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 查询每个出版社的名称以及对应的出版的书籍量<br># <span class="hljs-keyword">SQL</span> 先连表，后查询<br><span class="hljs-keyword">select</span> publish.name,<span class="hljs-built_in">Count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> book <span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> publish <span class="hljs-keyword">on</span> book.nid<span class="hljs-operator">=</span>publish.id <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> publish.id<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ORM</span><br><span class="hljs-keyword">from</span> django.db.models <span class="hljs-keyword">import</span> Avg, Max, Min, Count<br><br><span class="hljs-comment"># 查询每个出版社的名称以及对应的出版的书籍量</span><br>res = Publish.objects.<span class="hljs-built_in">all</span>().values(<span class="hljs-string">&quot;name&quot;</span>).annotate(book_num=Count(<span class="hljs-string">&quot;book__title&quot;</span>))<br><span class="hljs-built_in">print</span>(res)  <span class="hljs-comment"># &lt;QuerySet [&#123;&#x27;name&#x27;: &#x27;北京出版社&#x27;, &#x27;book_num&#x27;: 2&#125;, &#123;&#x27;name&#x27;: &#x27;南京出版社&#x27;, &#x27;book_num&#x27;: 1&#125;, &#123;&#x27;name&#x27;: &#x27;上海出版社&#x27;, &#x27;book_num&#x27;: 0&#125;]&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>或者还可以这么写</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询每个出版社的名称以及对应的出版的书籍量</span><br>Publish.objects.<span class="hljs-built_in">all</span>().values(<span class="hljs-string">&quot;nid&quot;</span>).annotate(book_num=Count(<span class="hljs-string">&quot;book__title&quot;</span>)).values(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;book_num&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询每一个书籍的名称以及对应的作者个数</span><br>Book.objects.<span class="hljs-built_in">all</span>().values(<span class="hljs-string">&quot;nid&quot;</span>).annotate(author_num=Count(<span class="hljs-string">&quot;author__name&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>总结：多表分组查询模型：</p>
+<ul>
+<li>正向查询</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">表模型<span class="hljs-selector-class">.objects</span><span class="hljs-selector-class">.all</span>()<span class="hljs-selector-class">.values</span>(<span class="hljs-string">&quot;主键&quot;</span>)<span class="hljs-selector-class">.annotate</span>(聚合函数(关联字段__统计字段))<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反向查询</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">后表模型<span class="hljs-selector-class">.objects</span><span class="hljs-selector-class">.all</span>()<span class="hljs-selector-class">.values</span>(<span class="hljs-string">&quot;主键&quot;</span>)<span class="hljs-selector-class">.annotate</span>(聚合函数(关联表名__统计字段))<br></code></pre></td></tr></table></figure>
+
+<p>**补充：**当我们不指定分组的依据时，ORM 引擎默认根据主键来分组；</p>
+<p>我们还可以查询到分组模型对象的其他字段。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询每一个出版社的名称以及出版的书籍个数</span><br>ret = Publish.objects.values(<span class="hljs-string">&quot;nid&quot;</span>).annotate(c=Count(<span class="hljs-string">&quot;book__title&quot;</span>)).values(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;address&quot;</span>)  <span class="hljs-comment"># 完整版分组查询</span><br>ret = Publish.objects.<span class="hljs-built_in">all</span>().annotate(c=Count(<span class="hljs-string">&quot;book__title&quot;</span>)).values(<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;c&quot;</span>,<span class="hljs-string">&quot;address&quot;</span>)  <span class="hljs-comment"># 此时会自动按照主键分组</span><br>ret = Publish.objects.annotate(c=Count(<span class="hljs-string">&quot;book__title&quot;</span>)).values(<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;c&quot;</span>,<span class="hljs-string">&quot;address&quot;</span>)  <span class="hljs-comment"># 默认全部查询后再按主键分组</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="五、F查询和Q查询"><a href="#五、F查询和Q查询" class="headerlink" title="五、F查询和Q查询"></a>五、F查询和Q查询</h2><h3 id="5-1-F查询"><a href="#5-1-F查询" class="headerlink" title="5.1 F查询"></a><strong>5.1 F查询</strong></h3><p>在上面所有的例子中，我们构造的过滤器都只是将字段值与某个常量做比较。如果我们要对两个字段的值做比较，那该怎么做呢？Django 提供 F() 来做这样的比较。F() 的实例可以在查询中引用字段，来比较同一个 model 实例中两个不同字段的值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询评论数大于收藏数的书籍</span><br><span class="hljs-keyword">from</span> django.db.models <span class="hljs-keyword">import</span> F<br><br>Book.objects.<span class="hljs-built_in">filter</span>(commnet_no__lt=F(<span class="hljs-string">&#x27;keep_no&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>Django 还支持 F() 对象之间以及 F() 对象和常数之间的加减乘除和取模的操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询评论数大于收藏数2倍的书籍</span><br><br>Book.objects.<span class="hljs-built_in">filter</span>(commnet_no__lt=F(<span class="hljs-string">&#x27;keep_no&#x27;</span>)*<span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<p>修改操作也可以使用F函数，比如将每一本书的价格提高30元：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">Book.objects.<span class="hljs-built_in">all</span>().update(price=F(<span class="hljs-string">&quot;price&quot;</span>)+<span class="hljs-number">30</span>)　<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-2-Q查询"><a href="#5-2-Q查询" class="headerlink" title="5.2 Q查询"></a><strong>5.2 Q查询</strong></h3><p>filter() 等方法中的关键字参数查询其实都是一起进行 AND 操作 的。如果你需要执行更复杂的查询（例如 OR ），你可以使用 Q 对象。Q对象可以使用&amp; 和| 操作符组合起来。当一个操作符在两个Q 对象上使用时，它产生一个新的Q 对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询书名是以Py开头或者以Li开头的书籍</span><br><span class="hljs-keyword">from</span> django.db.models <span class="hljs-keyword">import</span> Q<br><br>Book.objects.<span class="hljs-built_in">filter</span>(Q(title__startswith=<span class="hljs-string">&#x27;Py&#x27;</span>)|Q(title__startswith=<span class="hljs-string">&#x27;Li&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>可以组合使用 &amp; 和 | 操作符，以及使用括号进行分组来编写任意复杂的Q 对象。同时，Q 对象可以使用 ~ 操作符取反，这允许组合正常的查询和取反(NOT) 查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询作者是cdc且发行年限不是2017年的书籍的书名</span><br><br>bookList=Book.objects.<span class="hljs-built_in">filter</span>(Q(author__name=<span class="hljs-string">&quot;cdc&quot;</span>) &amp; ~Q(publish_date__year=<span class="hljs-number">2017</span>)).values_list(<span class="hljs-string">&quot;title&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>查询函数可以混合使用Q 对象和关键字参数。所有提供给查询函数的参数（关键字参数或Q 对象）都将”AND” 在一起。但是，如果出现Q 对象，它必须位于所有关键字参数的前面。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 查询在2016年或者2017年出版的，且书名忽略大小写为python的书籍</span><br><br>bookList=Book.objects.<span class="hljs-built_in">filter</span>(Q(publishDate__year=<span class="hljs-number">2016</span>) | Q(publishDate__year=<span class="hljs-number">2017</span>), title__icontains=<span class="hljs-string">&quot;python&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>https://clark-cdc.github.io/2025/01/30/0507-Django模型层(二)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/30/0506-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%B8%80)/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/30/0508-%E4%BD%BF%E7%94%A8AJAX%E5%92%8C%E5%90%8E%E5%8F%B0%E4%BA%A4%E4%BA%92/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
