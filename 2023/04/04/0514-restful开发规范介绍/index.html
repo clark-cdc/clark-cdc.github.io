@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Web开发前后端模式1. 前后端不分离前后端不分离的开发模式，常见于早期的 Web 开发中（现在也有部分网站延用该模式）。在该模式下，前端人员只需要构建好页面结构样式，提供页面模板即可；后端人员除了要编写相关后台的业务处理接口，还需要根据前端模板将数据进行填充渲染。因此该模式下，前后端的开发关联性较强，比较适合开发用户量少、简单的项目。 12345678特点：    - 用户访问 URL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Restful 开发规范介绍">
+<meta property="og:url" content="https://clark-cdc.github.io/2023/04/04/0514-restful%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="一、Web开发前后端模式1. 前后端不分离前后端不分离的开发模式，常见于早期的 Web 开发中（现在也有部分网站延用该模式）。在该模式下，前端人员只需要构建好页面结构样式，提供页面模板即可；后端人员除了要编写相关后台的业务处理接口，还需要根据前端模板将数据进行填充渲染。因此该模式下，前后端的开发关联性较强，比较适合开发用户量少、简单的项目。 12345678特点：    - 用户访问 URL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+<meta property="article:published_time" content="2023-04-04T12:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-10T13:34:08.625Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
+<meta property="article:tag" content="django_restful_framework">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+  
+  
+  
+  <title>Restful 开发规范介绍 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Restful 开发规范介绍"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-04 20:00" pubdate>
+          2023年4月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Restful 开发规范介绍</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、Web开发前后端模式"><a href="#一、Web开发前后端模式" class="headerlink" title="一、Web开发前后端模式"></a>一、Web开发前后端模式</h2><h3 id="1-前后端不分离"><a href="#1-前后端不分离" class="headerlink" title="1. 前后端不分离"></a>1. 前后端不分离</h3><p>前后端不分离的开发模式，常见于早期的 Web 开发中（现在也有部分网站延用该模式）。在该模式下，前端人员只需要构建好页面结构样式，提供页面模板即可；后端人员除了要编写相关后台的业务处理接口，还需要根据前端模板将数据进行填充渲染。因此该模式下，前后端的开发关联性较强，比较适合开发用户量少、简单的项目。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs markdown">特点：<br><span class="hljs-bullet">    -</span> 用户访问 URL<br><span class="hljs-bullet">    -</span> 执行视图函数，视图进行业务处理<br><span class="hljs-bullet">    -</span> 视图 render，读取 HTML 模块 + 数据渲染，将渲染完成的 HTML/CSS/JS 返回并呈现在用户浏览器上。<br><br>配合开发：<br><span class="hljs-bullet">    -</span> 前端，写HTML、CSS、JS<br><span class="hljs-bullet">    -</span> 后端，前端代码给后端，后端代码 + 前端代码集成到项目中。<br></code></pre></td></tr></table></figure>
+
+<p>从用户的角度而言，前后端的代码都从同一个地址就能拿到</p>
+<img src="/img/blog/about_drf/drf1.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" />  
+
+<h3 id="2-前后端分离"><a href="#2-前后端分离" class="headerlink" title="2. 前后端分离"></a>2. 前后端分离</h3><p>前后端不分离的开发模式存在以下缺陷：</p>
+<ul>
+<li>后端的工作量较大，除了要编写业务接口，还需要兼顾前端模板的数据渲染</li>
+<li>前后端关联性太强，对于大型项目或多人协作的项目，可能会造成项目进度阻塞</li>
+</ul>
+<p>因此现在大部分的Web开发都是采用的前后端分离的开发模式。在该模式下，前端人员通常借助一些前端框架（Vue、React、Angular）来编写前端页面，同时也支持逻辑处理和数据请求，从而可以从后端直接获取数据并实现数据的动态渲染，前端不必再为后端提供页面模板，后端也可以只专注于业务逻辑的编写。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs markdown">特点：<br><span class="hljs-bullet">    -</span> 一般基于 vue.js、react.js、angular.js 框架来编写前端页面（本质上是HTML、CSS、JS）。<br><span class="hljs-bullet">    -</span> 页面上如果需要呈现数据，则需要则需要通过 ajax 的形式向后端发送请求（URL）并获取数据。<br><span class="hljs-bullet">    -</span> 后端接收到请求后，执行视图函数并进行业务处理<br><span class="hljs-bullet">    -</span> 后端的视图执行完毕后，给前端返回 JSON 格式数据。<br><span class="hljs-bullet">    -</span> 前端接收到 JSON 格式数据后呈现在浏览器上即可。<br><br>配合开发：<br><span class="hljs-bullet">    -</span> 前端，写 HTML、CSS、JS（数据都是通过调用后端API获得）<br><span class="hljs-bullet">    -</span> 后端，写 API 接口<br><span class="hljs-bullet">    -</span> 前后端约定好接口的规则。<br></code></pre></td></tr></table></figure>
+
+<p>从用户的角度而言，前后端的代码会从不同的地址上拿到</p>
+<img src="/img/blog/about_drf/drf2.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:80%;" /> 
+
+<p>使用前后端分离开发模式的好处如下：</p>
+<ul>
+<li>前后端职责清晰，前端开发者只编写页面，后端开发者只编写业务逻辑代码（两者通过 <code>json</code> 格式请求数据的传输）</li>
+<li>开发高效，前后端做自己擅长的领域，且前端开发者使用前端框架开发，比传统的 <code>HTML</code>、<code>CSS</code>、<code>JS</code>、<code>jQuery</code>等技术高效</li>
+<li>有利于项目的扩展（支持多 <code>APP</code>、微信小程序等）</li>
+</ul>
+<h2 id="二、restful规范"><a href="#二、restful规范" class="headerlink" title="二、restful规范"></a>二、restful规范</h2><h3 id="1-为什么要有开发规范"><a href="#1-为什么要有开发规范" class="headerlink" title="1. 为什么要有开发规范"></a>1. 为什么要有开发规范</h3><p>基于前后端分离的开发模式进行开发，前后端的开发者关联性较弱，各自负责自己领域的开发工作，这就要求前后端必须有一套互相约束的开发规范，避免冲突，例如：</p>
+<ul>
+<li>数据传输用什么格式？XML 格式？JSON 格式？</li>
+<li>出现错误时，错误信息有谁来提供？错误码怎么定义？</li>
+<li>其他等等等……</li>
+</ul>
+<p>目前使用最多的就是 restful 开发规范，它是主流的一套 <code>API</code> 规范，企业进行前后端分离开发一般都会遵循它。restful 中定义了很多规范的条款，涉及到数据交互格式、请求方式、状态码、错误处理等等。</p>
+<h3 id="2-restful-内容介绍"><a href="#2-restful-内容介绍" class="headerlink" title="2. restful 内容介绍"></a>2. restful 内容介绍</h3><h4 id="2-1-HTTPS-协议"><a href="#2-1-HTTPS-协议" class="headerlink" title="2.1 HTTPS 协议"></a>2.1 HTTPS 协议</h4><p>restful 建议使用 <code>https</code> 协议替代 <code>http</code> 协议，让接口数据更加安全。</p>
+<h4 id="2-2-域名"><a href="#2-2-域名" class="headerlink" title="2.2 域名"></a>2.2 域名</h4><p>对于后端 <code>API</code> 接口中要体现 <code>API</code> 标识，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apl"># 通过二级域名体现<br>https://api.example.com<br><br># 通过URL后缀体现<br>https://www.example.com/api/<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-版本"><a href="#2-3-版本" class="headerlink" title="2.3 版本"></a>2.3 版本</h4><p>对于后端 <code>API</code> 接口中要体现版本，便于实现接口的兼容性，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs apl"># 通过URL后缀体现<br>http://api.example.com/v1/<br><br># 通过URL携带的参数体现<br>http://api.example.com/?version=v1<br><br># 通过二级域名体现<br>http://v1.example.com/<br><br># 通过请求头体现<br>Accept: application/json; version=v1<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-路径"><a href="#2-4-路径" class="headerlink" title="2.4 路径"></a>2.4 路径</h4><p>restful 规范中认为网络上的一切都称是资源，围绕着资源可以进行增删改查等操作。这些资源，在URL中要使用名词表示（可复数），围绕着资源进行的操作就用方法名进行区分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apl">https://api.example.com/v1/person<br>https://api.example.com/v1/zoos<br>https://api.example.com/v1/animals<br>https://api.example.com/v1/employees<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-5-请求方法"><a href="#2-5-请求方法" class="headerlink" title="2.5 请求方法"></a>2.5 请求方法</h4><p>根据请求方法不同进行不同的操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs apl"># 请求方法<br>GET		在服务器取出资源（一项或多项）<br>POST	在服务器新建一个资源<br>PUT		在服务器更新资源（客户端提供改变后的完整资源）<br>PATCH	在服务器更新资源（客户端提供改变的属性）<br>DELETE	在服务器删除资源<br><br># 示例<br>https://api.example.com/v1/users<br>https://api.example.com/v1/users/1/<br><br>接口：/users/			方法：GET     =&gt;   用户列表<br>接口：/users/			方法：POST    =&gt;   添加用户<br>接口：/users/(\d+)/	方法：GET     =&gt;   获取单条数据<br>接口：/users/(\d+)/	方法：DELETE  =&gt;   删除数据<br>接口：/users/(\d+)/	方法：PUT     =&gt;   更新数据<br>接口：/users/(\d+)/	方法：PATCH   =&gt;   局部更新<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-6-搜索条件"><a href="#2-6-搜索条件" class="headerlink" title="2.6 搜索条件"></a>2.6 搜索条件</h4><p>在URL中通过参数的形式来传递搜索条件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs apl"># 指定返回记录的数量<br>https://api.example.com/v1/zoos?limit=10<br><br># 指定返回记录的开始位置<br>https://api.example.com/v1/zoos?offset=10<br><br># 指定第几页，以及每页的记录数<br>https://api.example.com/v1/zoos?page=2&amp;per_page=100<br><br># 指定返回结果按照哪个属性排序，以及排序顺序<br>https://api.example.com/v1/zoos?sortby=name&amp;order=asc<br><br># 指定筛选条件<br>https://api.example.com/v1/zoos?animal_type_id=1<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-7-返回数据"><a href="#2-7-返回数据" class="headerlink" title="2.7 返回数据"></a>2.7 返回数据</h4><p>针对不同操作，服务器向用户返回的结果结构应该不同。</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>方法</th>
+<th>描述</th>
+<th>返回数据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;users&#x2F;</td>
+<td>GET</td>
+<td>列表</td>
+<td>返回资源对象的列表<br />[ {“id”: 1, “name”: “CDC”},   {“id”: 2, “name”: “TR”}  ]</td>
+</tr>
+<tr>
+<td>&#x2F;users&#x2F;</td>
+<td>POST</td>
+<td>添加</td>
+<td>返回新生成的资源对象<br />{ “id”: 3, “name”: “CDDC”}</td>
+</tr>
+<tr>
+<td>&#x2F;users&#x2F;(\d+)&#x2F;</td>
+<td>GET</td>
+<td>获取单条数据</td>
+<td>返回单个资源对象<br />{ “id”: 1, “name”: “CDC”}</td>
+</tr>
+<tr>
+<td>&#x2F;users&#x2F;(\d+)&#x2F;</td>
+<td>DELETE</td>
+<td>删除数据</td>
+<td>返回一个空文档<br />null</td>
+</tr>
+<tr>
+<td>&#x2F;users&#x2F;(\d+)&#x2F;</td>
+<td>PUT</td>
+<td>更新数据</td>
+<td>返回完整的资源对象<br />{ “id”: 1, “name”: “CDCC” }</td>
+</tr>
+<tr>
+<td>&#x2F;users&#x2F;(\d+)&#x2F;</td>
+<td>PATCH</td>
+<td>局部更新</td>
+<td>返回完整的资源对象<br />{ “id”: 1, “name”: “CDCC” }</td>
+</tr>
+</tbody></table>
+<p>一般在实际的开发过程中会对上述返回数据进行补充和完善，例如每次请求都返回一个字典，其中包含：</p>
+<ul>
+<li>code：表示返回码，用于表示请求执行请求，例如：0 表示请求成功，1003 表示参数非法，40009 数据量太大等。</li>
+<li>data：表示数据</li>
+<li>error：错误信息</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    code<span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>    data<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CDC&quot;</span><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>   <span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;TR&quot;</span><span class="hljs-punctuation">&#125;</span>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    code<span class="hljs-punctuation">:</span> <span class="hljs-number">1003</span><span class="hljs-punctuation">,</span><br>    error<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;query params invalid&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-8-状态码"><a href="#2-8-状态码" class="headerlink" title="2.8 状态码"></a>2.8 状态码</h4><p>后端 <code>API</code> 在对请求进行响应时，除了返回数据以外，还应该返回状态码来表示请求状况。常见的通用状态码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs apl">200 OK - [GET]：服务器成功返回用户请求的数据<br>201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。<br>202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）<br>204 NO CONTENT - [DELETE]：用户删除数据成功。<br>400 INVALID REQUEST - [POST/PUT/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作。<br>401 Unauthorized - [*]：表示用户未认证（令牌、用户名、密码错误）。<br>403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。<br>404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作。<br>406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。<br>410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。<br>422 Unprocesable entity - [POST/PUT/PATCH] 当创建一个对象时，发生一个验证错误。<br>500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。<br><br>更多看这里：http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html<br></code></pre></td></tr></table></figure>
+
+<img src="/img/blog/about_drf/drf3.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:70%;" />  
+
+<p>通用的状态码可以表示一部分的服务端的处理请求，但特别细致的信息无法全都都包括，所以一般在开发中，后端 <code>API</code> 会额外再返回一个自定义的状态码来表示额外的请求结果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> JsonResponse<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">query_user</span>(<span class="hljs-params">request</span>):<br>    query_param = request.GET.get(<span class="hljs-string">&quot;uid&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>    <span class="hljs-keyword">try</span>:<br>        user_id = <span class="hljs-built_in">int</span>(query_param)<br><br>        <span class="hljs-keyword">if</span> user_id == <span class="hljs-number">1</span>:<br>            ret_data = &#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1000</span>, <span class="hljs-string">&quot;data&quot;</span>: &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;CDC&quot;</span>&#125;&#125;<br>        <span class="hljs-keyword">else</span>:<br>            ret_data = &#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1001</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;no user&quot;</span>&#125;<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        ret_data = &#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;invalid query params&quot;</span>&#125;<br><br>    <span class="hljs-keyword">return</span> JsonResponse(ret_data)<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-9-错误处理"><a href="#2-9-错误处理" class="headerlink" title="2.9 错误处理"></a>2.9 错误处理</h4><p>当后端 <code>API</code> 报错，应该返回导致错误的信息</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;error&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Invalid API key&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/django/" class="print-no-link">#django</a>
+      
+        <a href="/tags/django-restful-framework/" class="print-no-link">#django_restful_framework</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Restful 开发规范介绍</div>
+      <div>https://clark-cdc.github.io/2023/04/04/0514-restful开发规范介绍/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/05/0515-drf%E7%9A%84%E4%BD%BF%E7%94%A8/" title="DRF的使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DRF的使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/27/0513-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="Django之中间件">
+                        <span class="hidden-mobile">Django之中间件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

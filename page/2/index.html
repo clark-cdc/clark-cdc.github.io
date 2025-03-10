@@ -236,18 +236,24 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/18/0510-Django%E7%BB%84%E4%BB%B6%E4%B9%8Bforms/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之forms组件">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/01/30/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" target="_self">
-          
+        <a href="/2020/04/18/0510-Django%E7%BB%84%E4%BB%B6%E4%B9%8Bforms/" target="_self">
+          Django之forms组件
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/30/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" target="_self">
+      <a class="index-excerpt " href="/2020/04/18/0510-Django%E7%BB%84%E4%BB%B6%E4%B9%8Bforms/" target="_self">
         <div>
-          Django之模板语言一、模板简介​		对于一个web请求的全过程，浏览器发出的请求会转到视图函数进行相关的处理，再将处理完的结果返回给浏览器进行渲染。如果我们想给浏览器返回一个我们自己设计好的页面，可以在视图函数中这么写： 12345from django.shortcuts import HttpResponsedef index(request):    name = &quot;cdc&q
+          一、forms组件简介​		forms 组件是 django 提供的一种可以快速校验前端发送的数据的格式以及渲染相关信息和标签的机制，使用 forms 组件可以大大提高开发中的效率。 二、forms组件的校验功能我们模拟实现一个用户注册信息的例子，来研究一下使用forms组件如何去实现对数据的校验功能。 2.1 普通版12345678# urls.pyfrom django.conf.urls i
         </div>
       </a>
 
@@ -255,12 +261,42 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2025-01-30 17:00" pubdate>
-              2025-01-30
+            <time datetime="2020-04-18 20:00" pubdate>
+              2020-04-18
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
         
       </div>
     </article>
@@ -269,16 +305,505 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/15/0509-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%88%86%E9%A1%B5%E5%99%A8/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之分页器">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/01/30/0502-Django%E5%88%9D%E8%AF%86/" target="_self">
+        <a href="/2020/04/15/0509-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%88%86%E9%A1%B5%E5%99%A8/" target="_self">
+          Django之分页器
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/04/15/0509-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%88%86%E9%A1%B5%E5%99%A8/" target="_self">
+        <div>
+          一、分页器简介​		分页器主要是为了解决大规模数据展示的问题。试想一下，如果数据库中有成千上万条数据，一下子全部在页面上展示出来的话，对于用户的体验肯定是不好的。我们可以将数据分批展示，例如每一页就展示十条数据，让用户通过页码去控制。Django 中也专门提供了这种分页的机制。 二、分页器的简单使用**第一步：**创建 Book 表，用于存放书籍名字和价格等信息。 12345678910# app
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-15 19:30" pubdate>
+              2020-04-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/14/0508-%E4%BD%BF%E7%94%A8AJAX%E5%92%8C%E5%90%8E%E5%8F%B0%E4%BA%A4%E4%BA%92/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django结合AJAX的使用">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/04/14/0508-%E4%BD%BF%E7%94%A8AJAX%E5%92%8C%E5%90%8E%E5%8F%B0%E4%BA%A4%E4%BA%92/" target="_self">
+          Django结合AJAX的使用
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/04/14/0508-%E4%BD%BF%E7%94%A8AJAX%E5%92%8C%E5%90%8E%E5%8F%B0%E4%BA%A4%E4%BA%92/" target="_self">
+        <div>
+          一、AJAX简介我们知道，前端页面想要和后端接口进行数据交互，可以通过以下方式：	  将参数添加到 url 中，后端通过 get 方式从 url 中获取数据； 前端页面通过 form 表单，将数据以 get 或者 post 的方式发送给后端； 前端通过 a 标签（和使用url方式传参的方式类似）；  此外，我们还可以使用 ajax 技术来实现前后端数据的交互。 ​		AJAX（Asynchrono
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-14 18:30" pubdate>
+              2020-04-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/11/0507-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%BA%8C)/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之多表操作">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/04/11/0507-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%BA%8C)/" target="_self">
+          Django之多表操作
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/04/11/0507-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%BA%8C)/" target="_self">
+        <div>
+          一、创建模型1.1 需求分析为了方便演示，我们先来构造一下需求场景。现在有这么四张表，分别是：  Book表	用于记录书籍的书名，价格，作者，出版社等信息 Author表    用于记录作者的简要信息以及编写的书籍的相关信息 AuthorDetail表   用于记录作者的详细信息 Publish表    用于记录出版社的信息和出版书籍的相关信息  我们再为上述的四张表添加以下的对应关系：  一对一
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-11 18:00" pubdate>
+              2020-04-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/03/0506-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%B8%80)/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之单表操作">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/04/03/0506-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%B8%80)/" target="_self">
+          Django之单表操作
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/04/03/0506-Django%E6%A8%A1%E5%9E%8B%E5%B1%82(%E4%B8%80)/" target="_self">
+        <div>
+          一、ORM简介1.1 简介​		我们在使用 Django 框架开发web应用的过程中，不可避免地会涉及到数据的管理操作（增、删、改、查），而一旦谈到数据的管理操作，就需要用到数据库管理软件，例如 mysql、oracle 等。如果应用程序需要操作数据（比如将用户注册信息永久存放起来），那么我们需要在应用程序中编写原生 sql 语句，然后使用 pymysql 模块远程操作 mysql 数据库，但是直
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-03 23:00" pubdate>
+              2020-04-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/31/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之模板层">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/03/31/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" target="_self">
+          Django之模板层
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/03/31/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" target="_self">
+        <div>
+          一、模板简介​		对于一个web请求的全过程，浏览器发出的请求会转到视图函数进行相关的处理，再将处理完的结果返回给浏览器进行渲染。如果我们想给浏览器返回一个我们自己设计好的页面，可以在视图函数中这么写： 12345from django.shortcuts import HttpResponsedef index(request):    name = &quot;cdc&quot;    ret
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-31 20:00" pubdate>
+              2020-03-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/23/0504-Django%E4%B9%8B%E8%A7%86%E5%9B%BE%E5%B1%82/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之视图层">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/03/23/0504-Django%E4%B9%8B%E8%A7%86%E5%9B%BE%E5%B1%82/" target="_self">
+          Django之视图层
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/03/23/0504-Django%E4%B9%8B%E8%A7%86%E5%9B%BE%E5%B1%82/" target="_self">
+        <div>
+          一、视图层简介​		一个视图函数（类），简称视图，是一个简单的 Python 函数（类），它接受 Web 请求并且返回 Web 响应。响应可以是一张网页的 HTML 内容，一个重定向，一个404错误，一个XML文档，或者一张图片。 ​		无论视图本身包含什么逻辑，都要返回响应。代码写在哪里也无所谓，只要它在你当前项目目录下面。除此之外没有更多的要求了。为了将代码放在某处，大家约定成俗将视图放置在项
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-23 09:00" pubdate>
+              2020-03-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/16/0503-Django%E4%B9%8B%E8%B7%AF%E7%94%B1%E5%B1%82/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django之路由层">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/03/16/0503-Django%E4%B9%8B%E8%B7%AF%E7%94%B1%E5%B1%82/" target="_self">
+          Django之路由层
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/03/16/0503-Django%E4%B9%8B%E8%B7%AF%E7%94%B1%E5%B1%82/" target="_self">
+        <div>
+          一、路由层简介1.1 路由介绍​		在上一章介绍的 Django 生命周期中，我们知道了浏览器发出一个请求，在经过 wsgiref 和中间件后，就到达了路由层。那路由层的作用是啥呢？如果我们把一个 django 项目当作一本书，那么路由层相当于就是书的目录，我们可以根据目录查找到相关的章节位置，同样在 django 中，也是根据路由层来找到对应的视图函数。路由，就是请求地址和视图函数的映射关系。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-16 14:00" pubdate>
+              2020-03-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/15/0502-Django%E5%88%9D%E8%AF%86/" target="_self">
+          <img src="/img/cover/Django.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Django 初识">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/03/15/0502-Django%E5%88%9D%E8%AF%86/" target="_self">
           Django 初识
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/30/0502-Django%E5%88%9D%E8%AF%86/" target="_self">
+      <a class="index-excerpt " href="/2020/03/15/0502-Django%E5%88%9D%E8%AF%86/" target="_self">
         <div>
           一、MVC框架和MTV框架​		MVC（Model View Controller）是软件工程中的一种软件架构模式，它把软件系统分为三个基本部分：模型(Model)、视图(View)、控制器(Controller)。MVC具有耦合性低、重用性高、生命周期成本低等优点。其中，模型负责业务对象与数据库的对象(ORM)，视图负责与用户的交互(页面)，控制器(C)接受用户的输入调用模型和视图完成用户的请求
         </div>
@@ -288,12 +813,42 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2025-01-30 17:00" pubdate>
-              2025-01-30
+            <time datetime="2020-03-15 11:00" pubdate>
+              2020-03-15
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+              <a href="/tags/django/">#django</a>
+            
+          </div>
         
       </div>
     </article>
@@ -361,475 +916,6 @@
               <a href="/tags/python/">#python</a>
             
               <a href="/tags/django/">#django</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/06/10/0019-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python IO多路复用">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/06/10/0019-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" target="_self">
-          Python IO多路复用
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/06/10/0019-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" target="_self">
-        <div>
-          IO 模型 blocking IO              阻塞IO nonblocking IO        非阻塞IO IO multiplexing        IO多路复用 signal driven IO       信号驱动IO（在实际中并不常用） asynchronous IO       异步IO（python实现不了，但是有tornado框架天生自带异步）  IO发生时涉及
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-10 19:00" pubdate>
-              2019-06-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/06/03/0018-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 网络编程">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/06/03/0018-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/" target="_self">
-          Python 网络编程
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/06/03/0018-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/" target="_self">
-        <div>
-          网络基础简介一、软件开发架构​		在日常生活中，我们会使用软件进行聊天，视频，收发文件，搜索浏览等等，其本质都是应用程序间进行通信。我们平时涉及到的两个程序之间通讯的应用大致可以分为两种： 第一是应用类：qq、微信、网盘、优酷这一类是属于需要安装的桌面应用； 第二是web类：比如百度、知乎、博客园等使用浏览器访问就可以直接使用的应用； 这两个分类分别对应了两个软件开发的架构： 1.1、C&#x2F
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-03 15:30" pubdate>
-              2019-06-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/05/22/0017-%E5%8D%8F%E7%A8%8B/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 协程开发">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/05/22/0017-%E5%8D%8F%E7%A8%8B/" target="_self">
-          Python 协程开发
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/05/22/0017-%E5%8D%8F%E7%A8%8B/" target="_self">
-        <div>
-          协程引入​		之前我们学习了线程、进程的概念，了解了在操作系统中**进程是资源分配的最小单位,线程是CPU调度的最小单位。**按道理来说我们已经算是把 CPU 的利用率提高很多了。但是我们知道无论是创建多进程还是创建多线程来解决问题，都要消耗一定的时间来创建进程、创建线程、以及管理他们之间的切换。 　　随着我们对于效率的追求不断提高，基于单线程来实现并发又成为一个新的课题，即只用一个主线程（很明显
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-22 22:30" pubdate>
-              2019-05-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/05/20/0016-%E7%BA%BF%E7%A8%8B/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 多线程开发">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/05/20/0016-%E7%BA%BF%E7%A8%8B/" target="_self">
-          Python 多线程开发
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/05/20/0016-%E7%BA%BF%E7%A8%8B/" target="_self">
-        <div>
-          线程简介一、进程的优缺点​		在操作系统中，程序并不能单独运行，只有将程序装载到内存中，系统为它分配资源才能运行，而这种执行的程序就称之为进程。程序和进程的区别就在于：程序是指令的集合，它是进程运行的静态描述文本；进程是程序的一次执行活动，属于动态概念。在多道编程中，我们允许多个程序同时加载到内存中，在操作系统的调度下，可以实现并发地执行。正是这样的设计，大大提高了CPU的利用率。进程的出现让每个
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-20 19:30" pubdate>
-              2019-05-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/05/13/0015-%E5%A4%9A%E8%BF%9B%E7%A8%8B/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 多进程开发">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/05/13/0015-%E5%A4%9A%E8%BF%9B%E7%A8%8B/" target="_self">
-          Python 多进程开发
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/05/13/0015-%E5%A4%9A%E8%BF%9B%E7%A8%8B/" target="_self">
-        <div>
-          进程的创建以及使用一、创建进程方式一：直接创建 ​		process 模块是 multiprocessing库一个创建进程的模块，借助这个模块，就可以完成进程的创建。 ​		Process([group [, target [, name [, args [, kwargs]]]]])，由该类实例化得到的对象，表示一个子进程中的任		务（尚未启动） 参数说明：  group     参数未使用，值
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-13 18:30" pubdate>
-              2019-05-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/05/10/0014-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 正则表达式">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/05/10/0014-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" target="_self">
-          Python 正则表达式
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/05/10/0014-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" target="_self">
-        <div>
-          正则简介一、什么是正则表达式？​		正则表达式本身与某种编程语言并没有什么实质性的联系，它只是匹配字符串内容的一种规则。官方的定义是，正则表达式是对字符串操作的一种逻辑公式，就是用事先定义好的一些特定字符、及这些特定字符的组合，组成一个“规则字符串”，这个“规则字符串”用来表达对字符串的一种过滤逻辑。 二、应用领域​		正则匹配可以应用于用户登录或注册时输入的用户名、密码、邮箱、手机号等信息是否合
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-10 21:00" pubdate>
-              2019-05-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/05/04/0013-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/" target="_self">
-          <img src="/img/cover/Python.jpeg" srcset="/img/asserts/loading.gif" lazyload alt="Python 面向对象进阶">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2019/05/04/0013-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/" target="_self">
-          Python 面向对象进阶
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2019/05/04/0013-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/" target="_self">
-        <div>
-          属性一、属性初识我们定义一个用于计算圆的周长和面积的类： 12345678910111213class Circle:    def __init__(self, r):        self.r = r    def perimeter(self):        return 2 * 3.14 * self.r    def area(self):        return 3.14 *
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-04 10:00" pubdate>
-              2019-05-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/python%E5%AD%A6%E4%B9%A0/" class="category-chain-item">python学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
             
           </div>
         

@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、视图层简介​		一个视图函数（类），简称视图，是一个简单的 Python 函数（类），它接受 Web 请求并且返回 Web 响应。响应可以是一张网页的 HTML 内容，一个重定向，一个404错误，一个XML文档，或者一张图片。 ​		无论视图本身包含什么逻辑，都要返回响应。代码写在哪里也无所谓，只要它在你当前项目目录下面。除此之外没有更多的要求了。为了将代码放在某处，大家约定成俗将视图放置在项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django之视图层">
+<meta property="og:url" content="https://clark-cdc.github.io/2020/03/23/0504-Django%E4%B9%8B%E8%A7%86%E5%9B%BE%E5%B1%82/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="一、视图层简介​		一个视图函数（类），简称视图，是一个简单的 Python 函数（类），它接受 Web 请求并且返回 Web 响应。响应可以是一张网页的 HTML 内容，一个重定向，一个404错误，一个XML文档，或者一张图片。 ​		无论视图本身包含什么逻辑，都要返回响应。代码写在哪里也无所谓，只要它在你当前项目目录下面。除此之外没有更多的要求了。为了将代码放在某处，大家约定成俗将视图放置在项">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+<meta property="article:published_time" content="2020-03-23T01:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-10T13:18:20.059Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+  
+  
+  
+  <title>Django之视图层 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Django之视图层"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-23 09:00" pubdate>
+          2020年3月23日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Django之视图层</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、视图层简介"><a href="#一、视图层简介" class="headerlink" title="一、视图层简介"></a>一、视图层简介</h2><p>​		一个视图函数（类），简称视图，是一个简单的 Python 函数（类），它接受 Web 请求并且返回 Web 响应。响应可以是一张网页的 HTML 内容，一个重定向，一个404错误，一个XML文档，或者一张图片。</p>
+<p>​		无论视图本身包含什么逻辑，都要返回响应。代码写在哪里也无所谓，只要它在你当前项目目录下面。除此之外没有更多的要求了。为了将代码放在某处，大家约定成俗将视图放置在项目（project）或应用程序（app）目录中的名为 views.py 的文件中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^admin/&#x27;</span>, admin.site.urls),<br>    url(<span class="hljs-string">r&#x27;^index/&#x27;</span>, views.index),	<span class="hljs-comment"># views.index 为视图函数，当在浏览器访问 127.0.0.1:8000/index 时，会通过该路由找到对应的视图函数</span><br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py  存放视图函数</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):  <span class="hljs-comment"># 试图函数必须接收一个 request 参数，所有跟请求相关的数据都封装到了这个request对象里面</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;进行对应的逻辑处理...&quot;</span>)<br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;这是首页&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、FBV和CBV"><a href="#二、FBV和CBV" class="headerlink" title="二、FBV和CBV"></a>二、FBV和CBV</h2><h3 id="2-1-FBV"><a href="#2-1-FBV" class="headerlink" title="2.1 FBV"></a><strong>2.1 FBV</strong></h3><p>FBV 是基于函数的视图（function base view），即视图层的相关逻辑处理接口都是基于函数的。下面我们根据一个用户登录的示例来看一下FBV的用法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^login/&quot;</span>, views.login)<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-comment"># 1.判断浏览器发送的请求是 get 还是 post</span><br>    <span class="hljs-comment">#       如果是get：是用户第一次访问，直接返回登录的页面</span><br>    <span class="hljs-comment">#       如果是post：是用户发数据过来了，接收用户名和密码</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-comment"># 2.判断用户名密码是否正确，正确返回首页，错误返回提示信息</span><br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!--templates/login.html--&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>登录页面<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/login/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><br>                用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;请输入用户名&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><br>                密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pwd&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pwd&quot;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;请输入密码&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;登录&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br><br>&#123;# templates/index.py #&#125;<br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>首页<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;text-align: center;color: red&quot;</span>&gt;</span>欢迎登录<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-CBV"><a href="#2-2-CBV" class="headerlink" title="2.2 CBV"></a><strong>2.2 CBV</strong></h3><p>CBV是基于类的视图（class base view），采用CBV可以引入面向对象的思想对数据进行更高程度的封装。使用CBV来编写视图层如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> django.views <span class="hljs-keyword">import</span> View<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^login/&quot;</span>, views.Login.as_view()),  <span class="hljs-comment"># 固定写法</span><br>]<br></code></pre></td></tr></table></figure>
+
+<p>在使用CBV方式构建视图层时，要求必须自己先定义一个类，在路由层调用该类的实例化对象时，也要使用django自己的实例化方式，即 “类名.as_view()”。</p>
+<h3 id="2-3-CBV源码剖析"><a href="#2-3-CBV源码剖析" class="headerlink" title="2.3 CBV源码剖析"></a><strong>2.3 CBV源码剖析</strong></h3><p>我们根据CBV的源码来详细了解一下django内部究竟是怎么实现这个机制的。</p>
+<p><strong>第一步：</strong></p>
+<p>浏览器发送请求后，先来到了路由层，路由层根据请求的路由调用了对应的视图，即 Login 类中的 as_view() 方法，显然我们自己定义的Login类中是没有这个方法的，所以该方法肯定是使用的父类 View 中的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># base.py</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">View</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Intentionally simple parent class for all views. Only implements</span><br><span class="hljs-string">    dispatch-by-method and simple sanity checking.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    http_method_names = [<span class="hljs-string">&#x27;get&#x27;</span>, <span class="hljs-string">&#x27;post&#x27;</span>, <span class="hljs-string">&#x27;put&#x27;</span>, <span class="hljs-string">&#x27;patch&#x27;</span>, <span class="hljs-string">&#x27;delete&#x27;</span>, <span class="hljs-string">&#x27;head&#x27;</span>, <span class="hljs-string">&#x27;options&#x27;</span>, <span class="hljs-string">&#x27;trace&#x27;</span>]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, **kwargs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Constructor. Called in the URLconf; can contain helpful extra</span><br><span class="hljs-string">        keyword arguments, and other things.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># Go through keyword arguments, and either save their values to our</span><br>        <span class="hljs-comment"># instance, or raise an error.</span><br>        <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> six.iteritems(kwargs):<br>            <span class="hljs-built_in">setattr</span>(<span class="hljs-variable language_">self</span>, key, value)<br><br><span class="hljs-meta">    @classonlymethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">as_view</span>(<span class="hljs-params">cls, **initkwargs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Main entry point for a request-response process.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> initkwargs:<br>            <span class="hljs-keyword">if</span> key <span class="hljs-keyword">in</span> cls.http_method_names:<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">&quot;You tried to pass in the %s method name as a &quot;</span><br>                                <span class="hljs-string">&quot;keyword argument to %s(). Don&#x27;t do that.&quot;</span><br>                                % (key, cls.__name__))<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">hasattr</span>(cls, key):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">&quot;%s() received an invalid keyword %r. as_view &quot;</span><br>                                <span class="hljs-string">&quot;only accepts arguments that are already &quot;</span><br>                                <span class="hljs-string">&quot;attributes of the class.&quot;</span> % (cls.__name__, key))<br><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">view</span>(<span class="hljs-params">request, *args, **kwargs</span>):<br>            <span class="hljs-variable language_">self</span> = cls(**initkwargs)<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;get&#x27;</span>) <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">hasattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;head&#x27;</span>):<br>                <span class="hljs-variable language_">self</span>.head = <span class="hljs-variable language_">self</span>.get<br>            <span class="hljs-variable language_">self</span>.request = request<br>            <span class="hljs-variable language_">self</span>.args = args<br>            <span class="hljs-variable language_">self</span>.kwargs = kwargs<br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.dispatch(request, *args, **kwargs)<br>        view.view_class = cls<br>        view.view_initkwargs = initkwargs<br><br>        <span class="hljs-comment"># take name and docstring from class</span><br>        update_wrapper(view, cls, updated=())<br><br>        <span class="hljs-comment"># and possible attributes set by decorators</span><br>        <span class="hljs-comment"># like csrf_exempt from dispatch</span><br>        update_wrapper(view, cls.dispatch, assigned=())<br>        <span class="hljs-keyword">return</span> view<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-comment"># Try to dispatch to the right method; if a method doesn&#x27;t exist,</span><br>        <span class="hljs-comment"># defer to the error handler. Also defer to the error handler if the</span><br>        <span class="hljs-comment"># request method isn&#x27;t on the approved list.</span><br>        <span class="hljs-keyword">if</span> request.method.lower() <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.http_method_names:<br>            handler = <span class="hljs-built_in">getattr</span>(<span class="hljs-variable language_">self</span>, request.method.lower(), <span class="hljs-variable language_">self</span>.http_method_not_allowed)<br>        <span class="hljs-keyword">else</span>:<br>            handler = <span class="hljs-variable language_">self</span>.http_method_not_allowed<br>        <span class="hljs-keyword">return</span> handler(request, *args, **kwargs)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">http_method_not_allowed</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        logger.warning(<br>            <span class="hljs-string">&#x27;Method Not Allowed (%s): %s&#x27;</span>, request.method, request.path,<br>            extra=&#123;<span class="hljs-string">&#x27;status_code&#x27;</span>: <span class="hljs-number">405</span>, <span class="hljs-string">&#x27;request&#x27;</span>: request&#125;<br>        )<br>        <span class="hljs-keyword">return</span> http.HttpResponseNotAllowed(<span class="hljs-variable language_">self</span>._allowed_methods())<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">options</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Handles responding to requests for the OPTIONS HTTP verb.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        response = http.HttpResponse()<br>        response[<span class="hljs-string">&#x27;Allow&#x27;</span>] = <span class="hljs-string">&#x27;, &#x27;</span>.join(<span class="hljs-variable language_">self</span>._allowed_methods())<br>        response[<span class="hljs-string">&#x27;Content-Length&#x27;</span>] = <span class="hljs-string">&#x27;0&#x27;</span><br>        <span class="hljs-keyword">return</span> response<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_allowed_methods</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> [m.upper() <span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.http_method_names <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(<span class="hljs-variable language_">self</span>, m)]<br></code></pre></td></tr></table></figure>
+
+<p><strong>第二步：</strong></p>
+<p>我们能在父类中找到 as_view() 方法，发现该方法最后返回的是一个  view()  函数，我们再详细看一下 view 中做了什么事情。 view  函数中先实例化了一个当前自己定义的类的对象 self &#x3D; cls(**initkwargs)，再将所有接收到的参数以及请求相关的内容request都传给了 dispatch() 函数。</p>
+<p><strong>第三步：</strong></p>
+<p>我们继续来到 dispatch() 函数中，首先将请求方式（post、get等）小写话处理，再去 http_method_names 中匹配是否有该种请求方式，如果有，就根据映射去执行对应的函数，如果没有就返回错误信息，这就是为什么我们在类中编写了get和post同名的函数后，不同的请求会执行不同的函数的原因了，当然我们也可以在类中定义自己的 dispatch() 方法，根据自己的需求做出相关的处理。</p>
+<p><strong>第四步：</strong> </p>
+<p>dispatch() 函数处理完第三步的逻辑后，最终会返回一个 handler，handler 是 http_method_not_allowed() 函数的一个返回值，是一个 HttpResponse 格式的值。</p>
+<p>所以，根据上述源码的分析，我们简单总结以下CBV的执行流程：</p>
+<ol>
+<li><p>收到请求以后，根据urls.py去找对应的视图，即 类名.as_view()</p>
+</li>
+<li><p>来到视图层，找到对应的类，如果没有找到 as_view() 方法，就去执行继承的父类的 as_view() 方法，进一步执行 as_view() 中的 view()</p>
+</li>
+<li><p>执行view函数</p>
+<ul>
+<li><p>实例化自己写的类   self &#x3D; cls(**initkwargs)</p>
+</li>
+<li><p>将接收到的请求相关的内容传给实例化对象      self.request &#x3D; request</p>
+</li>
+<li><p>执行 self.dispatch(request, *args, **kwargs)</p>
+<ul>
+<li>执行父类中的 dispatch 方法，判断请求是否被允许，最后返回 handler(request, *args, **kwargs)，如果允许：handler &#x3D; 通过反射获取 get  post 等方法 ；如果不允许：handler &#x3D; 不允许的方法</li>
+<li>返回HttpResponse对象</li>
+</ul>
+</li>
+<li><p>返回HttpResponse对象 给django</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>我们可以在类中定义自己的 dispatch 方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> django.views <span class="hljs-keyword">import</span> View<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之前可以做一些处理&quot;</span>)<br>        ret = <span class="hljs-built_in">super</span>().dispatch(request, *args, **kwargs)  <span class="hljs-comment"># 必须接收并返回这个HttpResponse给django</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之后可以做一些处理&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># 将dispatch处理完的HttpResponse返回给django</span><br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"># 启动项目进行测试，分别发送一个get请求和post请求xiang<br>请求来之前可以做一些处理<br>接收到get请求了<br>请求来之后可以做一些处理<br><span class="hljs-string">[12/Mar/2020 16:13:36]</span> <span class="hljs-string">&quot;<span class="hljs-keyword">GET</span> /login/ HTTP/1.1&quot;</span> <span class="hljs-number">200</span> <span class="hljs-number">624</span><br><span class="hljs-string">[12/Mar/2020 16:13:55]</span> <span class="hljs-string">&quot;<span class="hljs-keyword">POST</span> /login/ HTTP/1.1&quot;</span> <span class="hljs-number">200</span> <span class="hljs-number">187</span><br>请求来之前可以做一些处理<br>接收到post请求了<br>请求来之后可以做一些处理<br></code></pre></td></tr></table></figure>
+
+<p>可以观察到，dispatch 是在最先被执行的，换而言之，来到视图层找到对应的类后，先执行 dispatch  方法，后根据请求执行对应的视图，其实 dispatch 可以充当装饰器的功能。</p>
+<p>了解CBV的实际处理机制后，我们还可根据实际的需要做更多的自定制，如我们自定义允许处理的请求方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br>    <span class="hljs-comment"># 父类中的请求方式</span><br>    <span class="hljs-comment"># http_method_names = [&#x27;get&#x27;, &#x27;post&#x27;, &#x27;put&#x27;, &#x27;patch&#x27;, &#x27;delete&#x27;, &#x27;head&#x27;, &#x27;options&#x27;, &#x27;trace&#x27;]</span><br>    <span class="hljs-comment"># 自定义请求方式，只能处理get请求</span><br>    http_method_names = [<span class="hljs-string">&#x27;get&#x27;</span>]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之前可以做一些处理&quot;</span>)<br>        ret = <span class="hljs-built_in">super</span>().dispatch(request, *args, **kwargs)  <span class="hljs-comment"># 必须接收并返回这个HttpResponse给django</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之后可以做一些处理&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># 将dispatch处理完的HttpResponse返回给django</span><br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"># 启动项目进行测试，分别发送一个get请求和post请求，get可以正常执行，post报错，该请求方式不允许<br>请求来之前可以做一些处理<br>接收到get请求了<br>请求来之后可以做一些处理<br><span class="hljs-string">[12/Mar/2020 16:23:23]</span> <span class="hljs-string">&quot;<span class="hljs-keyword">GET</span> /login/ HTTP/1.1&quot;</span> <span class="hljs-number">200</span> <span class="hljs-number">624</span><br>Method Not Allowed (POST): /login/<br><span class="hljs-string">[12/Mar/2020 16:23:30]</span> <span class="hljs-string">&quot;<span class="hljs-keyword">POST</span> /login/ HTTP/1.1&quot;</span> <span class="hljs-number">405</span> <span class="hljs-number">0</span><br>请求来之前可以做一些处理<br>请求来之后可以做一些处理<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-4-视图层添加装饰器"><a href="#2-4-视图层添加装饰器" class="headerlink" title="2.4 视图层添加装饰器"></a><strong>2.4 视图层添加装饰器</strong></h3><h4 id="2-4-1-对于FBV"><a href="#2-4-1-对于FBV" class="headerlink" title="2.4.1 对于FBV"></a><strong>2.4.1 对于FBV</strong></h4><p>FBV使用装饰器和正常的函数使用装饰器没有任何区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-comment"># 用于计算执行视图函数花费的时间</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timer</span>(<span class="hljs-params">fn</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">inner</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        start = time.time()<br>        ret = fn(*args, **kwargs)  <span class="hljs-comment"># 执行的函数必须返会一个HttpResponse对象</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;执行花费了<span class="hljs-subst">&#123;time.time() - start&#125;</span>秒&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># HttpResponse对象必须返回给django</span><br>    <span class="hljs-keyword">return</span> inner<br><br><br><span class="hljs-meta">@timer</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-comment"># 1.判断浏览器发送的请求是 get 还是 post</span><br>    <span class="hljs-comment">#       如果是get：是用户第一次访问，直接返回登录的页面</span><br>    <span class="hljs-comment">#       如果是post：是用户发数据过来了，接收用户名和密码</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-comment"># 2.判断用户名密码是否正确，正确返回首页，错误返回提示页面</span><br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^login/&quot;</span>, views.login)<br>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-2-对于CBV"><a href="#2-4-2-对于CBV" class="headerlink" title="2.4.2 对于CBV"></a><strong>2.4.2 对于CBV</strong></h4><p>给CBV添加装饰器需要用到django自带的方法，有以下三种方式添加装饰器</p>
+<ul>
+<li>直接对定义的类添加</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> django.utils.decorators <span class="hljs-keyword">import</span> method_decorator<br><span class="hljs-keyword">from</span> django.views <span class="hljs-keyword">import</span> View<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 用于计算执行视图函数花费的时间</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timer</span>(<span class="hljs-params">fn</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">inner</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        start = time.time()<br>        ret = fn(*args, **kwargs)  <span class="hljs-comment"># 执行的函数必须返会一个HttpResponse对象</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;执行花费了<span class="hljs-subst">&#123;time.time() - start&#125;</span>秒&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># HttpResponse对象必须返回给django</span><br><br>    <span class="hljs-keyword">return</span> inner<br><br><span class="hljs-meta">@method_decorator(<span class="hljs-params">timer, name=<span class="hljs-string">&quot;get&quot;</span></span>)  </span><span class="hljs-comment"># 给get方法添加装饰器</span><br><span class="hljs-meta">@method_decorator(<span class="hljs-params">timer, name=<span class="hljs-string">&quot;post&quot;</span></span>)  </span><span class="hljs-comment"># 给post方法添加装饰器</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之前可以做一些处理&quot;</span>)<br>        ret = <span class="hljs-built_in">super</span>().dispatch(request, *args, **kwargs)  <span class="hljs-comment"># 必须接收并返回这个HttpResponse给django</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之后可以做一些处理&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># 将dispatch处理完的HttpResponse返回给django</span><br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^login/&quot;</span>, views.Login.as_view()),  <span class="hljs-comment"># 固定写法</span><br>]<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>直接对函数添加装饰器</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> django.utils.decorators <span class="hljs-keyword">import</span> method_decorator<br><span class="hljs-keyword">from</span> django.views <span class="hljs-keyword">import</span> View<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 用于计算执行视图函数花费的时间</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timer</span>(<span class="hljs-params">fn</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">inner</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        start = time.time()<br>        ret = fn(*args, **kwargs)  <span class="hljs-comment"># 执行的函数必须返会一个HttpResponse对象</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;执行花费了<span class="hljs-subst">&#123;time.time() - start&#125;</span>秒&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># HttpResponse对象必须返回给django</span><br><br>    <span class="hljs-keyword">return</span> inner<br>    <br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之前可以做一些处理&quot;</span>)<br>        ret = <span class="hljs-built_in">super</span>().dispatch(request, *args, **kwargs)  <span class="hljs-comment"># 必须接收并返回这个HttpResponse给django</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之后可以做一些处理&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># 将dispatch处理完的HttpResponse返回给django</span><br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br><span class="hljs-meta">    @method_decorator(<span class="hljs-params">timer</span>)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br><span class="hljs-meta">    @method_decorator(<span class="hljs-params">timer</span>)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>无论是对函数还是对类，有多少个方法就要添加多少个装饰器。换个思路来思考，根据对CBV源码的分析，我们可以知道对于后面的逻辑操作函数，都是从dispatch中映射执行的，也就是说我们可以对dispatch添加装饰器，这样后面能够通过映射执行到的逻辑处理函数就都可以被装饰器作用到了</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> django.utils.decorators <span class="hljs-keyword">import</span> method_decorator<br><span class="hljs-keyword">from</span> django.views <span class="hljs-keyword">import</span> View<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 用于计算执行视图函数花费的时间</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timer</span>(<span class="hljs-params">fn</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">inner</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        start = time.time()<br>        ret = fn(*args, **kwargs)  <span class="hljs-comment"># 执行的函数必须返会一个HttpResponse对象</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;执行花费了<span class="hljs-subst">&#123;time.time() - start&#125;</span>秒&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># HttpResponse对象必须返回给django</span><br><br>    <span class="hljs-keyword">return</span> inner<br>    <br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Login</span>(<span class="hljs-title class_ inherited__">View</span>):<br>	<br><span class="hljs-meta">	@method_decorator(<span class="hljs-params">timer</span>)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之前可以做一些处理&quot;</span>)<br>        ret = <span class="hljs-built_in">super</span>().dispatch(request, *args, **kwargs)  <span class="hljs-comment"># 必须接收并返回这个HttpResponse给django</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;请求来之后可以做一些处理&quot;</span>)<br>        <span class="hljs-keyword">return</span> ret  <span class="hljs-comment"># 将dispatch处理完的HttpResponse返回给django</span><br><br>    <span class="hljs-comment"># 如果是get请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到get请求了&quot;</span>)<br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;login.html&quot;</span>)<br><br>    <span class="hljs-comment"># 如果是post请求，就执行这个函数</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;接收到post请求了&quot;</span>)<br>        username = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        password = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        <span class="hljs-keyword">if</span> username == <span class="hljs-string">&quot;cdc&quot;</span> <span class="hljs-keyword">and</span> password == <span class="hljs-string">&quot;123456&quot;</span>:<br>            <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;用户名或者密码错误&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、请求对象（HttpRequest）"><a href="#三、请求对象（HttpRequest）" class="headerlink" title="三、请求对象（HttpRequest）"></a>三、请求对象（HttpRequest）</h2><p>​		Django将http协议请求报文中的请求行、首部信息、内容抓提封装到了HttpRequest对象中，django会将HttpRequest对象当做参数传给视图函数的第一个参数request，在视图函数中，通过访问该对象的属性便可以提取http协议的请求数据。由于HttpRequest的方法和属性较多，为了方便记忆，我们可以进行简单分组。</p>
+<h3 id="3-1、method"><a href="#3-1、method" class="headerlink" title="3.1、method"></a><strong>3.1、method</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">一<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.method</span><br>　　获取请求使用的方法（值为纯大写的字符串格式）。例如：<span class="hljs-string">&quot;GET&quot;</span>、<span class="hljs-string">&quot;POST&quot;</span><br>   应该通过该属性的值来判断请求方法<br><br>二<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.GET</span><br>　　值为一个类似于字典的QueryDict对象，封装了GET请求的所有参数，可通过HttpRequest<span class="hljs-selector-class">.GET</span><span class="hljs-selector-class">.get</span>(<span class="hljs-string">&#x27;键&#x27;</span>)获取相对应的值<br>  <br>三<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.POST</span><br>   值为一个类似于字典的QueryDict对象，封装了POST请求所包含的表单数据，可通过HttpRequest<span class="hljs-selector-class">.POST</span><span class="hljs-selector-class">.get</span>(<span class="hljs-string">&#x27;键&#x27;</span>)获取相对应的值<br>   <br>   针对表单中checkbox类型的input标签、select标签提交的数据，键对应的值为多个，需要用：HttpRequest<span class="hljs-selector-class">.POST</span><span class="hljs-selector-class">.getlist</span>(<span class="hljs-string">&quot;hobbies&quot;</span>)获取存有多个值的列表,同理也有HttpRequest<span class="hljs-selector-class">.GET</span><span class="hljs-selector-class">.getlist</span>(<span class="hljs-string">&quot;键&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>我们以一个用户注册的例子来研究一下具体的使用方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">register</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-built_in">print</span>(request.method)  <span class="hljs-comment"># 查看浏览器请求的方法</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;GET&quot;</span>:<br>        <span class="hljs-comment"># 如果用户发的是get请求，返回注册页面给用户注册</span><br><br>        <span class="hljs-built_in">print</span>(request.GET)  <span class="hljs-comment"># &lt;QueryDict: &#123;&#125;&gt;</span><br><br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;register.html&quot;</span>)<br>    <span class="hljs-keyword">elif</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-comment"># 如果是post请求，证明用户已经填写好了，接收用户提交的数据</span><br>        <span class="hljs-comment"># 表单内用户填写的数据会封装在 request.POST中</span><br><br>        <span class="hljs-built_in">print</span>(request.POST)  <span class="hljs-comment"># &lt;QueryDict: &#123;&#x27;name&#x27;: [&#x27;cdc&#x27;], &#x27;pwd&#x27;: [&#x27;123456&#x27;], &#x27;hobby&#x27;: [&#x27;sing&#x27;, &#x27;dance&#x27;, &#x27;rap&#x27;]&#125;&gt;</span><br>        <br>        name = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        pwd = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        hobby = request.POST.getlist(<span class="hljs-string">&quot;hobby&quot;</span>)<br>        <span class="hljs-built_in">print</span>(name)  <span class="hljs-comment"># cdc</span><br>        <span class="hljs-built_in">print</span>(pwd)  <span class="hljs-comment"># 123456</span><br>        <span class="hljs-built_in">print</span>(hobby)  <span class="hljs-comment"># [&#x27;sing&#x27;, &#x27;dance&#x27;, &#x27;rap&#x27;]</span><br>        <br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;提交成功&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^register/&quot;</span>, views.register), <br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- templates/register.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>注册页面<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;text-align: center&quot;</span>&gt;</span>欢迎注册<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/register/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span>用户名：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>             <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;请输入昵称&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span>密码：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>             <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pwd&quot;</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;请输入密码&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>爱好：<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;sing&quot;</span>&gt;</span>唱<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hobby&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;sing&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;sing&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;sing&quot;</span>&gt;</span>跳<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hobby&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;dance&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;dance&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;sing&quot;</span>&gt;</span>rap<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hobby&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;rap&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;rap&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;sing&quot;</span>&gt;</span>篮球<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hobby&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;basketball&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;basketball&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>补充：我们知道如果前端想要给后端发送数据，可以通过 form表单以post的形式实现，或者使用ajax实现，其实还可以直接将数据添加到请求的 url 中，但是这样就会把数据在页面上暴露，是十分不安全的，但是对于一些不敏感的信息，可以很方便的通过 url 使用 get 请求发送给后端，后端可以直接从url中取值。</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta"># url 使用 ? 和 &amp; 来添加参数，例如 http:<span class="hljs-comment">//127.0.0.1:8000/test_get?a=1&amp;b=2&amp;c=3&amp;c=4&amp;c=5</span></span><br><span class="hljs-meta"># 路由部分是 http:<span class="hljs-comment">//127.0.0.1:8000/test_get，路由层只识别 ? 号前面的部分，对后面的参数全部忽略</span></span><br><span class="hljs-meta"># 所以在路由层还是可以找到对应的视图函数的</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_demo</span>(<span class="hljs-params">request</span>):<br><br>    <span class="hljs-built_in">print</span>(request.method)<br>    <span class="hljs-built_in">print</span>(request.path)  <span class="hljs-comment"># 获取访问的url  结果为 /test/get/ 可见将url中的参数都忽略了</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;GET&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.GET)  <span class="hljs-comment"># &lt;QueryDict: &#123;&#x27;a&#x27;: [&#x27;1&#x27;], &#x27;b&#x27;: [&#x27;2&#x27;], &#x27;c&#x27;: [&#x27;3&#x27;, &#x27;4&#x27;, &#x27;5&#x27;]&#125;&gt;</span><br><br>        <span class="hljs-comment"># 通过GET来取值</span><br>        a = request.GET.get(<span class="hljs-string">&quot;a&quot;</span>)<br>        b = request.GET.get(<span class="hljs-string">&quot;b&quot;</span>)<br>        c = request.GET.getlist(<span class="hljs-string">&quot;c&quot;</span>)<br>        <span class="hljs-built_in">print</span>(a)  <span class="hljs-comment"># 1</span><br>        <span class="hljs-built_in">print</span>(b)  <span class="hljs-comment"># 2</span><br>        <span class="hljs-built_in">print</span>(c)  <span class="hljs-comment"># [&#x27;3&#x27;, &#x27;4&#x27;, &#x27;5&#x27;]</span><br><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^test/get/&quot;</span>, views.get_demo),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sas"># 测试<br># 启动项目，浏览器输入 http://127.0.0.1:8000/test/get/?a=1<span class="hljs-variable">&amp;b</span>=2<span class="hljs-variable">&amp;c</span>=3<span class="hljs-variable">&amp;c</span>=4<span class="hljs-variable">&amp;c</span>=5 进行访问<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2、body"><a href="#3-2、body" class="headerlink" title="3.2、body"></a><strong>3.2、body</strong></h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs stata">一.HttpRequest.body<br>   当浏览器基于http协议的<span class="hljs-keyword">POST</span>方法提交数据时，数据会被放到请求体中发送给django，django会将接收到的请求体数据存放于HttpRequest.body属性中，因为该属性的值为Bytes类型，所以通常情况下直接处理Bytes、并从中提取有用数据的操作是复杂而繁琐的，好在django会对它做进一步的处理与封装以便我们更为方便地提取数据，比如<br>   对于<span class="hljs-keyword">form</span>表单来说，提交数据的常用方法为GET与<span class="hljs-keyword">POST</span><br>   1：如果表单属性method=&#x27;GET&#x27;,那么在提交表单时，表单内数据不会存放于请求体中，而是会将表单数据按照k1=v1&amp;k2=v2&amp;k3=v3的格式放到url中，然后发送给django，django会将这些数据封装到request.GET中，注意此时的request.body为空、无用<br>   2：如果表单属性method=&#x27;<span class="hljs-keyword">POST</span>&#x27;，那么在提交表单时，表单内的所有数据都会存放于请求体中，在发送给django后会封装到request.body里，此时django为了方便我们提取数据，会request.body的数据进行进一步的处理，具体如何处理呢，需要从<span class="hljs-keyword">form</span>表单提交数据的编码格式说起：<br>    <span class="hljs-keyword">form</span>表单对提交的表单数据有两种常用的编码格式，可以通过属性enctype进行设置，如下<br>    编码格式1(默认的编码格式):enctype=<span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span> <br>    编码格式2(使用<span class="hljs-keyword">form</span>表单上传文件时只能用该编码):enctype=<span class="hljs-string">&quot;multipart/form-data&quot;</span> <br>    如果<span class="hljs-keyword">form</span>表单提交数据是按照编码格式1,那么request.body中数据的格式类似于GET方法的数据格式，如上述用户注册示例中，用户填完信息提交数据后，后端输入request.body的结果为b&#x27;name=cdc&amp;<span class="hljs-keyword">pwd</span>=123456&amp;hobby=sing&amp;hobby=dance&amp;hobby=rap&#x27;，此时django会将request.body中的数据提取出来封装到request.<span class="hljs-keyword">POST</span>中方便我们提取<br>    如果<span class="hljs-keyword">form</span>表单提交数据是按照编码格式2,那么request.body中数据的格式为b&#x27;------WebKitFormBoundaryKtcwuksQltpNprep\r\nContent-Disposition: <span class="hljs-keyword">form</span>-data;......&#x27;,，此时django会将request.body中的数据提取出来封装到request.<span class="hljs-keyword">POST</span>中，将上传的文件数据专门提取出来封装到request.FILES属性中<br>    强调：毫无疑问，编码格式2的数据量要大于编码格式1，如果无需上传文件，还是推荐使用更为精简的编码格式1<br>    <br>    我们除了可以采用<span class="hljs-keyword">form</span>表单向django提交数据外，还可以采用ajax技术，ajax可以提交的数据格式有：1、编码格式1 2、编码格式2 3、json，当ajax采用<span class="hljs-keyword">POST</span>方法提交前两种格式的数据时，django的处理方案同上，但是当ajax采用<span class="hljs-keyword">POST</span>方法提交json格式的数据时，django会将接收到的数据存放于HttpRequest.body，此时需要我们自己对HttpRequest.body属性值做反序列化操作，<br>具体的，我们在讲解ajax时再做具体介绍<br>    <br>二.HttpRequest.FILES<br>   如果使用<span class="hljs-keyword">form</span>表单<span class="hljs-keyword">POST</span>上传文件的话，文件数据将包含在HttpRequest.FILES属性中。<br><br>　　该属性值为一个类似于字典的对象，可以包含多组key:value（对应多个上传的文件），其中每个key为&lt;<span class="hljs-keyword">input</span> <span class="hljs-keyword">type</span>=<span class="hljs-string">&quot;file&quot;</span> name=<span class="hljs-string">&quot;&quot;</span> /&gt; 中name属性的值，而value则为对应的文件数据<br>　　强调：HttpRequest.FILES 只有在请求的方法为<span class="hljs-keyword">POST</span> 且提交的&lt;<span class="hljs-keyword">form</span>&gt; 带有enctype=<span class="hljs-string">&quot;multipart/form-data&quot;</span> 的情况下才会包含数据。否则，FILES 将为一个空的类似于字典的对象。<br></code></pre></td></tr></table></figure>
+
+<p>form表单上传文件示例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># viwes.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><span class="hljs-keyword">from</span> Django视图层.settings <span class="hljs-keyword">import</span> BASE_DIR<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.body)<br><br>        <span class="hljs-comment"># 从request.POST中获取用户名</span><br>        name = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        <span class="hljs-built_in">print</span>(name)<br><br>        <span class="hljs-comment"># 从request.FILES中获取文件内容</span><br>        file_obj = request.FILES.get(<span class="hljs-string">&quot;avator&quot;</span>)<br>        f_name = file_obj.name  <span class="hljs-comment"># 获取文件名</span><br><br>        file_name = os.path.join(BASE_DIR, f_name)  <span class="hljs-comment"># 文件的存储位置</span><br>        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_name, <span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> f:<br>            <span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> file_obj.chunks():  <span class="hljs-comment"># 从文件中一点一点取</span><br>                f.write(chunk)<br><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;upload.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^upload/&quot;</span>, views.upload),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- templates/upload.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>上传文件<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/upload/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span> <span class="hljs-attr">enctype</span>=<span class="hljs-string">&quot;multipart/form-data&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;username&quot;</span>&gt;</span>姓名：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;username&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;avator&quot;</span>&gt;</span>头像：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;avator&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;avator&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;上传&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3、path"><a href="#3-3、path" class="headerlink" title="3.3、path"></a><strong>3.3、path</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs stylus">一<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.path</span><br>　　获取url地址的路径部分，只包含路径部分<br><br>二<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.get_full_path</span>()<br>　　获取url地址的完整path，既包含路径又包含参数部分<br><br>如果请求地址是http:<span class="hljs-comment">//127.0.0.1:8001/order/?name=egon&amp;age=10#_label3，</span><br>HttpRequest.path的值为<span class="hljs-string">&quot;/order/&quot;</span><br>HttpRequest<span class="hljs-selector-class">.get_full_path</span>()的值为<span class="hljs-string">&quot;/order/?name=egon&amp;age=10&quot;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse, render<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">path</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-built_in">print</span>(request.path)  <span class="hljs-comment"># /test/path</span><br>    <span class="hljs-built_in">print</span>(request.get_full_path())  <span class="hljs-comment"># /test/path?a=1&amp;b=2&amp;c=3</span><br><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;ok&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^test/path&quot;</span>, views.path),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 测试</span><br>浏览器访问 http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8000</span><span class="hljs-regexp">/test/</span>path?a=<span class="hljs-number">1</span>&amp;b=<span class="hljs-number">2</span>&amp;c=<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4、其他常用属性及方法"><a href="#3-4、其他常用属性及方法" class="headerlink" title="3.4、其他常用属性及方法"></a><strong>3.4、其他常用属性及方法</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs stylus">一<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.META</span><br> 　 值为包含了HTTP协议的请求头数据的Python字典，字典中的key及对应值的解释如下<br>    CONTENT_LENGTH —— 请求的正文的长度（是一个字符串）。<br>    CONTENT_TYPE —— 请求的正文的MIME类型。<br>    HTTP_ACCEPT —— 响应可接收的Content-Type。<br>    HTTP_ACCEPT_ENCODING —— 响应可接收的编码。<br>    HTTP_ACCEPT_LANGUAGE —— 响应可接收的语言。<br>    HTTP_HOST —— 客服端发送数据的目标主机与端口<br>    HTTP_REFERER —— Referring 页面。<br>    HTTP_USER_AGENT —— 客户端使用的软件版本信息<br>    QUERY_STRING —— 单个字符串形式的查询字符串（未解析过的形式）。<br>    REMOTE_ADDR —— 客户端的IP地址。<br>    REMOTE_HOST —— 客户端的主机名。<br>    REMOTE_USER —— 服务器认证后的用户。<br>    REQUEST_METHOD —— 一个字符串，例如<span class="hljs-string">&quot;GET&quot;</span> 或<span class="hljs-string">&quot;POST&quot;</span>。<br>    SERVER_NAME —— 服务器的主机名。<br>    SERVER_PORT —— 服务器的端口（是一个字符串）。<br>    <br> 　 从上面可以看到，除 CONTENT_LENGTH 和 CONTENT_TYPE 之外，HTTP协议的请求头数据转换为 META 的键时，都会<br>    	<span class="hljs-number">1</span>、将所有字母大写<br>    	<span class="hljs-number">2</span>、将单词的连接符替换为下划线<br>    	<span class="hljs-number">3</span>、加上前缀HTTP_。<br>    所以，一个叫做 X-Bender 的头部将转换成 META 中的 HTTP_X_BENDER 键。<br>   <br>注意：下述常用属性暂且了解即可，待我们讲到专门的知识点时再专门详细讲解<br>二<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.COOKIES</span><br>　　一个标准的Python 字典，包含所有的cookie。键和值都为字符串。<br><br>三<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.session</span><br> 　一个既可读又可写的类似于字典的对象，表示当前的会话。只有当Django 启用会话的支持时才可用。<br><br>四<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.user</span>(用户认证组件下使用)<br><br>　　一个 AUTH_USER_MODEL 类型的对象，表示当前登录的用户。<br><br>五<span class="hljs-selector-class">.HttpRequest</span><span class="hljs-selector-class">.is_ajax</span>()<br><br>　　如果请求是通过XMLHttpRequest 发起的，则返回True，方法是检查 HTTP_X_REQUESTED_WITH 相应的首部是否是字符串<span class="hljs-string">&#x27;XMLHttpRequest&#x27;</span>。<br><br>　　大部分现代的 JavaScript 库都会发送这个头部。如果你编写自己的 XMLHttpRequest 调用（在浏览器端），你必须手工设置这个值来让 <span class="hljs-built_in">is_ajax</span>() 可以工作。<br><br>　　如果一个响应需要根据请求是否是通过AJAX 发起的，并且你正在使用某种形式的缓存例如Django 的 cache middleware，<br>   你应该使用 <span class="hljs-built_in">vary_on_headers</span>(<span class="hljs-string">&#x27;HTTP_X_REQUESTED_WITH&#x27;</span>) 装饰你的视图以让响应能够正确地缓存。<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、响应对象（HttpResponse）"><a href="#四、响应对象（HttpResponse）" class="headerlink" title="四、响应对象（HttpResponse）"></a>四、响应对象（HttpResponse）</h2><p>​		响应对象可以是任何形式的内容，比如一个HTML文件的内容，一个重定向，一个404错误，一个XML文档或者一张图片等等。总之无论视图本身包含什么逻辑，都要返回响应。django中主要的响应方式有三种，俗称响应三件套。</p>
+<h3 id="4-1、HttpResponse"><a href="#4-1、HttpResponse" class="headerlink" title="4.1、HttpResponse"></a><strong>4.1、HttpResponse</strong></h3><p>括号内直接跟一个字符串作为响应内容。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> HttpResponse<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-comment"># return HttpResponse(&quot;OK&quot;)  # 直接返回一个字符串</span><br>    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;&lt;h1&gt;OK&lt;/h1&gt;&quot;</span>)  <span class="hljs-comment"># 也可以返回html格式代码的字符串，浏览器会自动转换并渲染</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^index&quot;</span>, views.index),<br>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2、render"><a href="#4-2、render" class="headerlink" title="4.2、render"></a><strong>4.2、render</strong></h3><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mel"><span class="hljs-keyword">render</span>(request, template_name[, context]）<br>参数：<br>    <span class="hljs-number">1</span>、request：用于生成响应的请求对象，固定必须传入的第一个参数<br><br>    <span class="hljs-number">2</span>、template_name：要使用的模板的完整名称，必须传入，<span class="hljs-keyword">render</span>默认会去templates目录下查找模板文件<br><br>    <span class="hljs-number">3</span>、context：可选参数，可以传入一个字典用来替换模块文件中的变量，模板中的变量名要和传入的字典的键保持一致<br><br>综上，<span class="hljs-keyword">render</span>的功能可以总结为：根据给定字典渲染模板文件，并返回一个渲染后的 HttpResponse对象。<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-comment"># return render(request, &quot;index.html&quot;)  # 直接返回模板</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>, &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;cdc&quot;</span>&#125;)  <span class="hljs-comment"># 返回模板并替换模板中的变量</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^index&quot;</span>, views.index),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- templates/index.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>首页<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;text-align: center;color: red&quot;</span>&gt;</span>欢迎登录<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>        &#123;&#123; name &#125;&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3、redirect"><a href="#4-3、redirect" class="headerlink" title="4.3、redirect"></a><strong>4.3、redirect</strong></h3><p>返回重定向信息</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-comment"># 返回重定向信息</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_view</span>(<span class="hljs-params">request</span>):<br>    ...<br>    <span class="hljs-keyword">return</span> redirect(<span class="hljs-string">&#x27;/some/url/&#x27;</span>)<br><br><span class="hljs-comment"># 重定向的地址也可以是一个完整的URL：</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_view</span>(<span class="hljs-params">request</span>):<br>    ...<br>    <span class="hljs-keyword">return</span> redirect(<span class="hljs-string">&#x27;http://www.baidu.com/&#x27;</span>)　<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> redirect<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;index.html&quot;</span>)  <span class="hljs-comment"># 直接返回模板</span><br>   <br>   <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">return</span> redirect(<span class="hljs-string">&quot;/index/&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin<br><span class="hljs-keyword">from</span> Django视图层 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&quot;^index&quot;</span>, views.index),<br>    url(<span class="hljs-string">r&quot;^login&quot;</span>, views.login),<br>]<br></code></pre></td></tr></table></figure>
+
+<p><strong>重定向的实质</strong></p>
+<img src="/img/blog/about_django/重定向实质.png" srcset="/img/asserts/loading.gif" lazyload style="zoom:67%;" />  
+
+<p>首先浏览器访问的是 <a target="_blank" rel="noopener" href="http://127.0.0.1:8000/login/%EF%BC%8C%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BE%BE%E7%9B%B8%E5%85%B3%E7%9A%84%E8%A7%86%E5%9B%BE%E5%90%8E%EF%BC%8C%E8%B7%B3%E8%BD%AC%E5%88%B0">http://127.0.0.1:8000/login/，请求到达相关的视图后，跳转到</a> “&#x2F;index&#x2F;“，而对于浏览器而言，实际上的做的事情是再访问一下<a target="_blank" rel="noopener" href="http://127.0.0.1:8000/index/">http://127.0.0.1:8000/index/</a></p>
+<p><strong>重定向状态码</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs css">一、<span class="hljs-number">301</span>和<span class="hljs-number">302</span>的异同。<br>   <span class="hljs-number">1</span>、相同之处：<br>   <span class="hljs-number">301</span>和<span class="hljs-number">302</span>状态码都表示重定向，具体点说就是浏览器在拿到服务器返回的这个状态码后会自动跳转到一个新的URL地址（浏览器会从响应头Location中获取新地址），用户看到的效果都是输入地址<span class="hljs-selector-tag">A</span>后瞬间跳转到了另一个地址<span class="hljs-selector-tag">B</span><br>   <br>   <span class="hljs-number">2</span>、不同之处：<br>　　<span class="hljs-number">301</span>表示旧地址<span class="hljs-selector-tag">A</span>的资源已经被永久地移除了，即这个资源不可访问了。搜索引擎在抓取新内容的同时也将旧的网址转换为重定向之后的地址；<br>　　<span class="hljs-number">302</span>表示旧地址<span class="hljs-selector-tag">A</span>的资源还在，即这个资源仍然可以访问，这个重定向只是临时地从旧地址<span class="hljs-selector-tag">A</span>跳转到地址<span class="hljs-selector-tag">B</span>，搜索引擎会抓取新的内容、并且会保存旧的网址。 从SEO层面考虑，<span class="hljs-number">302</span>要好于<span class="hljs-number">301</span><br><br>二、重定向原因：<br>   <span class="hljs-number">1</span>、网站调整（如改变网页目录结构）；<br>   <span class="hljs-number">2</span>、网页被移到一个新地址；<br>   <span class="hljs-number">3</span>、网页扩展名改变(如应用需要把<span class="hljs-selector-class">.php</span>改成<span class="hljs-selector-class">.Html</span>或<span class="hljs-selector-class">.shtml</span>)。<br>      这种情况下，如果不做重定向，则用户收藏夹或搜索引擎数据库中旧地址只能让访问客户得到一个<span class="hljs-number">404</span>页面错误信息，访问流量白白丧失；再者某些注册了多个域名的网站，也需要通过重定向让访问这些域名的用户自动跳转到主站点等。<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、JsonResponse"><a href="#五、JsonResponse" class="headerlink" title="五、JsonResponse"></a>五、JsonResponse</h2><p>用于后端向前端返回 json 格式的数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 普通方法返回</span><br><span class="hljs-keyword">import</span> json<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_view</span>(<span class="hljs-params">request</span>):<br>    data=[<span class="hljs-string">&#x27;egon&#x27;</span>,<span class="hljs-string">&#x27;kevin&#x27;</span>]<br>    <span class="hljs-keyword">return</span> HttpResponse(json.dumps(data) )<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># JsonResponse 方式返回</span><br><br><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> JsonResponse<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_view</span>(<span class="hljs-params">request</span>):<br>    data=[<span class="hljs-string">&#x27;egon&#x27;</span>,<span class="hljs-string">&#x27;kevin&#x27;</span>]<br>    <span class="hljs-keyword">return</span> JsonResponse(data,safe=<span class="hljs-literal">False</span>)<br>    <span class="hljs-comment">#默认safe=True代表只能序列化字典对象，safe=False代表可以序列化字典以外的对象</span><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/django/" class="print-no-link">#django</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Django之视图层</div>
+      <div>https://clark-cdc.github.io/2020/03/23/0504-Django之视图层/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/31/0505-Django%E4%B9%8B%E6%A8%A1%E6%9D%BF%E5%B1%82/" title="Django之模板层">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Django之模板层</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/16/0503-Django%E4%B9%8B%E8%B7%AF%E7%94%B1%E5%B1%82/" title="Django之路由层">
+                        <span class="hidden-mobile">Django之路由层</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

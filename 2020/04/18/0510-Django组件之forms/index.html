@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、forms组件简介​		forms 组件是 django 提供的一种可以快速校验前端发送的数据的格式以及渲染相关信息和标签的机制，使用 forms 组件可以大大提高开发中的效率。 二、forms组件的校验功能我们模拟实现一个用户注册信息的例子，来研究一下使用forms组件如何去实现对数据的校验功能。 2.1 普通版12345678# urls.pyfrom django.conf.urls i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django之forms组件">
+<meta property="og:url" content="https://clark-cdc.github.io/2020/04/18/0510-Django%E7%BB%84%E4%BB%B6%E4%B9%8Bforms/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="一、forms组件简介​		forms 组件是 django 提供的一种可以快速校验前端发送的数据的格式以及渲染相关信息和标签的机制，使用 forms 组件可以大大提高开发中的效率。 二、forms组件的校验功能我们模拟实现一个用户注册信息的例子，来研究一下使用forms组件如何去实现对数据的校验功能。 2.1 普通版12345678# urls.pyfrom django.conf.urls i">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+<meta property="article:published_time" content="2020-04-18T12:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-10T13:22:49.858Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+  
+  
+  
+  <title>Django之forms组件 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Django之forms组件"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-18 20:00" pubdate>
+          2020年4月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Django之forms组件</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、forms组件简介"><a href="#一、forms组件简介" class="headerlink" title="一、forms组件简介"></a>一、forms组件简介</h2><p>​		forms 组件是 django 提供的一种可以快速校验前端发送的数据的格式以及渲染相关信息和标签的机制，使用 forms 组件可以大大提高开发中的效率。</p>
+<h2 id="二、forms组件的校验功能"><a href="#二、forms组件的校验功能" class="headerlink" title="二、forms组件的校验功能"></a>二、forms组件的校验功能</h2><p>我们模拟实现一个用户注册信息的例子，来研究一下使用forms组件如何去实现对数据的校验功能。</p>
+<h3 id="2-1-普通版"><a href="#2-1-普通版" class="headerlink" title="2.1 普通版"></a><strong>2.1 普通版</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    url(<span class="hljs-string">r&#x27;^reg/&#x27;</span>, views.reg),<br>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.POST)<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        对接收到数据分别进行校验，比如：</span><br><span class="hljs-string">        密码长度是不是大于4</span><br><span class="hljs-string">        电话号码是否是有效的</span><br><span class="hljs-string">        邮箱格式是否正确等</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- reg.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>密  码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pwd&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>确认密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;r_pwd&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>邮  箱：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;email&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>电话号码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;tel&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们在后台的视图中要自己编写对应的规则去匹配用户输入的数据是否合法，显然这是十分复杂和困难的，我们可以使用 django 提供的forms机制来实现对数据的校验。</p>
+<h3 id="2-2-使用forms简单校验数据"><a href="#2-2-使用forms简单校验数据" class="headerlink" title="2.2 使用forms简单校验数据"></a><strong>2.2 使用forms简单校验数据</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 用户名长度至少是4</span><br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    email = forms.EmailField()  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.POST)<br>        name = request.POST.get(<span class="hljs-string">&quot;name&quot;</span>)<br>        pwd = request.POST.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        r_pwd = request.POST.get(<span class="hljs-string">&quot;r_pwd&quot;</span>)<br>        email = request.POST.get(<span class="hljs-string">&quot;email&quot;</span>)<br>        tel = request.POST.get(<span class="hljs-string">&quot;tel&quot;</span>)<br><br>        form = UserForm(&#123;<span class="hljs-string">&quot;name&quot;</span>: name, <span class="hljs-string">&quot;pwd&quot;</span>: pwd, <span class="hljs-string">&quot;email&quot;</span>: email&#125;)<br>        <span class="hljs-comment"># form = UserForm(request.POST)  # 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对</span><br>            <span class="hljs-built_in">print</span>(form.errors)  <span class="hljs-comment"># 存放校验失败的内容部分</span><br><br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>​		首先要自定义一个检验的类，该类必须继承 forms.Form，在类中我们可以对相关的字段做一些条件的约束。当获取到前端的数据后，可以根据自定义的校验类来对数据进行校验。使用时需要注意以下几点：</p>
+<h4 id="2-2-1-关于自定义校验类中的字段"><a href="#2-2-1-关于自定义校验类中的字段" class="headerlink" title="2.2.1 关于自定义校验类中的字段"></a><strong>2.2.1 关于自定义校验类中的字段</strong></h4><p>在传入校验数据的时候，必须要与类中的字段都能匹配上，只能多不能少，否则校验结果为 False</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 在类中定义了三个字段，分别为 name,pwd,email</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 用户名长度至少是4</span><br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    email = forms.EmailField()  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br>    <br>    <br><span class="hljs-comment"># 针对以下几种情况的校验结果</span><br><span class="hljs-comment"># 1.传入数据时，字段名填写错误，校验结果为false（比如类中定义的是name，传数据时候写的是names）</span><br>form = UserForm(&#123;<span class="hljs-string">&quot;names&quot;</span>: name, <span class="hljs-string">&quot;pwd&quot;</span>: pwd, <span class="hljs-string">&quot;email&quot;</span>: email&#125;)<br>form.is_valid()  <span class="hljs-comment"># 此时校验结果为false</span><br><br><span class="hljs-comment"># 2.传入数据时，字段少于类中定义的字段，校验结果为false（比如类中定义了三个属性，传数据时候只传了两个）</span><br>form = UserForm(&#123;<span class="hljs-string">&quot;name&quot;</span>: name, <span class="hljs-string">&quot;pwd&quot;</span>: pwd&#125;)<br>form.is_valid()  <span class="hljs-comment"># 此时校验结果为false</span><br><br><span class="hljs-comment"># 3.传入数据时，字段多于类中定义的字段，只要能全部匹配到类中定义的字段，多余的字段会自动忽略，校验结果有数据的正确与否决定（比如类中定义了三个属性，传数据时候传了五个）</span><br>form = UserForm(&#123;<span class="hljs-string">&quot;name&quot;</span>: name, <span class="hljs-string">&quot;pwd&quot;</span>: pwd, <span class="hljs-string">&quot;r_pwd&quot;</span>:pwd, <span class="hljs-string">&quot;tel&quot;</span>:tel, <span class="hljs-string">&quot;email&quot;</span>: email&#125;)<br>form.is_valid()  <br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-关于数据的校验"><a href="#2-2-2-关于数据的校验" class="headerlink" title="2.2.2 关于数据的校验"></a><strong>2.2.2 关于数据的校验</strong></h4><p>is_valid() 方法就是自动校验的方法，结果是一个布尔值：</p>
+<ul>
+<li>结果为False：校验时字段传入有问题，或者数据不符合规则</li>
+<li>结果为True：校验时传入的字段没问题，且数据都符合规则</li>
+</ul>
+<p>form.cleaned_data    存放校验通过的字段，是一个字典的数据格式，存放的值是校验通过的数据键值对</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 比如用户名和密码是校验通过的，那么 form.cleaned_data 存放的值的格式为</span><br>&#123;<span class="hljs-string">&quot;name&quot;</span>: “cdchello, <span class="hljs-string">&quot;pwd&quot;</span>: <span class="hljs-string">&quot;123456&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>form.errors     存放校验失败的内容部分，是一个字典的数据格式，但是跟我们常见的字典类型不一样，字典的键是校验失败的字段，值是一个列表，存放的是错误信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 比如用户名长度为3，不符合类中定义的最小长度为4的规则，其余都是合法数据</span><br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对  </span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对  &#123;&#x27;pwd&#x27;: &#x27;dasdasdasdasd&#x27;, &#x27;email&#x27;: &#x27;1275500642@qq.com&#x27;&#125;</span><br>            <span class="hljs-built_in">print</span>(form.errors)  <span class="hljs-comment"># 存放校验失败的内容部分   &lt;ul class=&quot;errorlist&quot;&gt;&lt;li&gt;name&lt;ul class=&quot;errorlist&quot;&gt;&lt;li&gt;Ensure this value has at least 4 characters (it has 3).&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(form.errors))  <span class="hljs-comment">#  &lt;class &#x27;django.forms.utils.ErrorDict&#x27;&gt;</span><br>            <span class="hljs-built_in">print</span>(form.errors.get(<span class="hljs-string">&quot;name&quot;</span>))  <span class="hljs-comment"># &lt;ul class=&quot;errorlist&quot;&gt;&lt;li&gt;Ensure this value has at least 4 characters (it has 3).&lt;/li&gt;&lt;/ul&gt;</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(form.errors.get(<span class="hljs-string">&quot;name&quot;</span>)))  <span class="hljs-comment"># &lt;class &#x27;django.forms.utils.ErrorList&#x27;&gt;</span><br>            <span class="hljs-built_in">print</span>(form.errors.get(<span class="hljs-string">&quot;name&quot;</span>)[<span class="hljs-number">0</span>])  <span class="hljs-comment"># 获取错误信息  Ensure this value has at least 4 characters (it has 3).</span><br></code></pre></td></tr></table></figure>
+
+<p>使用 form.errors.get(“字段值”)[0] 从 form.errors 中获取错误信息。</p>
+<h2 id="三、forms组件渲染标签的功能"><a href="#三、forms组件渲染标签的功能" class="headerlink" title="三、forms组件渲染标签的功能"></a>三、forms组件渲染标签的功能</h2><p>在上一节中我们提到，我们可以直接将request.POST中获取到的内容进行校验，但是这就要求前端的form表单的name属性值应该与forms组件字段名称一致，如果不一致校验就会失败。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 用户名长度至少是4</span><br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    email = forms.EmailField()  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.POST) <br>      <br>        form = UserForm(request.POST)  <span class="hljs-comment"># 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <br>            <span class="hljs-built_in">print</span>(form.errors)  <br><br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>但是每次要保证前后端的一致性是十分麻烦的，所以 forms 组件还给我们提供了简单渲染标签的功能，会自动在前端根据我们设置的字段名生成对应的input标签，主要有以下三种方式：</p>
+<ul>
+<li>直接使用变量替换</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 用户名长度至少是4</span><br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    email = forms.EmailField()  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br>    tel = forms.EmailField()  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        form = UserForm(request.POST)  <span class="hljs-comment"># 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对  </span><br>            <span class="hljs-built_in">print</span>(form.errors)  <span class="hljs-comment"># 存放校验失败的内容部分   </span><br>           <br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br><br>    form = UserForm()  <span class="hljs-comment"># 在接收到 get 请求时，就实例化一个form对象，用于渲染标签</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- reg.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>forms渲染标签1<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：&#123;&#123; form.name &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>密  码：&#123;&#123; form.pwd &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>确认密码：&#123;&#123; form.r_pwd &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>邮  箱：&#123;&#123; form.email &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>电话号码：&#123;&#123; form.tel &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用for循环</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- reg.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>forms渲染标签2<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    &#123;% for field in form %&#125;<br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#123;&#123; field &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    &#123;% endfor %&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>以上方式有一个问题，虽然输入狂生成了，但是没有前面的填写信息的提示，forms中在设置字段规则的时候还有一个label属性，我们可以通过设置各个字段 label 的值。如果不设置，默认值为字段名</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;用户名&quot;</span>)  <span class="hljs-comment"># 用户名长度至少是4</span><br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;密码&quot;</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;确认密码&quot;</span>)  <span class="hljs-comment"># 密码的长度至少为4</span><br>    email = forms.EmailField(label=<span class="hljs-string">&quot;邮箱&quot;</span>)  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br>    tel = forms.EmailField(label=<span class="hljs-string">&quot;电话&quot;</span>)  <span class="hljs-comment"># 邮箱必须符合邮箱规则</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        form = UserForm(request.POST) <br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <span class="hljs-comment"># 存放校验成功的键值对 </span><br>            <span class="hljs-built_in">print</span>(form.errors)  <span class="hljs-comment"># 存放校验失败的内容部分  </span><br><br>        <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;OK&quot;</span>)<br><br>    form = UserForm()  <span class="hljs-comment"># 在接收到 get 请求时，就实例化一个form对象，用于渲染标签</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- reg.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>forms渲染标签2<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    &#123;% for field in form %&#125;<br>        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span>&#123;&#123; field.label &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>            &#123;&#123; field &#125;&#125;<br>        <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    &#123;% endfor %&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>通过 forms.as_p 属性，不推荐使用，一旦使用这种方式，前端自动生成的标签就固定住了，灵活性差</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- reg.html --&gt;</span><br><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>forms渲染标签3<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    &#123;&#123; form.as_p &#125;&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="四、forms组件渲染错误信息的功能"><a href="#四、forms组件渲染错误信息的功能" class="headerlink" title="四、forms组件渲染错误信息的功能"></a>四、forms组件渲染错误信息的功能</h2><h3 id="4-1-渲染错误信息"><a href="#4-1-渲染错误信息" class="headerlink" title="4.1 渲染错误信息"></a><strong>4.1 渲染错误信息</strong></h3><p>用户填写相关信息时，如果填写错误，需要给用户提示错误的原因。要实现这个功能，我们首先要对视图函数进行修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>       <br>        form = UserForm(request.POST)  <span class="hljs-comment"># 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)  <br>            <span class="hljs-built_in">print</span>(form.errors) <br><br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br><br>    form = UserForm()  <span class="hljs-comment"># 在接收到 get 请求时，就实例化一个form对象，用于渲染标签</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br></code></pre></td></tr></table></figure>
+
+<p>​		上面的代码中，我们实例化出了两个 forms 对象，但是两者是完全不同的。对于 get 请求的使用的 forms 对象（未绑定数据的forms对象），它的作用主要就是用来渲染生成标签；对于 post 请求中的forms 对象，除了有渲染标签的功能，它还能绑定用户在输入框中输入的数据，确保刷新页面时，数据不丢失。</p>
+<p>对于前端，我们只需要在标签后显示对应的错误信息即可，代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Title<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>forms渲染标签1<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span><br>    &#123;% csrf_token %&#125;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>用户名：&#123;&#123; form.name &#125;&#125; <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; form.name.errors.0 &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>密 码：&#123;&#123; form.pwd &#125;&#125; <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; form.pwd.errors.0 &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>确认密码：&#123;&#123; form.r_pwd &#125;&#125; <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; form.r_pwd.errors.0 &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>邮 箱：&#123;&#123; form.email &#125;&#125; <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; form.email.errors.0 &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>电话号码：&#123;&#123; form.tel &#125;&#125; <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>&#123;&#123; form.tel.errors.0 &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;提交&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">hr</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-相关参数的设置"><a href="#4-2-相关参数的设置" class="headerlink" title="4.2 相关参数的设置"></a><strong>4.2 相关参数的设置</strong></h3><p>​		渲染完错误信息后，我们发现提示语都是django内置的内容，我们要如何显示我们自己定义的内容呢？并且前端使用forms组件方式来进行渲染标签，我们想要给标签添加对应的属性又要怎么操作呢？使用forms组件渲染的标签都是text类型的输入标签，怎样设置其他格式的标签呢（单选框等）？这些都可以在定义forms组件时进行设置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><span class="hljs-keyword">from</span> django.forms <span class="hljs-keyword">import</span> widgets<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    <span class="hljs-comment"># error_message 参数用于设置错误提示信息</span><br>    <span class="hljs-comment">#   固定键值 required 表示为空错误</span><br>    <span class="hljs-comment">#   固定键值 invalid 表示格式错误</span><br><br>    <span class="hljs-comment"># widget 参数用于设置标签的类型以及添加相关的属性等</span><br>    <span class="hljs-comment">#   widget = widgets.PasswordInput()  规定标签的类型</span><br>    <span class="hljs-comment">#   widget = widgets.PasswordInput(attrs=&#123;&quot;class&quot;: &quot;form-control&quot;, &quot;id&quot;: &quot;pwd&quot;&#125;)  给标签添加对应的css属性</span><br>    <br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;用户名&quot;</span>,<br>                           error_messages=&#123;<span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-string">&quot;信息不能为空&quot;</span>, <span class="hljs-string">&quot;invalid&quot;</span>: <span class="hljs-string">&quot;数据格式错误&quot;</span>&#125;, widget=widgets.TextInput())<br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;密码&quot;</span>,<br>                          widget=widgets.PasswordInput(attrs=&#123;<span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;form-control&quot;</span>, <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;pwd&quot;</span>&#125;))  <span class="hljs-comment">#</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;确认密码&quot;</span>, widget=widgets.PasswordInput())  <span class="hljs-comment">#</span><br>    email = forms.EmailField(label=<span class="hljs-string">&quot;邮箱&quot;</span>, widget=widgets.EmailInput())<br>    tel = forms.CharField(label=<span class="hljs-string">&quot;电话&quot;</span>, widget=widgets.TextInput)<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、forms组件的钩子功能"><a href="#五、forms组件的钩子功能" class="headerlink" title="五、forms组件的钩子功能"></a>五、forms组件的钩子功能</h2><p>​		我们在自定义forms组件的类的时候，只能简单的进行一些规则的定制，如果想要实现更加负责的操作，可以使用forms组件提供的钩子机制来完成。由于钩子机制是forms组件内部封装好的，所以在使用前，有必要对forms的源码进行简单的了解，看一下forms的检验机制究竟是怎样实现的。</p>
+<p>我们从 forms 的校验函数  form.is_valid() 进入查看：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># forms.py</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">is_valid</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Returns True if the form has no errors. Otherwise, False. If errors are</span><br><span class="hljs-string">    being ignored, returns False.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.is_bound <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.errors<br></code></pre></td></tr></table></figure>
+
+<p>该方法最后只返回了两个值，我们需要注意的是第二个返回值，这个 errors 就是存放校验失败内容的字典，我们再查看一下 errors 是怎么实现的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># forms.py</span><br><br><span class="hljs-meta"> @property</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">errors</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;Returns an ErrorDict for the data provided for the form&quot;</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>._errors <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-variable language_">self</span>.full_clean()<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>._errors<br></code></pre></td></tr></table></figure>
+
+<p>在errors内部执行了一个 full_clean() 方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># forms.py</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">full_clean</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Cleans all of self.data and populates self._errors and</span><br><span class="hljs-string">        self.cleaned_data.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-variable language_">self</span>._errors = ErrorDict()  <span class="hljs-comment"># 定义一个存放校验失败内容的字典</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.is_bound:  <span class="hljs-comment"># Stop further processing.</span><br>            <span class="hljs-keyword">return</span><br>        <span class="hljs-variable language_">self</span>.cleaned_data = &#123;&#125;  <span class="hljs-comment"># # 定义一个存放校验成功内容的字典</span><br>        <span class="hljs-comment"># If the form is permitted to be empty, and none of the form data has</span><br>        <span class="hljs-comment"># changed from the initial data, short circuit any validation.</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.empty_permitted <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.has_changed():<br>            <span class="hljs-keyword">return</span><br><br>        <span class="hljs-variable language_">self</span>._clean_fields()  <span class="hljs-comment"># 局部钩子</span><br>        <span class="hljs-variable language_">self</span>._clean_form()  <span class="hljs-comment"># 全局钩子</span><br>        <span class="hljs-variable language_">self</span>._post_clean()<br></code></pre></td></tr></table></figure>
+
+<p>我们需要重点关注的就是 full_clean() 方法中调用的 self._clean_fields() 和 self._clean_form()，这是实现钩子的核心。我们一个一个来看</p>
+<h3 id="5-1-局部钩子"><a href="#5-1-局部钩子" class="headerlink" title="5.1 局部钩子"></a><strong>5.1 局部钩子</strong></h3><p>局部钩子函数用于实现对某一个字段进行更加复杂的校验操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># forms.py</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_clean_fields</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">for</span> name, field <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.fields.items():  <span class="hljs-comment"># fileds是一个字典，存放的内容是 &#123;&quot;name&quot;:name字段的校验规则, &quot;pwd&quot;:pwd的校验规则......&#125;</span><br>            <span class="hljs-comment"># value_from_datadict() gets the data from the data dictionaries.</span><br>            <span class="hljs-comment"># Each widget type knows how to retrieve its own data, because some</span><br>            <span class="hljs-comment"># widgets split data over several HTML fields.</span><br>            <span class="hljs-keyword">if</span> field.disabled:<br>                value = <span class="hljs-variable language_">self</span>.get_initial_for_field(field, name)<br>            <span class="hljs-keyword">else</span>:<br>                value = field.widget.value_from_datadict(<span class="hljs-variable language_">self</span>.data, <span class="hljs-variable language_">self</span>.files, <span class="hljs-variable language_">self</span>.add_prefix(name))<br>            <span class="hljs-keyword">try</span>:<br>                <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(field, FileField):<br>                    initial = <span class="hljs-variable language_">self</span>.get_initial_for_field(field, name)<br>                    value = field.clean(value, initial)<br>                <span class="hljs-keyword">else</span>:<br>                    value = field.clean(value)  <span class="hljs-comment"># 按定义的规则进行数据的校验</span><br>                <span class="hljs-variable language_">self</span>.cleaned_data[name] = value  <span class="hljs-comment"># 数据校验通过，就把数据放到 cleaned_data 字典中，键为字段名，值为校验通过的数据</span><br>                <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;clean_%s&#x27;</span> % name):<br>                    value = <span class="hljs-built_in">getattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;clean_%s&#x27;</span> % name)()<br>                    <span class="hljs-variable language_">self</span>.cleaned_data[name] = value<br>            <span class="hljs-keyword">except</span> ValidationError <span class="hljs-keyword">as</span> e:<br>                <span class="hljs-variable language_">self</span>.add_error(name, e)  <span class="hljs-comment"># 校验失败，就把数据放到 errors 字典中，键为字段名，值为校验失败的报错信息</span><br></code></pre></td></tr></table></figure>
+
+<p>​		局部钩子的逻辑是这样的，先对数据按照我们在类中定义的规则进行校验，如果校验成功，会把数据存入 cleaned_data 字典中，紧接着，再通过反射去寻找有没有以 clean_ 开头的函数方法，如果有就再去执行，并把刚刚存数据的操作重新覆盖执行一遍；如果校验失败，会引发一个 ValidationError 异常，并把字段和异常存入 error 字典。</p>
+<p>​		因此，我们想要对哪个字段使用钩子函数，只需要在自定义的类中去定义再去定义一个 clean_字段名 的函数即可，把复杂的操作在函数中完成。例如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><span class="hljs-keyword">from</span> django.forms <span class="hljs-keyword">import</span> widgets<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> User<br><span class="hljs-keyword">from</span> django.core.exceptions <span class="hljs-keyword">import</span> ValidationError<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;用户名&quot;</span>,<br>                           error_messages=&#123;<span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-string">&quot;信息不能为空&quot;</span>, <span class="hljs-string">&quot;invalid&quot;</span>: <span class="hljs-string">&quot;数据格式错误&quot;</span>&#125;, widget=widgets.TextInput())<br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;密码&quot;</span>,<br>                          widget=widgets.PasswordInput(attrs=&#123;<span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;form-control&quot;</span>, <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;pwd&quot;</span>&#125;))  <span class="hljs-comment">#</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;确认密码&quot;</span>, widget=widgets.PasswordInput())  <span class="hljs-comment">#</span><br>    email = forms.EmailField(label=<span class="hljs-string">&quot;邮箱&quot;</span>, widget=widgets.EmailInput())<br>    tel = forms.CharField(label=<span class="hljs-string">&quot;电话&quot;</span>, widget=widgets.TextInput)<br><br>    <span class="hljs-comment"># 校验用户名是不是在数据库中已经存在了</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">clean_name</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 会先执行自带的局部钩子，自带的钩子用于校验定义字段时的那些规则</span><br>        <span class="hljs-comment"># 如果能取到值，表示已经通过字段中的定义规则了，就会接下去执行更复杂的校验</span><br>        val = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;name&quot;</span>)<br><br>        ret = User.objects.<span class="hljs-built_in">filter</span>(name=val)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ret:<br>            <span class="hljs-comment"># 数据库中还没有该名字，可以注册，返回该结果</span><br>            <span class="hljs-comment"># _clean_fields 函数会通过 value = getattr(self, &#x27;clean_%s&#x27; % name)() 拿到该结果</span><br>            <span class="hljs-comment"># 接着通过 self.cleaned_data[name] = value 把该值添加到 cleaned_data中去，如果已经存在该值，会进行覆盖</span><br>            <span class="hljs-keyword">raise</span> val<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 如果用户名已经存在，引发一个 ValidationError 异常</span><br>            <span class="hljs-comment"># 字段名和自定义的异常信息会以键值对的形式存储到 errors 字典中去，如&#123;&quot;name&quot;:[&quot;用户名已存在&quot;]&#125;</span><br>            <span class="hljs-keyword">return</span> ValidationError(<span class="hljs-string">&quot;用户名已存在&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-2-全局钩子"><a href="#5-2-全局钩子" class="headerlink" title="5.2 全局钩子"></a><strong>5.2 全局钩子</strong></h3><p>全局钩子函数用于实现对多个字段间的复杂校验操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># forms.py</span><br><br> <span class="hljs-keyword">def</span> <span class="hljs-title function_">_clean_form</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">try</span>:<br>            cleaned_data = <span class="hljs-variable language_">self</span>.clean()<br>        <span class="hljs-keyword">except</span> ValidationError <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-variable language_">self</span>.add_error(<span class="hljs-literal">None</span>, e)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">if</span> cleaned_data <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>                <span class="hljs-variable language_">self</span>.cleaned_data = cleaned_data<br></code></pre></td></tr></table></figure>
+
+<p>对于全局钩子来说，最重要的就是执行了 clean 方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">clean</span>(<span class="hljs-params">self</span>):<br>     <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">     Hook for doing any extra form-wide cleaning after Field.clean() has been</span><br><span class="hljs-string">     called on every field. Any ValidationError raised by this method will</span><br><span class="hljs-string">     not be associated with a particular field; it will have a special-case</span><br><span class="hljs-string">     association with the field named &#x27;__all__&#x27;.</span><br><span class="hljs-string">     &quot;&quot;&quot;</span><br>     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cleaned_data<br></code></pre></td></tr></table></figure>
+
+<p>​		clean 方法中只是给了简单的描述，并没有实际的逻辑代码，这就代表着 clean 方法只是开放了一个功能，具体的实现需要我们自己来完成。但是有一点需要注意的是，由于全局操作的是多个字段之间的关系校验，因此如果校验失败，想把错误放到 errors 字典中，键应该填什么呢？clean 方法规定了，在这里键可以填 _<em>all</em>_</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><span class="hljs-keyword">from</span> django.forms <span class="hljs-keyword">import</span> widgets<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> User<br><span class="hljs-keyword">from</span> django.core.exceptions <span class="hljs-keyword">import</span> ValidationError<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;用户名&quot;</span>,<br>                           error_messages=&#123;<span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-string">&quot;信息不能为空&quot;</span>, <span class="hljs-string">&quot;invalid&quot;</span>: <span class="hljs-string">&quot;数据格式错误&quot;</span>&#125;, widget=widgets.TextInput())<br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;密码&quot;</span>,<br>                          widget=widgets.PasswordInput(attrs=&#123;<span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;form-control&quot;</span>, <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;pwd&quot;</span>&#125;))  <span class="hljs-comment">#</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;确认密码&quot;</span>, widget=widgets.TextInput())  <span class="hljs-comment">#</span><br>    email = forms.EmailField(label=<span class="hljs-string">&quot;邮箱&quot;</span>, widget=widgets.EmailInput())<br>    tel = forms.CharField(label=<span class="hljs-string">&quot;电话&quot;</span>, widget=widgets.TextInput)<br><br><br>    <span class="hljs-comment"># 校验输入的密码和确认密码是否一致</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">clean</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 两个只要有一个不能从cleaned_data中拿到值，那就证明对于最开始定义的字段时的校验规则都没有通过，因此也没有必要进行一致性的校验了</span><br>        <span class="hljs-comment"># 两个都能从cleaned_data中拿到值就证明都通过了最基本的规则校验，可以接着进行更复杂的校验了</span><br><br>        pwd = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        r_pwd = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;r_pwd&quot;</span>)<br><br>        <span class="hljs-keyword">if</span> pwd <span class="hljs-keyword">and</span> r_pwd:<br>            <span class="hljs-keyword">if</span> pwd == r_pwd:<br>                <span class="hljs-comment"># 一致性校验通过，将原始数据返回</span><br>                <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cleaned_data<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-keyword">raise</span> ValidationError(<span class="hljs-string">&quot;两次密码不一致&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 两个只要有一个不能从cleaned_data中拿到值，就没有必要进行一致性的校验了，直接返回原结果</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cleaned_data<br>        <br>        <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.POST)<br>        form = UserForm(request.POST)  <span class="hljs-comment"># 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)<br>            <span class="hljs-built_in">print</span>(form.errors)<br><br>            <span class="hljs-comment"># 校验全局钩子函数</span><br>            <span class="hljs-built_in">print</span>(form.errors.get(<span class="hljs-string">&quot;__all__&quot;</span>)[<span class="hljs-number">0</span>])<br>			<br>            <span class="hljs-comment"># 用该变量去前端渲染全局钩子错误</span><br>            errors = form.errors.get(<span class="hljs-string">&quot;__all__&quot;</span>)<br><br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br><br>    form = UserForm()  <span class="hljs-comment"># 在接收到 get 请求时，就实例化一个form对象，用于渲染标签</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br></code></pre></td></tr></table></figure>
+
+<p><strong>补充：由于forms 组件的功能比较多，我们一般会把forms组件相关的内容单独放到一个py文件中，比如上述操作都属于 app01 模块的forms组件，可以在模块中新建一个 app01_forms.py 的文件</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app0/app01_forms.py</span><br><br><span class="hljs-keyword">from</span> django <span class="hljs-keyword">import</span> forms<br><span class="hljs-keyword">from</span> django.forms <span class="hljs-keyword">import</span> widgets<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> User<br><span class="hljs-keyword">from</span> django.core.exceptions <span class="hljs-keyword">import</span> ValidationError<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserForm</span>(forms.Form):<br>    <span class="hljs-comment"># error_message 参数用于设置错误提示信息</span><br>    <span class="hljs-comment">#   固定键值 required 表示为空错误</span><br>    <span class="hljs-comment">#   固定键值 invalid 表示格式错误</span><br><br>    <span class="hljs-comment"># widget 参数用于设置标签的类型以及添加相关的属性等</span><br>    <span class="hljs-comment">#   widget = widgets.PasswordInput()  规定标签的类型</span><br>    <span class="hljs-comment">#   widget = widgets.PasswordInput(attrs=&#123;&quot;class&quot;: &quot;form-control&quot;, &quot;id&quot;: &quot;pwd&quot;&#125;)  给标签添加对应的css属性</span><br>    name = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;用户名&quot;</span>,<br>                           error_messages=&#123;<span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-string">&quot;信息不能为空&quot;</span>, <span class="hljs-string">&quot;invalid&quot;</span>: <span class="hljs-string">&quot;数据格式错误&quot;</span>&#125;, widget=widgets.TextInput())<br>    pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;密码&quot;</span>,<br>                          widget=widgets.PasswordInput(attrs=&#123;<span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;form-control&quot;</span>, <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;pwd&quot;</span>&#125;))  <span class="hljs-comment">#</span><br>    r_pwd = forms.CharField(min_length=<span class="hljs-number">4</span>, label=<span class="hljs-string">&quot;确认密码&quot;</span>, widget=widgets.TextInput())  <span class="hljs-comment">#</span><br>    email = forms.EmailField(label=<span class="hljs-string">&quot;邮箱&quot;</span>, widget=widgets.EmailInput())<br>    tel = forms.CharField(label=<span class="hljs-string">&quot;电话&quot;</span>, widget=widgets.TextInput)<br><br>    <span class="hljs-comment"># 校验用户名是不是在数据库中已经存在了</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">clean_name</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 会先执行自带的局部钩子，自带的钩子用于校验定义字段时的那些规则</span><br>        <span class="hljs-comment"># 如果能取到值，表示已经通过字段中的定义规则了，就会接下去执行更复杂的校验</span><br>        val = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;name&quot;</span>)<br><br>        ret = User.objects.<span class="hljs-built_in">filter</span>(name=val)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ret:<br>            <span class="hljs-comment"># 数据库中还没有该名字，可以注册，返回该结果</span><br>            <span class="hljs-comment"># _clean_fields 函数会通过 value = getattr(self, &#x27;clean_%s&#x27; % name)() 拿到该结果</span><br>            <span class="hljs-comment"># 接着通过 self.cleaned_data[name] = value 把该值添加到 cleaned_data中去，如果已经存在该值，会进行覆盖</span><br>            <span class="hljs-keyword">return</span> val<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 如果用户名已经存在，引发一个 ValidationError 异常</span><br>            <span class="hljs-comment"># 字段名和自定义的异常信息会以键值对的形式存储到 errors 字典中去，如&#123;&quot;name&quot;:[&quot;用户名已存在&quot;]&#125;</span><br>            <span class="hljs-keyword">raise</span> ValidationError(<span class="hljs-string">&quot;用户名已存在&quot;</span>)<br><br>    <span class="hljs-comment"># 校验输入的密码和确认密码是否一致</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">clean</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 两个只要有一个不能从cleaned_data中拿到值，那就证明对于最开始定义的字段时的校验规则都没有通过，因此也没有必要进行一致性的校验了</span><br>        <span class="hljs-comment"># 两个都能从cleaned_data中拿到值就证明都通过了最基本的规则校验，可以接着进行更复杂的校验了</span><br><br>        pwd = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;pwd&quot;</span>)<br>        r_pwd = <span class="hljs-variable language_">self</span>.cleaned_data.get(<span class="hljs-string">&quot;r_pwd&quot;</span>)<br><br>        <span class="hljs-keyword">if</span> pwd <span class="hljs-keyword">and</span> r_pwd:<br>            <span class="hljs-keyword">if</span> pwd == r_pwd:<br>                <span class="hljs-comment"># 一致性校验通过，将原始数据返回</span><br>                <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cleaned_data<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-keyword">raise</span> ValidationError(<span class="hljs-string">&quot;两次密码不一致&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 两个只要有一个不能从cleaned_data中拿到值，就没有必要进行一致性的校验了，直接返回原结果</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cleaned_data<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/views.py</span><br><br><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render, HttpResponse<br><span class="hljs-keyword">from</span> app01.app01_forms <span class="hljs-keyword">import</span> *<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reg</span>(<span class="hljs-params">request</span>):<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        <span class="hljs-built_in">print</span>(request.POST)<br>        form = UserForm(request.POST)  <span class="hljs-comment"># 如果想直接检验从前端获取的数据，那么form表单的name属性值应该与forms组件字段名称一致</span><br><br>        <span class="hljs-comment"># 使用forms检验数据，返回值是一个布尔值，当传入的值都检验成功时值为True，其他情况均为False</span><br>        <span class="hljs-built_in">print</span>(form.is_valid())<br><br>        <span class="hljs-keyword">if</span> form.is_valid():<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(form.cleaned_data)<br>            <span class="hljs-built_in">print</span>(form.errors)<br><br>            <span class="hljs-comment"># 校验全局钩子函数</span><br>            <span class="hljs-built_in">print</span>(form.errors.get(<span class="hljs-string">&quot;__all__&quot;</span>)[<span class="hljs-number">0</span>])<br><br>            errors = form.errors.get(<span class="hljs-string">&quot;__all__&quot;</span>)<br><br>        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br><br>    form = UserForm()  <span class="hljs-comment"># 在接收到 get 请求时，就实例化一个form对象，用于渲染标签</span><br>    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&quot;reg.html&quot;</span>, <span class="hljs-built_in">locals</span>())<br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/django/" class="print-no-link">#django</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Django之forms组件</div>
+      <div>https://clark-cdc.github.io/2020/04/18/0510-Django组件之forms/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年4月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/23/0511-Djano%E7%BB%84%E4%BB%B6%E4%B9%8B%E4%BC%9A%E8%AF%9D/" title="Django之会话">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Django之会话</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/15/0509-Django%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%88%86%E9%A1%B5%E5%99%A8/" title="Django之分页器">
+                        <span class="hidden-mobile">Django之分页器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/asserts/logo.png">
+  <link rel="icon" href="/img/asserts/logo.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="clark">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、认证组件介绍1. 用户认证的作用在开发后端 API 时，要考虑不同的功能会有不同限制的场景，例如：  无需认证，就可以访问并获取数据（游客模式） 需认证，用户先登录，后续发送请求要携带登录时发放的凭证  django 中可以借鉴装饰器、中间件等对所有接口执行之前先进行用户身份认证。drf 中直接提供了用户认证的组件，可以帮助我们快速高效的完成用户身份识别功能。 2. 认证组件的使用2.1 编写">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DRF组件之认证">
+<meta property="og:url" content="https://clark-cdc.github.io/2023/04/18/0518-drf%E7%BB%84%E4%BB%B6%E4%B9%8B%E8%AE%A4%E8%AF%81/index.html">
+<meta property="og:site_name" content="Clark&#39;s Blog">
+<meta property="og:description" content="一、认证组件介绍1. 用户认证的作用在开发后端 API 时，要考虑不同的功能会有不同限制的场景，例如：  无需认证，就可以访问并获取数据（游客模式） 需认证，用户先登录，后续发送请求要携带登录时发放的凭证  django 中可以借鉴装饰器、中间件等对所有接口执行之前先进行用户身份认证。drf 中直接提供了用户认证的组件，可以帮助我们快速高效的完成用户身份识别功能。 2. 认证组件的使用2.1 编写">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+<meta property="article:published_time" content="2023-04-18T13:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-10T13:38:01.363Z">
+<meta property="article:author" content="clark">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
+<meta property="article:tag" content="django_restful_framework">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clark-cdc.github.io/img/cover/Django.jpeg">
+  
+  
+  
+  <title>DRF组件之认证 - Clark&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clark-cdc.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/asserts/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Clark的知识星球</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/asserts/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="DRF组件之认证"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-18 21:00" pubdate>
+          2023年4月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">DRF组件之认证</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、认证组件介绍"><a href="#一、认证组件介绍" class="headerlink" title="一、认证组件介绍"></a>一、认证组件介绍</h2><h3 id="1-用户认证的作用"><a href="#1-用户认证的作用" class="headerlink" title="1. 用户认证的作用"></a>1. 用户认证的作用</h3><p>在开发后端 <code>API</code> 时，要考虑不同的功能会有不同限制的场景，例如：</p>
+<ul>
+<li>无需认证，就可以访问并获取数据（游客模式）</li>
+<li>需认证，用户先登录，后续发送请求要携带登录时发放的凭证</li>
+</ul>
+<p><code>django</code> 中可以借鉴装饰器、中间件等对所有接口执行之前先进行用户身份认证。<code>drf</code> 中直接提供了用户认证的组件，可以帮助我们快速高效的完成用户身份识别功能。</p>
+<h3 id="2-认证组件的使用"><a href="#2-认证组件的使用" class="headerlink" title="2. 认证组件的使用"></a>2. 认证组件的使用</h3><h4 id="2-1-编写认证类"><a href="#2-1-编写认证类" class="headerlink" title="2.1 编写认证类"></a>2.1 编写认证类</h4><p>一般功能性的组件不会跟业务代码放在一起，我们可以单独新建一个文件或者目录，存放我们自己编写的组件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/auth.py</span><br><br><span class="hljs-keyword">from</span> rest_framework.authentication <span class="hljs-keyword">import</span> BaseAuthentication<br><span class="hljs-keyword">from</span> rest_framework.exceptions <span class="hljs-keyword">import</span> AuthenticationFailed<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserTokenAuth</span>(<span class="hljs-title class_ inherited__">BaseAuthentication</span>):<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate</span>(<span class="hljs-params">self, request</span>):<br>        token = request.query_params.get(<span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br>		<br>        <span class="hljs-comment"># 如果请求路由未携带token，表示未登录，验证不通过</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> token:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br>		<br>         <span class="hljs-comment"># 如果请求路由携带token的token不对，表示未登录，验证不通过</span><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(token=token).first()<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        <span class="hljs-keyword">return</span> user_obj, token<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate_header</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Bearer realm=&quot;API&quot;&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>认证类的使用要注意以下几点：</p>
+<ul>
+<li>认证类必须继承 <code>rest_framework.authentication.BaseAuthentication</code> 类，且必须实现类中 <code>authenticate</code> 方法，该方法实现的就是认证的功能。<code>authenticate_header</code> 方法可以不用实现；</li>
+<li>对于认证失败的情况，要用 <code>rest_framework.exceptions.AuthenticationFailed</code> 类抛出异常；</li>
+<li>认证通过后，最后会返回两个值，两个值会分别赋值给 <code>request.user</code> 和 <code>request.auth</code> ，即可以在业务接口中直接查询访问的用户信息。</li>
+</ul>
+<h4 id="2-2-编写数据表模型"><a href="#2-2-编写数据表模型" class="headerlink" title="2.2 编写数据表模型"></a>2.2 编写数据表模型</h4><p>我们简单创建一张用户表，用于存储用户相关信息。当用户登录时，后端生成一个随机的 <code>token</code> 值，并将值存入表中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/models.py</span><br><br><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserInfo</span>(models.Model):<br>    uid = models.AutoField(primary_key=<span class="hljs-literal">True</span>, verbose_name=<span class="hljs-string">&quot;用户ID&quot;</span>)<br>    name = models.CharField(max_length=<span class="hljs-number">10</span>, verbose_name=<span class="hljs-string">&quot;用户名&quot;</span>, null=<span class="hljs-literal">False</span>)<br>    password = models.CharField(max_length=<span class="hljs-number">16</span>, verbose_name=<span class="hljs-string">&quot;用户密码&quot;</span>, null=<span class="hljs-literal">False</span>)<br>    token = models.CharField(max_length=<span class="hljs-number">32</span>, verbose_name=<span class="hljs-string">&quot;用户登录token&quot;</span>, null=<span class="hljs-literal">True</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__str__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.name<br><br>    <span class="hljs-keyword">class</span> <span class="hljs-title class_">Meta</span>:<br>        verbose_name_plural = <span class="hljs-string">&quot;user_info&quot;</span><br>        db_table = verbose_name_plural<br></code></pre></td></tr></table></figure>
+
+<p>创建完表模型后，执行数据库迁移命令（这里直接使用 sqlite 数据库）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 在项目根目录，即 manage.py 同级目录下打开终端执行</span><br><br>python manage.py makemigrations<br>python manage.py migrate<br></code></pre></td></tr></table></figure>
+
+<p>表生成以后手动插入一条数据</p>
+<img src="/img/blog/about_drf/drf13.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 50%;" /> 
+
+<h4 id="2-3-路由"><a href="#2-3-路由" class="headerlink" title="2.3 路由"></a>2.3 路由</h4><p>创建两条路由，一个用于用户登录，另一个用于查看商品信息</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># urls.py</span><br><br><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path<br><span class="hljs-keyword">from</span> app01 <span class="hljs-keyword">import</span> views<br><br>urlpatterns = [<br>    path(<span class="hljs-string">&#x27;api/v1/login/&#x27;</span>, views.UserLoginView.as_view()),<br>    path(<span class="hljs-string">&#x27;api/v1/product/&#x27;</span>, views.ProductManage.as_view()),<br>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-编写视图类"><a href="#2-4-编写视图类" class="headerlink" title="2.4 编写视图类"></a>2.4 编写视图类</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/views.py</span><br><br><span class="hljs-keyword">import</span> uuid<br><span class="hljs-keyword">from</span> rest_framework.views <span class="hljs-keyword">import</span> APIView<br><span class="hljs-keyword">from</span> rest_framework.response <span class="hljs-keyword">import</span> Response<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><span class="hljs-keyword">from</span> app01.auth <span class="hljs-keyword">import</span> UserTokenAuth<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserLoginView</span>(<span class="hljs-title class_ inherited__">APIView</span>):<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        data = request.data<br>        user_name = data.get(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br>        pwd = data.get(<span class="hljs-string">&quot;password&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(name=user_name, password=pwd).first()<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            ret_data = &#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1001</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;用户名或密码错误&quot;</span>&#125;<br>            <span class="hljs-keyword">return</span> Response(ret_data)<br><br>        user_token = <span class="hljs-built_in">str</span>(uuid.uuid4())<br>        user_obj.token = user_token<br>        user_obj.save()<br><br>        ret_data = &#123;<br>            <span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1000</span>,<br>            <span class="hljs-string">&quot;data&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;user&quot;</span>: user_name,<br>                <span class="hljs-string">&quot;token&quot;</span>: user_token<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> Response(ret_data)<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductManage</span>(<span class="hljs-title class_ inherited__">APIView</span>):<br>    <br>    <span class="hljs-comment"># 如果想对接口使用用户认证，需要做以下配置</span><br>    authentication_classes = [UserTokenAuth, ]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        product_list = [<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate30&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">3000</span>&#125;,<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate40&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">4000</span>&#125;,<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate50&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">5000</span>&#125;,<br>        ]<br><br>        <span class="hljs-keyword">return</span> Response(product_list)<br></code></pre></td></tr></table></figure>
+
+<p>上述两个视图类，<code>UserLoginView</code> 为用户登录接口，无需进行身份验证；<code>ProductManage</code> 类为查看商品信息，只有认证通过即登录过的用户才能请求看到数据。</p>
+<h4 id="2-5-用户认证校验"><a href="#2-5-用户认证校验" class="headerlink" title="2.5 用户认证校验"></a>2.5 用户认证校验</h4><ul>
+<li>用户先进行登录操作，拿到后端接口返回的 <code>token</code> 信息</li>
+</ul>
+<img src="/img/blog/about_drf/drf14.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 60%;" /> 
+
+<ul>
+<li>访问查询商品接口时，路由未携带 <code>token</code>，请求认证不通过</li>
+</ul>
+<img src="/img/blog/about_drf/drf15.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 60%;" /> 
+
+<ul>
+<li>访问查询商品接口时，路由携带 <code>token</code> 值不正确，请求认证不通过</li>
+</ul>
+<img src="/img/blog/about_drf/drf16.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 60%;" /> 
+
+<ul>
+<li>访问查询商品接口时，路由携带正确的 <code>token</code> ，请求认证通过，后端返回商品信息</li>
+</ul>
+<img src="/img/blog/about_drf/drf17.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 50%;" />  
+
+<h4 id="2-6-认证组件的全局使用"><a href="#2-6-认证组件的全局使用" class="headerlink" title="2.6 认证组件的全局使用"></a>2.6 认证组件的全局使用</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># settings.py</span><br><br>REST_FRAMEWORK = &#123;<br>    <span class="hljs-comment"># 将自己编写的认证类作用于全局的视图</span><br>    <span class="hljs-comment"># 键名为 DEFAULT_AUTHENTICATION_CLASSES</span><br>    <span class="hljs-comment"># 值为一个列表，里面存放认证类的文件路径</span><br>    <span class="hljs-string">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span>: [<span class="hljs-string">&quot;app01.auth.UserTokenAuth&quot;</span>, ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>设置好全局配置后，需要经过认证的视图类中就不用再配置 <code>authentication_classes</code> ，而针对于不想使用认证的视图类，只需要设置 <code>authentication_classes = []</code> 即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 登录的接口不需要做用户认证</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserLoginView</span>(<span class="hljs-title class_ inherited__">APIView</span>):<br>    <span class="hljs-comment"># 重新设置 authentication_classes 的值，覆盖全局配置</span><br>    authentication_classes = []<br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>      <span class="hljs-keyword">pass</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="二、多个认证类"><a href="#二、多个认证类" class="headerlink" title="二、多个认证类"></a>二、多个认证类</h2><h3 id="1-多个认证类的使用"><a href="#1-多个认证类的使用" class="headerlink" title="1. 多个认证类的使用"></a>1. 多个认证类的使用</h3><p>在实际的开发场景中，一个 <code>api</code> 可能被多方调用（PC端、App、小程序等等），各方使用的认证方式可能也不一样，我们的接口应该尽量兼容各种认证情况。</p>
+<p>在视图类的 <code>authentication_classes</code> 中定义认证类时，传入的是一个列表，这就意味着 <code>drf</code> 是支持定义多个认证类的。当出现多个认证类时，<code>drf</code> 内部会按照列表的顺序，逐一执行认证类的 <code>authenticate</code> 方法，如果返回元组或抛出异常则会终止后续认证类的执行；如果返回 <code>None</code>，则会继续执行后续的认证类。</p>
+<ul>
+<li>编写多个认证类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/auth.py</span><br><br><span class="hljs-keyword">from</span> rest_framework.authentication <span class="hljs-keyword">import</span> BaseAuthentication<br><span class="hljs-keyword">from</span> rest_framework.exceptions <span class="hljs-keyword">import</span> AuthenticationFailed<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><br><span class="hljs-keyword">from</span> rest_framework.authentication <span class="hljs-keyword">import</span> BaseAuthentication<br><span class="hljs-keyword">from</span> rest_framework.exceptions <span class="hljs-keyword">import</span> AuthenticationFailed<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserTokenAuth</span>(<span class="hljs-title class_ inherited__">BaseAuthentication</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    从请求路由中获取token值进行验证</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate</span>(<span class="hljs-params">self, request</span>):<br>        token = request.query_params.get(<span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br>		<br>        <span class="hljs-comment"># 如果请求路由中没有携带token参数，则跳过该认证，继续走后面的认证</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> token:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(token=token).first()<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        <span class="hljs-keyword">return</span> user_obj, token<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate_header</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Bearer realm=&quot;API&quot;&#x27;</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HeardTokenAuth</span>(<span class="hljs-title class_ inherited__">BaseAuthentication</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">     从请求头中获取token值进行验证</span><br><span class="hljs-string">     &quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate</span>(<span class="hljs-params">self, request</span>):<br>		<br>        <span class="hljs-comment"># 从请求头中获取token</span><br>        token = request.META.get(<span class="hljs-string">&quot;HTTP_TOKEN&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> token:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(token=token).first()<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        <span class="hljs-keyword">return</span> user_obj, token<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate_header</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Bearer realm=&quot;API&quot;&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>编写视图类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/views.py</span><br><br><span class="hljs-keyword">from</span> rest_framework.views <span class="hljs-keyword">import</span> APIView<br><span class="hljs-keyword">from</span> rest_framework.response <span class="hljs-keyword">import</span> Response<br><span class="hljs-keyword">from</span> app01.auth <span class="hljs-keyword">import</span> UserTokenAuth, HeardTokenAuth<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductManage</span>(<span class="hljs-title class_ inherited__">APIView</span>):<br>    authentication_classes = [UserTokenAuth, HeardTokenAuth]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br>        product_list = [<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate30&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">3000</span>&#125;,<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate40&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">4000</span>&#125;,<br>            &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate50&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">5000</span>&#125;,<br>        ]<br><br>        <span class="hljs-keyword">return</span> Response(product_list)<br></code></pre></td></tr></table></figure>
+
+<img src="/img/blog/about_drf/drf18.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 50%;" /> 
+
+<h3 id="2-关于认证的返回值"><a href="#2-关于认证的返回值" class="headerlink" title="2. 关于认证的返回值"></a>2. 关于认证的返回值</h3><p>认证类中的 <code>authenticate</code> 方法返回值主要有以下几种情形：</p>
+<ul>
+<li>返回元组，即直接返回两个值，例如：<code>return user_obj, token</code> 或者直接 <code>return None, None</code>，此时会把两个值分别赋值给 <code>request.user</code> 和 <code>request.auth</code>，后续的认证类也不会执行了；</li>
+<li>抛出异常，例如：<code>raise AuthenticationFailed(&#123;&quot;code&quot;: 1002, &quot;error&quot;: &quot;认证失败&quot;&#125;)</code>，此时后续的认证类也不会执行了。</li>
+<li>返回 <code>None</code>，例如：<code>return None</code>，此时会继续执行后续的认证类，如果所有的认证类的 <code>authenticate</code> 都返回了None，则默认 <code>request.user=&quot;AnonymousUser&quot;</code>（匿名用户）  和  <code>request.auth=None</code> 。当然，这两个默认值也可以通过配置来重新定义</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># settings.py</span><br><br>REST_FRAMEWORK = &#123;<br>    <span class="hljs-string">&quot;UNAUTHENTICATED_USER&quot;</span>: <span class="hljs-keyword">lambda</span>: <span class="hljs-literal">None</span>,<br>    <span class="hljs-string">&quot;UNAUTHENTICATED_TOKEN&quot;</span>: <span class="hljs-keyword">lambda</span>: <span class="hljs-literal">None</span>,<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-关于返回-None-的用法"><a href="#3-关于返回-None-的用法" class="headerlink" title="3. 关于返回 None 的用法"></a>3. 关于返回 None 的用法</h3><ul>
+<li>认证类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/auth.py</span><br><br><span class="hljs-keyword">from</span> rest_framework.authentication <span class="hljs-keyword">import</span> BaseAuthentication<br><span class="hljs-keyword">from</span> rest_framework.exceptions <span class="hljs-keyword">import</span> AuthenticationFailed<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><br><span class="hljs-keyword">from</span> rest_framework.authentication <span class="hljs-keyword">import</span> BaseAuthentication<br><span class="hljs-keyword">from</span> rest_framework.exceptions <span class="hljs-keyword">import</span> AuthenticationFailed<br><span class="hljs-keyword">from</span> app01.models <span class="hljs-keyword">import</span> UserInfo<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserTokenAuth</span>(<span class="hljs-title class_ inherited__">BaseAuthentication</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    从请求路由中获取token值进行验证</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate</span>(<span class="hljs-params">self, request</span>):<br>        token = request.query_params.get(<span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br>		<br>        <span class="hljs-comment"># 如果请求路由中没有携带token参数，则跳过该认证，继续走后面的认证</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> token:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(token=token).first()<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        <span class="hljs-keyword">return</span> user_obj, token<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate_header</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Bearer realm=&quot;API&quot;&#x27;</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HeardTokenAuth</span>(<span class="hljs-title class_ inherited__">BaseAuthentication</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">     从请求头中获取token值进行验证</span><br><span class="hljs-string">     &quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate</span>(<span class="hljs-params">self, request</span>):<br>		<br>        <span class="hljs-comment"># 从请求头中获取token</span><br>        token = request.META.get(<span class="hljs-string">&quot;HTTP_TOKEN&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> token:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br><br>        user_obj = UserInfo.objects.<span class="hljs-built_in">filter</span>(token=token).first()<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> user_obj:<br>            <span class="hljs-keyword">raise</span> AuthenticationFailed(&#123;<span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">1002</span>, <span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;认证失败&quot;</span>&#125;)<br><br>        <span class="hljs-keyword">return</span> user_obj, token<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">authenticate_header</span>(<span class="hljs-params">self, request</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Bearer realm=&quot;API&quot;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>视图类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># app01/views.py</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductManage</span>(<span class="hljs-title class_ inherited__">APIView</span>):<br>    authentication_classes = [UserTokenAuth, HeardTokenAuth]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get</span>(<span class="hljs-params">self, request, *args, **kwargs</span>):<br><br>        <span class="hljs-comment"># 如果没有通过认证，证明是游客模式，返回一些其他数据</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> request.user:<br>            product_list = [<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;xxx&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">9999</span>&#125;,<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;xxx&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">9999</span>&#125;,<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;xxx&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">9999</span>&#125;,<br>            ]<br>        <span class="hljs-keyword">else</span>:<br>            product_list = [<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate30&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">3000</span>&#125;,<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate40&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">4000</span>&#125;,<br>                &#123;<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;mate50&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">5000</span>&#125;,<br>            ]<br><br>        <span class="hljs-keyword">return</span> Response(product_list)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>不管是路由还是请求头都不携带 <code>token</code></li>
+</ul>
+<img src="/img/blog/about_drf/drf19.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 50%;" /> 
+
+<ul>
+<li>请求头携带 <code>token</code></li>
+</ul>
+<img src="/img/blog/about_drf/drf18.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 50%;" /> 
+
+<h2 id="三、认证组件源码分析"><a href="#三、认证组件源码分析" class="headerlink" title="三、认证组件源码分析"></a>三、认证组件源码分析</h2><p>认证组件功能的实现可以通过源码简单剖析一下</p>
+<img src="/img/blog/about_drf/drf20.png" srcset="/img/asserts/loading.gif" lazyload style="zoom: 100%;" /> 
+
+<ul>
+<li><p>第一步，还是通过视图类先走到 <code>APIView</code> 中的 <code>dispatch</code> 方法，里面有两个地方涉及到认证功能，首先是对请求数据的封装，即 <code>request = self.initialize_request(request, *args, **kwargs)</code>；</p>
+</li>
+<li><p>第二步，<code>self.initialize_request</code> 中实例化<code>rest_framework.request.Request</code> 类时，将 <code>self.get_authenticators()</code> 方法的返回值赋值给了参数 <code>authenticators</code>，<code>self.get_authenticators()</code> 方法中主要实现了对视图类中 <code>authentication_classes</code> 变量内所有的认证类都进行了实例化，并将所有的实例化对象放在了一个列表，即经过上述步骤会得到：<code>authenticators=[UserTokenAuth(), HeardTokenAuth()]</code>；</p>
+</li>
+<li><p>第三步，回到 <code>dispatch</code> 方法中，继续执行 <code>self.initial(request, *args, **kwargs)</code> 方法，该方法内部又调用了 <code>self.perform_authentication(request)</code> 方法，<code>perform_authentication</code> 内部又调用了 <code>request.user</code>，而 <code>request.user</code> 是 <code>rest_framework.request.Request</code> 类的一个属性；</p>
+</li>
+<li><p>第四步，在 <code>rest_framework.request.Request</code> 的属性方法 <code>user</code> 中调用了 <code>self._authenticate()</code> 方法，该方法也是实现认证过程的核心部分；</p>
+</li>
+<li><p>第五步，<code>self._authenticate()</code> 对 <code>self.authenticators</code> 中所有对象进行循环，即对我们自己编写的所有认证类的实例化对象进行循环操作，调用每个对象的 <code>authenticate</code> 方法：</p>
+<ul>
+<li>如果方法执行报错，调用 <code>self._not_authenticated()</code>，抛出异常，后续认证过程停止，认证过程结束；</li>
+<li>如果方法正常执行完，会返回一个结果，如果结果不是 <code>None</code>，则结果为一个元组，将两个值分别赋值给 <code>self.user</code> 和 <code>self.auth</code>，后续认证过程停止，认证过程结束；如果结果是 <code>None</code>，则继续循环；</li>
+<li>如果所有对象都循环完了，证明所有对象 <code>authenticate</code> 方法返回的都是 <code>None</code> ，则调用 <code>self._not_authenticated()</code> 方法,，认证过程结束；</li>
+</ul>
+</li>
+<li><p>第六步，在 <code>self._not_authenticated()</code> 中主要是针对认证类异常和全部跳过情况下，对  <code>self.user</code> 和 <code>self.auth</code> 两个变量取值做了一些处理。首先会先优先从工程下的 <code>settings.py</code> 中查找开发者是否做了相关配置，如果没有配置，则采用 <code>rest_framework/settings.py</code> 内的默认配置。</p>
+</li>
+</ul>
+<p><strong>补充</strong>：当我们自己编写的视图类中没有定义 <code>authentication_classes</code>，则会去父类，即 <code>APIView</code> 中寻找，最终会找到我们在配置文件中定义的 <code>DEFAULT_AUTHENTICATION_CLASSES</code>，从而使得认证组件的功能可以作用于全局。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/django%E5%AD%A6%E4%B9%A0/" class="category-chain-item">django学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/django/" class="print-no-link">#django</a>
+      
+        <a href="/tags/django-restful-framework/" class="print-no-link">#django_restful_framework</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>DRF组件之认证</div>
+      <div>https://clark-cdc.github.io/2023/04/18/0518-drf组件之认证/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>clark</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/22/0519-drf%E7%BB%84%E4%BB%B6%E4%B9%8B%E6%9D%83%E9%99%90/" title="DRF组件之权限">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DRF组件之权限</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/12/0517-drf%E7%BB%84%E4%BB%B6%E4%B9%8B%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" title="DRF组件之版本管理">
+                        <span class="hidden-mobile">DRF组件之版本管理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
